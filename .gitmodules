@@ -1,0 +1,9 @@
+[submodule "externals/SDL2"]
+	path = externals/SDL2
+	url = https://github.com/dhustkoder/SDL2
+[submodule "externals/glew"]
+	path = externals/glew
+	url = https://github.com/dhustkoder/glew
+[submodule "externals/freeglut"]
+	path = externals/freeglut
+	url = https://github.com/dhustkoder/freeglut
