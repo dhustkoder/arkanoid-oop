@@ -33,6 +33,8 @@ Display* create_display(const char* const title, const int w, const int h)
 	if (glewInit() != GLEW_OK)
 		goto free_glcontext;
 
+
+	clear_display(0, 0, 0, 0, &s_display);
 	return &s_display;
 
 free_glcontext:
@@ -64,6 +66,7 @@ bool update_display(Display* const display)
 
 	return true;
 }
+
 
 } // namespace gp
 

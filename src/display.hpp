@@ -15,8 +15,11 @@ extern Display* create_display(const char* title, int w, int h);
 extern void destroy_display(Display* display);
 extern bool update_display(Display* display);
 
-inline
-void clear_display(const float r, const float g, const float b, const float a)
+inline void clear_display(const float r,
+                          const float g,
+                          const float b,
+                          const float a,
+                          Display* const /*display*/)
 {
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT);

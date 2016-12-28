@@ -27,7 +27,7 @@ int main(int /*argc*/, char** /*argv*/)
 			p[2] = aux;
 			ticks = SDL_GetTicks();
 		}
-		gp::clear_display(r, g, b, 1.0f);
+		gp::clear_display(r, g, b, 1.0f, display);
 	}
 
 	gp::destroy_display(display);
