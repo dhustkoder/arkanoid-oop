@@ -64,21 +64,7 @@ include_directories("${GPROJ_SRC_DIR}")
 
 # specific platform builds
 if (${TARGET_OS} STREQUAL "Linux")
-	execute_process(COMMAND sdl2-config --cflags OUTPUT_VARIABLE SDL2_CFLAGS
-		OUTPUT_STRIP_TRAILING_WHITESPACE)
-	execute_process(COMMAND sdl2-config --libs OUTPUT_VARIABLE SDL2_LIBS
-		OUTPUT_STRIP_TRAILING_WHITESPACE)
-	
-	if ("${SDL2_CFLAGS}" STREQUAL "" OR "${SDL2_LIBS}" STREQUAL "")
-		message(FATAL_ERROR "Couldn't execute sdl2-config properly."
-			" Make sure you have SDL2 development library installed.")
-	endif()
-
-	message(STATUS "SDL2 CFLAGS: ${SDL2_CFLAGS}.")
-	message(STATUS "SDL2 LIBS: ${SDL2_LIBS}.")
-
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SDL2_CFLAGS}")
-	set(GPROJ_LINK_LIBRARIES "-lc ${SDL2_LIBS} -lGLEW -lGLU -lGL")
+	set(GPROJ_LINK_LIBRARIES "-lc -lGLEW -lglfw -lGL")
 else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()
