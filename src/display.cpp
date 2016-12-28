@@ -48,7 +48,7 @@ free_sdl:
 void destroy_display(Display* const display)
 {
 	SDL_GL_DeleteContext(display->glcontext);
-	SDL_DestroyWindow(display-win);
+	SDL_DestroyWindow(display->win);
 	SDL_Quit();
 }
 
