@@ -44,6 +44,6 @@ constexpr Finally<Fn> finally(Fn&& func)
 }
 
 
-}
+} // namespace gp
 #endif
 
