@@ -8,7 +8,7 @@ Meshes* create_meshes(Vertex* const data, const long height, const long width)
 {
 	const auto data_size = sizeof(Vertex) * height * width;
 	Meshes* const meshes =
-	  static_cast<Meshes*>(malloc(sizeof(Meshes) + data_size));
+		static_cast<Meshes*>(malloc(sizeof(Meshes) + data_size));
 		
 	if (meshes == nullptr) {
 		perror("");

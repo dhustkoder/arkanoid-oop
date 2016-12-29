@@ -28,7 +28,7 @@ int main(int /*argc*/, char** /*argv*/)
 	}
 
 	do {
-		gp::clear_display(0, 0.5f, 0, 1, display);
+		gp::clear_display(0, 0.5f, 1, 1, display);
 		gp::draw_meshes(*meshes);
 	} while (update_display(display));
 
