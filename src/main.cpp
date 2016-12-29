@@ -3,16 +3,19 @@
 #include <time.h>
 #include "display.hpp"
 #include "meshes.hpp"
+#include "finally.hpp"
 
 int main(int /*argc*/, char** /*argv*/)
 {
-	int ret = EXIT_SUCCESS;
-
 	gp::Display* const display = 
 	  gp::create_display("Hello gproj!", 800, 600);
 
 	if (display == nullptr)
 		return EXIT_FAILURE;
+
+	const auto display_guard = gp::finally([display] {
+		gp::destroy_display(display);
+	});
 
 	gp::Vertex vertices[] = {
 		{-0.9f, -0.9f, 0},
@@ -22,10 +25,12 @@ int main(int /*argc*/, char** /*argv*/)
 	
 	gp::Meshes* const meshes = gp::create_meshes(&vertices[0], 1, 3);
 
-	if (meshes == nullptr) {
-		ret = EXIT_FAILURE;
-		goto free_display;
-	}
+	if (meshes == nullptr)
+		return EXIT_FAILURE;
+
+	const auto meshes_guard = gp::finally([meshes] {
+		destroy_meshes(meshes);
+	});
 
 	// draw both buffers
 	for (int i = 0; i < 2; ++i) {
@@ -36,21 +41,17 @@ int main(int /*argc*/, char** /*argv*/)
 
 	// just show to the screen
 	long fps = 0;
-	auto start_clocks = clock();
+	clock_t start_time = time(nullptr);;
 	while (update_display(display)) {
 		++fps;
-		if ((clock() - start_clocks) > CLOCKS_PER_SEC) {
+		if ((time(nullptr) - start_time) >= 1) {
 			printf("FPS: %ld\n", fps);
 			fps = 0;
-			start_clocks = clock();
+			start_time = time(nullptr);
 		}
 	};
 
-
-	gp::destroy_meshes(meshes);
-free_display:
-	gp::destroy_display(display);
-	return ret;
+	return EXIT_SUCCESS;
 }
 
 
