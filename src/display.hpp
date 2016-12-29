@@ -1,14 +1,12 @@
 #ifndef GPRO_DISPLAY_H_
 #define GPRO_DISPLAY_H_
 #include <GL/glew.h>
-#include "SDL.h"
+#include <GLFW/glfw3.h>
 
 namespace gp {
 
 struct Display {
-	SDL_Window* win;
-	SDL_GLContext glcontext;
-	SDL_Event events;
+	GLFWwindow* window;
 };
 
 extern Display* create_display(const char* title, int w, int h);

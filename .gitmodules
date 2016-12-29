@@ -4,3 +4,6 @@
 [submodule "externals/SDL2"]
 	path = externals/SDL2
 	url = https://github.com/dhustkoder/SDL2
+[submodule "externals/glfw"]
+	path = externals/glfw
+	url = https://github.com/dhustkoder/glfw
