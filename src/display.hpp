@@ -11,7 +11,14 @@ struct Display {
 
 extern Display* create_display(const char* title, int w, int h);
 extern void destroy_display(Display* display);
-extern bool update_display(Display* display);
+
+
+inline bool update_display(Display* const display)
+{
+	glfwPollEvents();
+	glfwSwapBuffers(display->window);
+	return glfwWindowShouldClose(display->window) == 0;
+}
 
 inline void clear_display(const float r,
                           const float g,

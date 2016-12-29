@@ -17,7 +17,6 @@ Display* create_display(const char* const title, const int w, const int h)
 	GLFWwindow* const window = glfwCreateWindow(w, h, title, NULL, NULL);
 	if (window == nullptr)
 		goto free_glfw;
-
 	
 	glfwMakeContextCurrent(window);
 
@@ -28,7 +27,7 @@ Display* create_display(const char* const title, const int w, const int h)
 	}
 
 	s_display = { window };
-	clear_display(0, 0, 0, 1, &s_display);
+	//glfwSwapInterval(1);
 	return &s_display;
 
 free_window:
@@ -45,12 +44,6 @@ void destroy_display(Display* const display)
 }
 
 
-bool update_display(Display* const display)
-{
-	glfwPollEvents();
-	glfwSwapBuffers(display->window);
-	return glfwWindowShouldClose(display->window) == 0;
-}
 
 
 } // namespace gp

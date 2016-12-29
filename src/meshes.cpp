@@ -41,12 +41,7 @@ void destroy_meshes(Meshes* const meshes)
 	free(meshes);
 }
 
-void draw_meshes(const Meshes& meshes)
-{
-	glBindVertexArray(meshes.vertex_array_obj);
-	glDrawArrays(GL_TRIANGLES, 0, meshes.height * meshes.width);
-	glBindVertexArray(0);
-}
+
 
 
 } // namespace gp

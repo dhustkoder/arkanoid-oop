@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
 #include "display.hpp"
 #include "meshes.hpp"
 
@@ -25,10 +27,24 @@ int main(int /*argc*/, char** /*argv*/)
 		goto free_display;
 	}
 
-	do {
-		gp::clear_display(0, 0.5f, 1, 1, display);
+	// draw both buffers
+	for (int i = 0; i < 2; ++i) {
+		gp::clear_display(0, 0.5f, 0.3f, 1, display);
 		gp::draw_meshes(*meshes);
-	} while (update_display(display));
+		gp::update_display(display);
+	}
+
+	// just show to the screen
+	long fps = 0;
+	auto start_clocks = clock();
+	while (update_display(display)) {
+		++fps;
+		if ((clock() - start_clocks) > CLOCKS_PER_SEC) {
+			printf("FPS: %ld\n", fps);
+			fps = 0;
+			start_clocks = clock();
+		}
+	};
 
 
 	gp::destroy_meshes(meshes);

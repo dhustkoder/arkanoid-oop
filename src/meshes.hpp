@@ -22,7 +22,13 @@ struct Meshes {
 
 extern Meshes* create_meshes(Vertex* data, long height, long width);
 extern void destroy_meshes(Meshes* meshes);
-extern void draw_meshes(const Meshes& meshes);
+
+inline void draw_meshes(const Meshes& meshes)
+{
+	glBindVertexArray(meshes.vertex_array_obj);
+	glDrawArrays(GL_TRIANGLES, 0, meshes.height * meshes.width);
+	glBindVertexArray(0);
+}
 
 
 } // namespace gp
