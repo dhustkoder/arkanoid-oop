@@ -12,15 +12,13 @@ int main(int /*argc*/, char** /*argv*/)
 	if (display == nullptr)
 		return EXIT_FAILURE;
 
-	gp::Vertex vertices[1][3] = {
-		{
-			{-0.5f, -0.5f, 0},
-			{0, 0.5f, 0},
-			{0.5, -0.5, 0}
-		}
+	gp::Vertex vertices[] = {
+		{-0.9f, -0.9f, 0},
+		{0, 0.9f, 0},
+		{0.9f, -0.9f, 0}
 	};
 	
-	gp::Meshes* const meshes = gp::create_meshes(&vertices[0][0], 1, 3);
+	gp::Meshes* const meshes = gp::create_meshes(&vertices[0], 1, 3);
 
 	if (meshes == nullptr) {
 		ret = EXIT_FAILURE;
