@@ -20,7 +20,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O3 -Werror -fstrict-aliasing \
 	-fdata-sections -fno-unwind-tables -fno-asynchronous-unwind-tables \
 	-ffast-math")
 
-set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG -O1 -g3")
+set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG -O0 -g3")
 
 
 if (NOT CMAKE_BUILD_TYPE)

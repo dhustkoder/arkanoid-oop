@@ -7,18 +7,32 @@ static Display s_display;
 
 Display* create_display(const char* const title, const int w, const int h)
 {
-	if (!glfwInit())
-		return nullptr;
+	GLenum glew_ret;
 
-	/* Create a windowed mode window and its OpenGL context */
+	if (glfwInit() == 0) {
+		fprintf(stderr, "Couldn't initialize %s\n", "glfw");
+		return nullptr;
+	}
+
 	GLFWwindow* const window = glfwCreateWindow(w, h, title, NULL, NULL);
 	if (window == nullptr)
 		goto free_glfw;
 
+	
 	glfwMakeContextCurrent(window);
+
+	glew_ret = glewInit();
+	if (glew_ret != GLEW_OK) {
+		fprintf(stderr, "%s\n", glewGetErrorString(glew_ret));
+		goto free_window;
+	}
+
 	s_display = { window };
+	clear_display(0, 0, 0, 1, &s_display);
 	return &s_display;
 
+free_window:
+	glfwDestroyWindow(window);
 free_glfw:
 	glfwTerminate();
 	return nullptr;
@@ -33,8 +47,8 @@ void destroy_display(Display* const display)
 
 bool update_display(Display* const display)
 {
-	glfwSwapBuffers(display->window);
 	glfwPollEvents();
+	glfwSwapBuffers(display->window);
 	return glfwWindowShouldClose(display->window) == 0;
 }
 

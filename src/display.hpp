@@ -1,5 +1,5 @@
-#ifndef GPRO_DISPLAY_H_
-#define GPRO_DISPLAY_H_
+#ifndef GPRO_DISPLAY_HPP_
+#define GPRO_DISPLAY_HPP_
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
