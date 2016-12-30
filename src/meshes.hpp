@@ -22,7 +22,7 @@ extern void release_meshes(Meshes* meshes);
 inline void draw_meshes(const Meshes& meshes)
 {
 	glBindVertexArray(meshes.vao_id);
-	glDrawArrays(GL_TRIANGLES, 0, meshes.count * 2);
+	glDrawArrays(GL_TRIANGLES, 0, meshes.count);
 	glBindVertexArray(0);
 }
 

@@ -11,6 +11,7 @@ bool load_meshes(const Vertex* const vertices,
 {
 	const auto vertices_size = sizeof(*vertices) * count;
 	const auto colors_size = sizeof(*colors) * count;
+	meshes->count = vertices_size + colors_size;
 
 	glGenVertexArrays(1, &meshes->vao_id);
 	glBindVertexArray(meshes->vao_id);
