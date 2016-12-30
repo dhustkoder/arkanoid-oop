@@ -5,28 +5,24 @@
 
 namespace gp {
 
-using Vertex = glm::vec3;
-
-enum VertexBuffers {
-	kVertexBufferPosition,
-	kVertexBuffersSize
-};
+using Vertex = glm::vec4[3];
+using Color = glm::vec4[3];
 
 struct Meshes {
-	GLuint vertex_array_obj;
-	GLuint vertex_array_buffers[kVertexBuffersSize];
-	long height;
-	long width;
-	Vertex data[];
+	GLuint vao_id;
+	GLuint vbo_id;
+	GLuint cbo_id;
+	long count;
 };
 
-extern Meshes* create_meshes(Vertex* data, long height, long width);
-extern void destroy_meshes(Meshes* meshes);
+extern bool load_meshes(const Vertex* vertices, const Color* colors,
+                        long count, Meshes* meshes);
+extern void release_meshes(Meshes* meshes);
 
 inline void draw_meshes(const Meshes& meshes)
 {
-	glBindVertexArray(meshes.vertex_array_obj);
-	glDrawArrays(GL_TRIANGLES, 0, meshes.height * meshes.width);
+	glBindVertexArray(meshes.vao_id);
+	glDrawArrays(GL_TRIANGLES, 0, meshes.count * 2);
 	glBindVertexArray(0);
 }
 

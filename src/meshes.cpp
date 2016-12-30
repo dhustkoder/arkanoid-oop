@@ -4,41 +4,44 @@
 
 namespace gp {
 
-Meshes* create_meshes(Vertex* const data, const long height, const long width)
+bool load_meshes(const Vertex* const vertices,
+                 const Color* const colors,
+                 const long count,
+                 Meshes* const meshes)
 {
-	const auto data_size = sizeof(Vertex) * height * width;
-	Meshes* const meshes =
-		static_cast<Meshes*>(malloc(sizeof(Meshes) + data_size));
-		
-	if (meshes == nullptr) {
-		perror("");
-		return nullptr;
-	}
+	const auto vertices_size = sizeof(*vertices) * count;
+	const auto colors_size = sizeof(*colors) * count;
 
-	meshes->height = height;
-	meshes->width = width;
-	memcpy(&meshes->data[0], &data[0], data_size);
+	glGenVertexArrays(1, &meshes->vao_id);
+	glBindVertexArray(meshes->vao_id);
 
-	glGenVertexArrays(1, &meshes->vertex_array_obj);
-	glBindVertexArray(meshes->vertex_array_obj);
-	glGenBuffers(kVertexBuffersSize, meshes->vertex_array_buffers);
-	glBindBuffer(GL_ARRAY_BUFFER,
-	             meshes->vertex_array_buffers[kVertexBufferPosition]);
-	glBufferData(GL_ARRAY_BUFFER, data_size, meshes->data, GL_STATIC_DRAW);
-
+	glGenBuffers(1, &meshes->vbo_id);
+	glBindBuffer(GL_ARRAY_BUFFER, meshes->vbo_id);
+	glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glGenBuffers(1, &meshes->cbo_id);
+	glBindBuffer(GL_ARRAY_BUFFER, meshes->cbo_id);
+	glBufferData(GL_ARRAY_BUFFER, colors_size, colors, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	const auto error_check = glGetError();
+	if (error_check != GL_NO_ERROR) {
+		fprintf(stderr, "%s\n", glewGetErrorString(error_check));
+		release_meshes(meshes);
+		return false;
+	}
 
 	glBindVertexArray(0);
 
-
-	return meshes;
+	return true;
 }
 
-void destroy_meshes(Meshes* const meshes)
+void release_meshes(Meshes* const meshes)
 {
-	glDeleteVertexArrays(1, &meshes->vertex_array_obj);
-	free(meshes);
+	glDeleteVertexArrays(1, &meshes->vao_id);
 }
 
 
