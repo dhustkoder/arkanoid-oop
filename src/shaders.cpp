@@ -5,7 +5,7 @@
 
 namespace gp {
 
-constexpr const GLchar* const kVertexShader = "#version 130\n"
+constexpr const GLchar* const kVertexShader = "#version 400\n"
 	"layout(location=0) in vec4 in_Position;\n"
 	"layout(location=1) in vec4 in_Color;\n"
 	"out vec4 ex_Color;\n"
@@ -15,11 +15,11 @@ constexpr const GLchar* const kVertexShader = "#version 130\n"
 	"	ex_Color = in_Color;\n"
 	"}\n";
 
-constexpr const GLchar* const kFragmentShader = "#version 130\n"
+constexpr const GLchar* const kFragmentShader = "#version 400\n"
 	"in vec4 ex_Color;\n"
 	"out vec4 out_Color;\n"
 	"void main(void)\n"
-	"{\n"\
+	"{\n"
 	"	out_Color = ex_Color;\n"
 	"}\n";
 
@@ -42,8 +42,9 @@ Shaders* create_shaders()
 	constexpr const GLchar* const shader_sources[] {
 		kVertexShader, kFragmentShader
 	};
-	constexpr GLint lengths[] {
-		strlen(kVertexShader), strlen(kFragmentShader)
+	const GLint lengths[] {
+		static_cast<GLint>(strlen(kVertexShader)),
+		static_cast<GLint>(strlen(kFragmentShader))
 	};
 
 	const auto num_of_shaders = sizeof(shader_types) / sizeof(GLenum);

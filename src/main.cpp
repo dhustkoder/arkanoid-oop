@@ -47,7 +47,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 	// just show to the screen
 	long fps = 0;
-	clock_t start_time = time(nullptr);;
+	time_t start_time = time(nullptr);;
 	while (update_display(display)) {
 		clear_display(0, 0.5f, 0.3f, 1, display);
 		bind_shaders(*shaders);

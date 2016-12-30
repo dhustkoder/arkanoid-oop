@@ -133,10 +133,12 @@
     <ClCompile Include="..\..\..\src\display.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\meshes.cpp" />
+    <ClCompile Include="..\..\..\src\shaders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\display.hpp" />
     <ClInclude Include="..\..\..\src\meshes.hpp" />
+    <ClInclude Include="..\..\..\src\shaders.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
