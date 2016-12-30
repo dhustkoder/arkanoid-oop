@@ -5,26 +5,21 @@
 
 namespace gp {
 
-struct Display {
-	GLFWwindow* window;
-};
-
-extern Display* create_display(const char* title, int w, int h);
-extern void destroy_display(Display* display);
+	
+extern bool init_display(const char* title, int w, int h);
+extern void close_display();
 
 
-inline bool update_display(Display* const display)
+inline bool update_display()
 {
+	extern GLFWwindow* window;
 	glfwPollEvents();
-	glfwSwapBuffers(display->window);
-	return glfwWindowShouldClose(display->window) == 0;
+	glfwSwapBuffers(window);
+	return glfwWindowShouldClose(window) == 0;
 }
 
-inline void clear_display(const float r,
-                          const float g,
-                          const float b,
-                          const float a,
-                          Display* const /*display*/)
+inline void clear_display(const float r,const float g,
+                           const float b, const float a)
 {
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT);

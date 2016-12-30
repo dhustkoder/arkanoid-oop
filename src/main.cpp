@@ -11,14 +11,11 @@ int main(int /*argc*/, char** /*argv*/)
 {
 	using namespace gp;
 
-	Display* const display = 
-	  create_display("Hello gproj!", 800, 600);
-
-	if (display == nullptr)
+	if (!init_display("Hello gproj!", 800, 600))
 		return EXIT_FAILURE;
 
-	const auto display_guard = finally([display] {
-		destroy_display(display);
+	const auto display_guard = finally([] {
+		close_display();
 	});
 
 	Vertex vertices {
@@ -54,8 +51,8 @@ int main(int /*argc*/, char** /*argv*/)
 	long fps = 0;
 	time_t start_time = time(nullptr);
 
-	while (update_display(display)) {
-		clear_display(0, 0.5f, 0.3f, 1, display);
+	while (update_display()) {
+		clear_display(0, 0.5f, 0.3f, 1);
 		bind_shaders(*shaders);
 		draw_meshes(meshes);
 

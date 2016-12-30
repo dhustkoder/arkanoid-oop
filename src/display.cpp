@@ -3,9 +3,11 @@
 
 namespace gp {
 
-static Display s_display;
 
-Display* create_display(const char* const title, const int w, const int h)
+GLFWwindow* window = nullptr;
+static void glfw_error_callback(int error, const char* description);
+
+bool init_display(const char* const title, const int w, const int h)
 {
 	constexpr const auto infosize = 4;
 	constexpr GLenum infonums[infosize] {
@@ -17,13 +19,12 @@ Display* create_display(const char* const title, const int w, const int h)
 		"SHADING LANGUAGE VERSION"
 	};
 
-	GLenum glew_ret;
-	GLFWwindow* window;
+	GLenum errcode;
 
-	if (glfwInit() == 0) {
-		fprintf(stderr, "Couldn't initialize %s\n", "glfw");
-		return nullptr;
-	}
+	glfwSetErrorCallback(&glfw_error_callback);
+
+	if (glfwInit() == 0)
+		return false;
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
@@ -34,9 +35,8 @@ Display* create_display(const char* const title, const int w, const int h)
 	
 	glfwMakeContextCurrent(window);
 
-	glew_ret = glewInit();
-	if (glew_ret != GLEW_OK) {
-		fprintf(stderr, "%s\n", glewGetErrorString(glew_ret));
+	if ((errcode = glewInit()) != GLEW_OK) {
+		fprintf(stderr, "%s\n", glewGetErrorString(errcode));
 		goto free_window;
 	}
 
@@ -44,26 +44,27 @@ Display* create_display(const char* const title, const int w, const int h)
 	for (size_t i = 0; i < infosize; ++i)
 		printf("%s: %s\n", infostrs[i], glGetString(infonums[i]));
 
-	s_display = { window };
 	glfwSwapInterval(0);
-	return &s_display;
+	return true;
 
 free_window:
 	glfwDestroyWindow(window);
 free_glfw:
 	glfwTerminate();
-	return nullptr;
+	return false;
 }
 
-
-void destroy_display(Display* const display)
+void close_display()
 {
-	glfwDestroyWindow(display->window);
+	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
 
-
+void glfw_error_callback(int error, const char* description)
+{
+	fprintf(stderr, "Error %d: %s\n", error, description);
+}
 
 } // namespace gp
 
