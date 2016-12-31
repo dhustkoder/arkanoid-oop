@@ -4,7 +4,7 @@
 #include "finally.hpp"
 #include "display.hpp"
 #include "meshes.hpp"
-#include "shaders.hpp"
+#include "shader_program.hpp"
 
 
 int main(int /*argc*/, char** /*argv*/)
@@ -18,6 +18,8 @@ int main(int /*argc*/, char** /*argv*/)
 		close_display();
 	});
 
+	set_display_vsync(false);
+
 	Vertex vertices {
 		{-0.8f, -0.8f, 0.0f, 1.0f },
 		{ 0.0f,  0.8f, 0.0f, 1.0f },
@@ -30,16 +32,27 @@ int main(int /*argc*/, char** /*argv*/)
 		{ 0.0f, 0.0f, 1.0f, 1.0f }
 	};
 
-	Shaders* const shaders = create_shaders();
-	if (shaders == nullptr)
+	constexpr const char* const shader_sources[] {
+		"../shaders/vertex.glsl",
+		"../shaders/fragment.glsl"
+	};
+
+	constexpr GLenum shader_types[] {
+		GL_VERTEX_SHADER,
+		GL_FRAGMENT_SHADER
+	};
+
+	ShaderProgram* const shader_program =
+	  create_shader_program(shader_sources, shader_types, 2);
+
+	if (shader_program == nullptr)
 		return EXIT_FAILURE;
 
-	const auto shaders_guard = finally([shaders] {
-		destroy_shaders(shaders);
+	const auto shader_program_guard = finally([shader_program] {
+		destroy_shader_program(shader_program);
 	});
 
 	Meshes meshes;
-
 	if (!load_meshes(&vertices, &colors, 1, &meshes))
 		return EXIT_FAILURE;
 
@@ -53,7 +66,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 	while (update_display()) {
 		clear_display(0, 0.5f, 0.3f, 1);
-		bind_shaders(*shaders);
+		bind_shader_program(*shader_program);
 		draw_meshes(meshes);
 
 		++fps;
@@ -62,7 +75,7 @@ int main(int /*argc*/, char** /*argv*/)
 			fps = 0;
 			start_time = time(nullptr);
 		}
-	};
+	}
 
 	return EXIT_SUCCESS;
 }

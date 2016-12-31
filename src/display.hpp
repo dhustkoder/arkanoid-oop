@@ -4,18 +4,21 @@
 #include <GLFW/glfw3.h>
 
 namespace gp {
-
 	
 extern bool init_display(const char* title, int w, int h);
 extern void close_display();
 
+inline void set_display_vsync(const bool vsync)
+{
+	glfwSwapInterval(vsync ? 1 : 0);
+}
 
 inline bool update_display()
 {
-	extern GLFWwindow* window;
+	extern GLFWwindow* glfw_window;
 	glfwPollEvents();
-	glfwSwapBuffers(window);
-	return glfwWindowShouldClose(window) == 0;
+	glfwSwapBuffers(glfw_window);
+	return glfwWindowShouldClose(glfw_window) == 0;
 }
 
 inline void clear_display(const float r,const float g,
