@@ -107,6 +107,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/wd 4200 %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -133,12 +134,12 @@
     <ClCompile Include="..\..\..\src\display.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\meshes.cpp" />
-    <ClCompile Include="..\..\..\src\shaders.cpp" />
+    <ClCompile Include="..\..\..\src\shader_program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\display.hpp" />
     <ClInclude Include="..\..\..\src\meshes.hpp" />
-    <ClInclude Include="..\..\..\src\shaders.hpp" />
+    <ClInclude Include="..\..\..\src\shader_program.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
