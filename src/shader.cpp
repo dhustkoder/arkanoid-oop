@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "shader_program.hpp"
+#include "shader.hpp"
 #include "finally.hpp"
 
 namespace gp {
@@ -104,13 +104,11 @@ bool compile_and_link(const GLchar* const* sources,
 		}
 	});
 
-	for (int i = 0; i < count; ++i) {
+	for (long i = 0; i < count; ++i) {
 		if ((program->shaders[i] = glCreateShader(types[i])) == 0)
 			return false;
 
-		const GLint length = static_cast<GLint>(strlen(sources[i]));
-
-		glShaderSource(program->shaders[i], 1, &sources[i], &length);
+		glShaderSource(program->shaders[i], 1, &sources[i], nullptr);
 		glCompileShader(program->shaders[i]);
 
 		if (check_compile_errors(program->shaders[i]))

@@ -1,5 +1,5 @@
-#ifndef GPROJ_SHADER_PROGRAM_HPP_
-#define GPROJ_SHADER_PROGRAM_HPP_
+#ifndef GPROJ_SHADER_HPP_
+#define GPROJ_SHADER_HPP_
 #include <GL/glew.h>
 
 namespace gp {

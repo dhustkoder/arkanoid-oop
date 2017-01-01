@@ -3,8 +3,8 @@
 #include <time.h>
 #include "finally.hpp"
 #include "display.hpp"
-#include "meshes.hpp"
-#include "shader_program.hpp"
+#include "vertex.hpp"
+#include "shader.hpp"
 
 
 int main(int /*argc*/, char** /*argv*/)
@@ -20,16 +20,21 @@ int main(int /*argc*/, char** /*argv*/)
 
 	set_display_vsync(false);
 
-	Vertex vertices {
-		{-0.8f, -0.8f, 0.0f, 1.0f },
-		{ 0.0f,  0.8f, 0.0f, 1.0f },
-		{ 0.8f, -0.8f, 0.0f, 1.0f }
+ 	const Vertex triangle {
+		{ -0.8f, -0.8f, 0.0f, 1.0f },
+		{  0.0f,  0.8f, 0.0f, 1.0f },
+		{  0.8f, -0.8f, 0.0f, 1.0f }
 	};
-	
-	Color colors {
+
+	const Vertex colors {
 		{ 1.0f, 0.0f, 0.0f, 1.0f },
 		{ 0.0f, 1.0f, 0.0f, 1.0f },
 		{ 0.0f, 0.0f, 1.0f, 1.0f }
+	};
+
+	const Vertex data[] {
+		triangle,
+		colors,
 	};
 
 	constexpr const char* const shader_sources[] {
@@ -52,22 +57,24 @@ int main(int /*argc*/, char** /*argv*/)
 		destroy_shader_program(shader_program);
 	});
 
-	Meshes meshes;
-	if (!load_meshes(&vertices, &colors, 1, &meshes))
+	VertexArray* const vao = create_vertex_array(data, 2);
+
+	if (vao == nullptr)
 		return EXIT_FAILURE;
 
-	const auto meshes_guard = finally([&meshes] {
-		release_meshes(&meshes);
+	const auto vao_guard = finally([vao] {
+		destroy_vertex_array(vao);
 	});
 
 	// just show to the screen
 	long fps = 0;
 	time_t start_time = time(nullptr);
 
+	bind_shader_program(*shader_program);
+
 	while (update_display()) {
-		clear_display(0, 0.5f, 0.3f, 1);
-		bind_shader_program(*shader_program);
-		draw_meshes(meshes);
+		clear_display(0, 0, 0, 1);
+		draw_vertex_array(vao);
 
 		++fps;
 		if ((time(nullptr) - start_time) >= 1) {
