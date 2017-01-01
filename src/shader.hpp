@@ -4,19 +4,19 @@
 
 namespace gp {
 
-struct ShaderProgram {
+struct Shader {
 	GLuint id;
 	long count;
 	GLuint shaders[];
 };
 
-extern ShaderProgram* create_shader_program(const char* const* filepaths,
-                                            const GLenum* types,
-                                            long count);
+extern Shader* create_shader(const char* const* filepaths,
+                             const GLenum* types,
+                             long count);
 
-extern void destroy_shader_program(ShaderProgram* program);
+extern void destroy_shader(Shader* program);
 
-inline void bind_shader_program(const ShaderProgram& program)
+inline void bind_shader(const Shader& program)
 {
 	glUseProgram(program.id);
 }

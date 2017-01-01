@@ -16,7 +16,7 @@ static GLchar* read_source(const char* filepath);
 static bool compile_and_link(const GLchar* const* sources,
                              const GLenum* types,
 			     long count,
-			     ShaderProgram* program);
+			     Shader* program);
 
 static bool check_compile_errors(GLuint shader_id);
 static bool validate_program(GLuint program_id);
@@ -24,9 +24,9 @@ static bool validate_program(GLuint program_id);
 
 
 
-ShaderProgram* create_shader_program(const char* const* const filepaths,
-                                     const GLenum* const types,
-                                     const long count)
+Shader* create_shader(const char* const* const filepaths,
+                      const GLenum* const types,
+                      const long count)
 {
 	GLchar** const sources =
 	  static_cast<GLchar**>(calloc(count, sizeof(GLchar*)));
@@ -45,9 +45,8 @@ ShaderProgram* create_shader_program(const char* const* const filepaths,
 			return nullptr;
 	}
 
-	const auto memsize = sizeof(ShaderProgram) + sizeof(GLuint) * count;
-	ShaderProgram* const program =
-	  static_cast<ShaderProgram*>(malloc(memsize));
+	const auto memsize = sizeof(Shader) + sizeof(GLuint) * count;
+	Shader* const program = static_cast<Shader*>(malloc(memsize));
 	
 	if (program == nullptr) {
 		perror("");
@@ -78,7 +77,7 @@ ShaderProgram* create_shader_program(const char* const* const filepaths,
 }
 
 
-void destroy_shader_program(ShaderProgram* const program)
+void destroy_shader(Shader* const program)
 {	
 	for (long i = 0; i < program->count; ++i) {
 		glDetachShader(program->id, program->shaders[i]);
@@ -93,7 +92,7 @@ void destroy_shader_program(ShaderProgram* const program)
 bool compile_and_link(const GLchar* const* sources,
 		      const GLenum* const types,
 		      const long count,
-		      ShaderProgram* const program)
+		      Shader* const program)
 {
 	memset(program->shaders, 0, sizeof(GLuint) * count);
 	

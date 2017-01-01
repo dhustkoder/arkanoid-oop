@@ -6,8 +6,7 @@ namespace gp {
 
 
 GLFWwindow* glfw_window = nullptr;
-
-static void glfw_error_callback(int error, const char* description);
+void glfw_error_callback(int error, const char* description);
 
 bool init_display(const char* const title, const int w, const int h)
 {

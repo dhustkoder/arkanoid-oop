@@ -3,8 +3,8 @@
 #include <time.h>
 #include "finally.hpp"
 #include "display.hpp"
-#include "vertex.hpp"
 #include "shader.hpp"
+#include "mesh.hpp"
 
 
 int main(int /*argc*/, char** /*argv*/)
@@ -20,23 +20,6 @@ int main(int /*argc*/, char** /*argv*/)
 
 	set_display_vsync(false);
 
- 	const Vertex triangle {
-		{ -0.8f, -0.8f, 0.0f, 1.0f },
-		{  0.0f,  0.8f, 0.0f, 1.0f },
-		{  0.8f, -0.8f, 0.0f, 1.0f }
-	};
-
-	const Vertex colors {
-		{ 1.0f, 0.0f, 0.0f, 1.0f },
-		{ 0.0f, 1.0f, 0.0f, 1.0f },
-		{ 0.0f, 0.0f, 1.0f, 1.0f }
-	};
-
-	const Vertex data[] {
-		triangle,
-		colors,
-	};
-
 	constexpr const char* const shader_sources[] {
 		"../shaders/vertex.glsl",
 		"../shaders/fragment.glsl"
@@ -47,34 +30,65 @@ int main(int /*argc*/, char** /*argv*/)
 		GL_FRAGMENT_SHADER
 	};
 
-	ShaderProgram* const shader_program =
-	  create_shader_program(shader_sources, shader_types, 2);
-
-	if (shader_program == nullptr)
+	Shader* const shader = create_shader(shader_sources, shader_types, 2);
+	if (shader == nullptr)
 		return EXIT_FAILURE;
 
-	const auto shader_program_guard = finally([shader_program] {
-		destroy_shader_program(shader_program);
+	const auto shader_guard = finally([shader] {
+		destroy_shader(shader);
 	});
 
-	VertexArray* const vao = create_vertex_array(data, 2);
+	bind_shader(*shader);
 
-	if (vao == nullptr)
+
+	const Vertex quad[2] {
+		{
+			{-0.8f,  0.8f, 0.0f, 1.0f },
+			{ 0.8f,  0.8f, 0.0f, 1.0f },
+			{-0.8f, -0.8f, 0.0f, 1.0f }
+		},
+
+		{
+			{-0.8f, -0.8f, 0.0f, 1.0f },
+			{ 0.8f,  0.8f, 0.0f, 1.0f },
+			{ 0.8f, -0.8f, 0.0f, 1.0f },
+		}
+	};
+
+
+	const Vertex colors[2] {
+		{
+			{ 1.0f, 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f, 1.0f }
+		},
+
+		{
+			{ 0.0f, 0.0f, 1.0f, 1.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f, 1.0f }
+		}
+	};
+
+	const Vertex* const vertices[2] {
+		&quad[0], &colors[0]
+	};
+
+	Mesh* const mesh = create_mesh(vertices, 2, 2);
+	if (mesh == nullptr)
 		return EXIT_FAILURE;
 
-	const auto vao_guard = finally([vao] {
-		destroy_vertex_array(vao);
+	const auto mesh_guard = finally([mesh] {
+		destroy_mesh(mesh);
 	});
 
 	// just show to the screen
 	long fps = 0;
 	time_t start_time = time(nullptr);
 
-	bind_shader_program(*shader_program);
-
 	while (update_display()) {
 		clear_display(0, 0, 0, 1);
-		draw_vertex_array(vao);
+		draw_mesh(*mesh);
 
 		++fps;
 		if ((time(nullptr) - start_time) >= 1) {
