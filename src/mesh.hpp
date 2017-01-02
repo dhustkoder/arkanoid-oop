@@ -5,7 +5,10 @@
 
 namespace gp {
 
-using Vertex = glm::vec4;
+struct Vertex {
+	glm::vec4 pos;
+	glm::vec4 color;
+};
 
 struct Mesh {
 	long vertices_count;
@@ -17,9 +20,9 @@ struct Mesh {
 
 
 extern Mesh* create_mesh(GLenum mode,
-                         const Vertex* const* vertices,
-                         long vertices_arrays_size,
-			 long count);
+                         const Vertex* vertices,
+                         long vertices_count,
+                         long buffers_count);
 
 extern void destroy_mesh(Mesh* mesh);
 
