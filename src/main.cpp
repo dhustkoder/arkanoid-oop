@@ -43,18 +43,25 @@ int main(int /*argc*/, char** /*argv*/)
 
 	const Vertex quad[] {
 		{ {-0.8f,  0.8f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ { 0.8f,  0.8f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ {-0.8f, -0.8f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ { 0.8f, -0.8f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } }
+		{ {-0.5f,  0.8f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ {-0.8f,  0.5f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ {-0.5f,  0.5f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+
+		{ {-0.4f,  0.8f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ {-0.1f,  0.8f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ {-0.4f,  0.5f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ {-0.1f,  0.5f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } }
 	};
 
-	Mesh* const mesh = create_mesh(GL_TRIANGLE_STRIP, quad, 4, 1);
+	Mesh* const mesh = create_mesh(GL_TRIANGLE_STRIP, quad, 8);
 	if (mesh == nullptr)
 		return EXIT_FAILURE;
 
 	const auto mesh_guard = finally([mesh] {
 		destroy_mesh(mesh);
 	});
+
+	bind_mesh(*mesh);
 
 	// just show to the screen
 	long fps = 0;

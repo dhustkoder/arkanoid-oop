@@ -12,23 +12,23 @@ struct Vertex {
 
 struct Mesh {
 	long vertices_count;
-	long buffers_count;
 	GLenum mode;
 	GLuint vao_id;
-	GLuint buffers_ids[];
+	GLuint vbo_id;
 };
 
 
-extern Mesh* create_mesh(GLenum mode,
-                         const Vertex* vertices,
-                         long vertices_count,
-                         long buffers_count);
+extern Mesh* create_mesh(GLenum mode, const Vertex vertices[], long vertices_count);
 
 extern void destroy_mesh(Mesh* mesh);
 
-inline void draw_mesh(const Mesh& mesh)
+inline void bind_mesh(const Mesh& mesh)
 {
 	glBindVertexArray(mesh.vao_id);
+}
+
+inline void draw_mesh(const Mesh& mesh)
+{
 	glDrawArrays(mesh.mode, 0, mesh.vertices_count);
 }
 
