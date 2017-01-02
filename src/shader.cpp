@@ -18,8 +18,8 @@ static bool compile_and_link(const GLchar* const* sources,
 			     long count,
 			     Shader* program);
 
-static bool check_compile_errors(GLuint shader_id);
-static bool validate_program(GLuint program_id);
+static bool validade_compilation(GLuint shader_id);
+static bool validade_linkage(GLuint program_id);
 
 
 
@@ -110,7 +110,7 @@ bool compile_and_link(const GLchar* const* sources,
 		glShaderSource(program->shaders[i], 1, &sources[i], nullptr);
 		glCompileShader(program->shaders[i]);
 
-		if (check_compile_errors(program->shaders[i]))
+		if (!validade_compilation(program->shaders[i]))
 			return false;
 
 		glAttachShader(program->id, program->shaders[i]);
@@ -118,7 +118,7 @@ bool compile_and_link(const GLchar* const* sources,
 
 	glLinkProgram(program->id);
 
-	if (!validate_program(program->id))
+	if (!validade_linkage(program->id))
 		return false;
 
 	shaders_guard.Abort();
@@ -126,7 +126,7 @@ bool compile_and_link(const GLchar* const* sources,
 }
 
 
-bool check_compile_errors(const GLuint shader_id)
+bool validade_compilation(const GLuint shader_id)
 {
 	GLint success;
 	
@@ -136,14 +136,14 @@ bool check_compile_errors(const GLuint shader_id)
 		glGetShaderInfoLog(shader_id, kErrorMsgBufferSize,
 		                   nullptr, s_error_msg_buffer);
 		fprintf(stderr, "%s\n", s_error_msg_buffer);
-		return true;
+		return false;
 	}
 
-	return false;
+	return true;
 }
 
 
-bool validate_program(const GLuint program)
+bool validade_linkage(const GLuint program)
 {
 	const auto has_error = [program] {
 		GLint success;	
