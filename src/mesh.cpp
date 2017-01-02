@@ -5,7 +5,8 @@
 
 namespace gp {
 
-Mesh* create_mesh(const Vertex* const* vertices,
+Mesh* create_mesh(const GLenum mode,
+                  const Vertex* const* vertices,
                   const long vertices_arrays_count,
                   const long count)
 {
@@ -22,7 +23,8 @@ Mesh* create_mesh(const Vertex* const* vertices,
 	});
 
 	mesh->buffers_count = count;
-	mesh->vertices_count = vertices_arrays_count * 3;
+	mesh->vertices_count = vertices_arrays_count;
+	mesh->mode = mode;
 
 	GLenum error = glGetError();
 

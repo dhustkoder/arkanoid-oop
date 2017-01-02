@@ -41,40 +41,26 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_shader(*shader);
 
 
-	const Vertex quad[2] {
-		{
-			{-0.8f,  0.8f, 0.0f, 1.0f },
-			{ 0.8f,  0.8f, 0.0f, 1.0f },
-			{-0.8f, -0.8f, 0.0f, 1.0f }
-		},
-
-		{
-			{-0.8f, -0.8f, 0.0f, 1.0f },
-			{ 0.8f,  0.8f, 0.0f, 1.0f },
-			{ 0.8f, -0.8f, 0.0f, 1.0f },
-		}
+	const Vertex quad[] {
+		{-0.8f,  0.8f, 0.0f, 1.0f },
+		{ 0.8f,  0.8f, 0.0f, 1.0f },
+		{-0.8f, -0.8f, 0.0f, 1.0f },
+		{ 0.8f, -0.8f, 0.0f, 1.0f }
 	};
 
 
-	const Vertex colors[2] {
-		{
-			{ 1.0f, 0.0f, 0.0f, 1.0f },
-			{ 0.0f, 1.0f, 0.0f, 1.0f },
-			{ 0.0f, 0.0f, 1.0f, 1.0f }
-		},
-
-		{
-			{ 0.0f, 0.0f, 1.0f, 1.0f },
-			{ 0.0f, 1.0f, 0.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f, 1.0f }
-		}
+	const Vertex colors[] {
+		{ 1.0f, 0.0f, 0.0f, 1.0f },
+		{ 0.0f, 1.0f, 0.0f, 1.0f },
+		{ 0.0f, 0.0f, 1.0f, 1.0f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f }
 	};
 
 	const Vertex* const vertices[2] {
 		&quad[0], &colors[0]
 	};
 
-	Mesh* const mesh = create_mesh(vertices, 2, 2);
+	Mesh* const mesh = create_mesh(GL_TRIANGLE_STRIP, vertices, 4, 2);
 	if (mesh == nullptr)
 		return EXIT_FAILURE;
 
