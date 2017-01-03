@@ -6,7 +6,10 @@ namespace gp {
 
 
 GLFWwindow* glfw_window = nullptr;
-void glfw_error_callback(int error, const char* description);
+Color clear_color { 0.0f, 0.0f, 0.0f, 1.0f };
+
+static void error_callback(int error, const char* description);
+static void key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
 
 bool init_display(const char* const title, const int w, const int h)
 {
@@ -22,15 +25,14 @@ bool init_display(const char* const title, const int w, const int h)
 
 	GLenum errcode;
 
-	glfwSetErrorCallback(&glfw_error_callback);
+	glfwSetErrorCallback(&error_callback);
 
-	if (glfwInit() == 0)
+	if (glfwInit() != GLFW_TRUE)
 		return false;
 
 	auto glfw_guard = finally([] {
 		glfwTerminate();
 	});
-
 	
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfw_window = glfwCreateWindow(w, h, title, NULL, NULL);
@@ -41,8 +43,8 @@ bool init_display(const char* const title, const int w, const int h)
 	auto glfw_window_guard = finally([] {
 		glfwDestroyWindow(glfw_window);
 	});
-	
 
+	glfwSetKeyCallback(glfw_window, &key_callback);
 	glfwMakeContextCurrent(glfw_window);
 
 	if ((errcode = glewInit()) != GLEW_OK) {
@@ -65,9 +67,44 @@ void close_display()
 	glfwTerminate();
 }
 
-void glfw_error_callback(int error, const char* description)
+
+
+void error_callback(const int error, const char* const description)
 {
 	fprintf(stderr, "Error %d: %s\n", error, description);
+}
+
+
+
+void key_callback(GLFWwindow* const win,
+                  const int key,
+                  const int /*scancode*/,
+                  const int action,
+                  const int /*mods*/)
+{
+	printf("KEY: %d\nACTION: %d\n", key, action);
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(win, GLFW_TRUE);
+
+	
+	const auto inc = [] (float& col) {
+		if (col < 1.0f)
+			col += 0.10f;
+	};
+
+	const auto dec = [] (float& col) {
+		if (col > 0.0f)
+			col -= 0.10f;
+	};
+
+	switch (key) {
+	case GLFW_KEY_UP: inc(clear_color.r); break;
+	case GLFW_KEY_DOWN: dec(clear_color.r); break;
+	case GLFW_KEY_RIGHT: inc(clear_color.g); break;
+	case GLFW_KEY_LEFT: dec(clear_color.g); break;
+	case GLFW_KEY_ENTER: inc(clear_color.b); break;
+	case GLFW_KEY_BACKSPACE: dec(clear_color.b); break;
+	}
 }
 
 

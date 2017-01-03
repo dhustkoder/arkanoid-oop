@@ -2,6 +2,7 @@
 #define GPROJ_DISPLAY_HPP_
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "color.hpp"
 
 namespace gp {
 	
@@ -21,10 +22,9 @@ inline bool update_display()
 	return glfwWindowShouldClose(glfw_window) == 0;
 }
 
-inline void clear_display(const float r,const float g,
-                           const float b, const float a)
+inline void clear_display(const Color& color)
 {
-	glClearColor(r, g, b, a);
+	glClearColor(color.r, color.g, color.b, color.a);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
