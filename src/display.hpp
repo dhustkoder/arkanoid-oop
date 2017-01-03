@@ -5,9 +5,14 @@
 #include "color.hpp"
 
 namespace gp {
-	
+
+using KeyCallback = void(*)(void* userdata, int key);
+constexpr const long kMaxKeyCallbacks = 1;
+
 extern bool init_display(const char* title, int w, int h);
 extern void close_display();
+extern bool add_keycallback(void* userdata, KeyCallback callback);
+
 
 inline void set_display_vsync(const bool vsync)
 {
