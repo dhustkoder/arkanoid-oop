@@ -6,10 +6,16 @@
 
 namespace gp {
 
+struct Vertex {
+	Vec3f pos;
+	Vec4f color;
+};
+
+
 extern bool initialize_renderer();
 extern void terminate_renderer();
-extern void draw_elements(GLenum mode, const std::vector<Vec3f>& vertices, const std::vector<GLuint>& indices);
-extern void draw_arrays(GLenum mode, const std::vector<Vec3f>& vertices);
+extern void draw_elements(GLenum mode, const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+extern void draw_arrays(GLenum mode, const std::vector<Vertex>& vertices);
 
 
 inline void set_wireframe_mode(const bool on)

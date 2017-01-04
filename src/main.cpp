@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <GL/glew.h>
 #include "finally.hpp"
 #include "display.hpp"
@@ -19,36 +20,6 @@ int main(int /*argc*/, char** /*argv*/)
 		terminate_systems();
 	});
 
-/*
-	const std::vector<Vec3f> verts {
-		{  0.5f,  0.5f,  0.0f }, // top right
-		{  0.5f, -0.5f,  0.0f }, // bottom right
-		{ -0.5f, -0.5f,  0.0f }, // bottom left
-		{ -0.5f,  0.5f,  0.0f }  // top left
-	};
-
-	const std::vector<GLuint> inds {
-		0, 1, 3, // first triangle
-		1, 2, 3 // second triangle
-	};
-*/
-
-	const std::vector<Vec3f> t0 {
-		{ -0.4f,  0.0f,  0.0f },
-		{ -0.8f, -0.4f,  0.0f },
-		{  0.0f, -0.4f,  0.0f },
-
-		{  0.4f,  0.0f,  0.0f },
-		{  0.0f, -0.4f,  0.0f },
-		{  0.8f, -0.4f,  0.0f },
-
-		{  0.0f,  0.4f,  0.0f },
-		{ -0.4f,  0.0f,  0.0f },
-		{  0.4f,  0.0f,  0.0f }
-
-	};
-
-	Vec4f t0_color { 1, 1, 0, 1 };
 
 	bool wireframe = false;
 	add_keycallback(&wireframe,
@@ -60,14 +31,16 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 	});
 
+
+	std::vector<Vertex> triangle {
+		{{  0.0f,  0.4f,  0.0f }, { 1, 0, 0, 1 }},
+		{{  0.4f,  0.0f,  0.0f }, { 0, 1, 0, 1 }},
+		{{ -0.4f,  0.0f,  0.0f }, { 0, 0, 1, 1 }}
+	};
+
 	while (update_display()) {
 		clear_display({0, 0, 0, 1});
-		const auto time = glfwGetTime();
-		t0_color.r = static_cast<GLfloat>((cosl(time) / 2) + 0.5f);
-		t0_color.g = static_cast<GLfloat>((sinl(time) / 2) + 0.5f);
-		t0_color.b = static_cast<GLfloat>((tanl(time) / 2) + 0.5f);
-		set_shader_uniform("uni_color", t0_color);
-		draw_arrays(GL_TRIANGLES, t0);
+		draw_arrays(GL_TRIANGLES, triangle);
 	}
 
 	return EXIT_SUCCESS;

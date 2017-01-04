@@ -8,6 +8,7 @@ static GLuint vao_id = 0;
 static GLuint vbo_id = 0;
 static GLuint ebo_id = 0;
 
+static void fill_vbo(const Vertex* const vertices, const long count);
 
 bool initialize_renderer()
 {
@@ -43,17 +44,16 @@ void terminate_renderer()
 }
 
 
-void draw_elements(const GLenum mode, const std::vector<Vec3f>& vertices, const std::vector<GLuint>& indices)
+void draw_elements(const GLenum mode, const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices)
 {
-	const auto ver_count = vertices.size();
 	const auto ind_count = indices.size();
 	glBindVertexArray(vao_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3f) * ver_count, vertices.data(), GL_STREAM_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3f), static_cast<GLvoid*>(0));
-	glEnableVertexAttribArray(0);
+
+	fill_vbo(vertices.data(), vertices.size());
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * ind_count, indices.data(), GL_STREAM_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * ind_count, indices.data(), GL_STREAM_DRAW);
 	glDrawElements(mode, ind_count, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -62,17 +62,27 @@ void draw_elements(const GLenum mode, const std::vector<Vec3f>& vertices, const 
 }
 
 
-void draw_arrays(const GLenum mode, const std::vector<Vec3f>& vertices)
+void draw_arrays(const GLenum mode, const std::vector<Vertex>& vertices)
 {
 	const auto ver_count = vertices.size();
 	glBindVertexArray(vao_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3f) * ver_count, vertices.data(), GL_STREAM_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3f), static_cast<GLvoid*>(0));
-	glEnableVertexAttribArray(0);
+
+	fill_vbo(vertices.data(), ver_count);
+
 	glDrawArrays(mode, 0, ver_count);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+}
+
+
+void fill_vbo(const Vertex* const vertices, const long count)
+{
+	glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices) * count, vertices, GL_STREAM_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(*vertices), (GLvoid*)offsetof(Vertex, pos));
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(*vertices), (GLvoid*)(offsetof(Vertex, color)));
+	glEnableVertexAttribArray(1);
 }
 
 

@@ -1,13 +1,11 @@
-#version 400
-
-layout(location=0) in vec4 in_Position;
-layout(location=1) in vec4 in_Color;
-out vec4 ex_Color;
+#version 330 core
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec4 color;
+out vec4 fragment_color;
 
 void main(void)
 {
-	gl_Position = in_Position;
-	ex_Color = in_Color;
+	gl_Position = vec4(position, 1.0f);
+	fragment_color = color;
 }
-
 

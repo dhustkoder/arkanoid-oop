@@ -1,10 +1,10 @@
-#version 400
+#version 330 core
 
-in vec4 ex_Color;
-out vec4 out_Color;
+in vec4 fragment_color;
+out vec4 color;
 
 void main(void)
 {
-	out_Color = ex_Color;
+	color = fragment_color;
 }
 
