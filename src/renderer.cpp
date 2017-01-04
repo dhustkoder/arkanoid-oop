@@ -5,7 +5,8 @@
 namespace gp {
 
 static GLuint vao_id = 0;
-static std::vector<GLuint> vbo_ids;
+static GLuint vbo_id = 0;
+static GLuint ebo_id = 0;
 
 bool initialize_renderer()
 {
@@ -17,83 +18,41 @@ bool initialize_renderer()
 	}
 
 	glBindVertexArray(vao_id);
+	glGenBuffers(1, &vbo_id);
+	glGenBuffers(1, &ebo_id);
 	return true;
 }
 
 
 void terminate_renderer()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDeleteBuffers(1, &vbo_id);
+	glDeleteBuffers(1, &ebo_id);
 	glBindVertexArray(0);
-	
-	if (vbo_ids.size() > 0) {
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glDeleteBuffers(vbo_ids.size(), vbo_ids.data());
-	}
-
 	glDeleteVertexArrays(1, &vao_id);
+	ebo_id = 0;
 	vao_id = 0;
-	vbo_ids.clear();
+	vbo_id = 0;
 }
 
 
-void draw_sprites()
+void draw(const GLenum mode,
+	const std::vector<Vec3f>& vertices,
+	const std::vector<GLuint>& indices)
 {
-	for (size_t i = 0; i < vbo_ids.size(); ++i) {
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[i]);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glDrawArrays(GL_QUADS, 0, 6);
-	}
-}
-
-
-std::vector<GLuint> add_sprites(const Vec2* const positions,
-                                const Vec2* const sizes,
-                                const Color* const colors,
-		                const bool* const dynamics,
-		                const long count)
-{
-	const auto old_size = vbo_ids.size();
-	vbo_ids.resize(old_size + count);
-	glGenBuffers(count, &vbo_ids[old_size]);
-	const GLuint* const new_ids = &vbo_ids[old_size];
-	
-	GLfloat buffer_data[12];
-
-	for (long i = 0; i < count; ++i) {
-		auto pos = positions[i];
-		auto size = sizes[i];
-		auto color = colors[i];
-		auto dynamic = dynamics[i];
-		auto id = new_ids[i];
-
-		buffer_data[0] = pos.x;
-		buffer_data[1] = pos.y;
-
-		buffer_data[2] = pos.x + size.x;
-		buffer_data[3] = pos.y;
-
-		buffer_data[4] = pos.x + size.x;
-		buffer_data[5] = pos.y - size.y;
-
-		buffer_data[6] = pos.x;
-		buffer_data[7] = pos.y - size.y;
-
-		buffer_data[8] = color.r;
-		buffer_data[9] = color.g;
-		buffer_data[10] = color.b;
-		buffer_data[11] = color.a;
-
-		glBindBuffer(GL_ARRAY_BUFFER, id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data,
-		             dynamic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-	}
-
-	return { vbo_ids.begin() + old_size, vbo_ids.end() };
-}
-
+	const auto ver_count = vertices.size();
+	const auto ind_count = indices.size();
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3f) * ver_count, vertices.data(), GL_STREAM_DRAW);
+	glVertexAttribPointer(0, ver_count, GL_FLOAT, GL_FALSE, sizeof(Vec3f), static_cast<GLvoid*>(0));
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * ind_count, indices.data(), GL_STREAM_DRAW);
+	glDrawElements(mode, ind_count, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 
 }
 
+
+
+}
