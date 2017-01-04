@@ -64,7 +64,7 @@ include_directories("${GPROJ_SRC_DIR}")
 
 # specific platform builds
 if (${TARGET_OS} STREQUAL "Linux")
-	set(GPROJ_LINK_LIBRARIES "-lc -lGLEW -lglfw -lGL")
+	set(GPROJ_LINK_LIBRARIES "-lc -lstdc++ -lGLEW -lglfw -lGL")
 else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()

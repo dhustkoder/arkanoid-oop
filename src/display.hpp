@@ -9,10 +9,9 @@ namespace gp {
 using KeyCallback = void(*)(void* userdata, int key);
 constexpr const long kMaxKeyCallbacks = 1;
 
-extern bool init_display(const char* title, int w, int h);
-extern void close_display();
+extern bool initialize_display(const char* title, int w, int h);
+extern void terminate_display();
 extern bool add_keycallback(void* userdata, KeyCallback callback);
-
 
 inline void set_display_vsync(const bool vsync)
 {
@@ -30,7 +29,7 @@ inline bool update_display()
 inline void clear_display(const Color& color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 
