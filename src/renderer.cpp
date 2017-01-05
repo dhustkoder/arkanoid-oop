@@ -37,20 +37,28 @@ void terminate_renderer()
 }
 
 
-void draw(const GLenum mode,
-	const std::vector<Vec3f>& vertices,
-	const std::vector<GLuint>& indices)
+void draw_elements(const GLenum mode, const std::vector<Vec3f>& vertices, const std::vector<GLuint>& indices)
 {
 	const auto ver_count = vertices.size();
 	const auto ind_count = indices.size();
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3f) * ver_count, vertices.data(), GL_STREAM_DRAW);
-	glVertexAttribPointer(0, ver_count, GL_FLOAT, GL_FALSE, sizeof(Vec3f), static_cast<GLvoid*>(0));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3f), static_cast<GLvoid*>(0));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * ind_count, indices.data(), GL_STREAM_DRAW);
 	glDrawElements(mode, ind_count, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 
+}
+
+void draw_arrays(const GLenum mode, const std::vector<Vec3f>& vertices)
+{
+	const auto ver_count = vertices.size();
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3f) * ver_count, vertices.data(), GL_STREAM_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3f), static_cast<GLvoid*>(0));
+	glEnableVertexAttribArray(0);
+	glDrawArrays(mode, 0, ver_count);
 }
 
 

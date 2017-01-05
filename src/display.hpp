@@ -6,7 +6,7 @@
 
 namespace gp {
 
-using KeyCallback = void(*)(void* userdata, int key);
+using KeyCallback = void(*)(void* userdata, int key, int action);
 constexpr const long kMaxKeyCallbacks = 1;
 
 extern bool initialize_display(const char* title, int w, int h);

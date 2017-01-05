@@ -100,7 +100,7 @@ void glfw_key_callback(GLFWwindow* const win,
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(win, GLFW_TRUE);
 	for (long i = 0; i < key_callbacks_count; ++i)
-		key_callbacks[i](key_callbacks_userdata[i], key);
+		key_callbacks[i](key_callbacks_userdata[i], key, action);
 }
 
 

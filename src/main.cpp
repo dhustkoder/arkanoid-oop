@@ -19,7 +19,7 @@ int main(int /*argc*/, char** /*argv*/)
 		terminate_systems();
 	});
 
-
+/*
 	const std::vector<Vec3f> verts {
 		{  0.5f,  0.5f,  0.0f }, // top right
 		{  0.5f, -0.5f,  0.0f }, // bottom right
@@ -31,11 +31,36 @@ int main(int /*argc*/, char** /*argv*/)
 		0, 1, 3, // first triangle
 		1, 2, 3 // second triangle
 	};
+*/
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	const std::vector<Vec3f> t0 {
+		{ -0.4f,  0.0f,  0.0f },
+		{ -0.8f, -0.4f,  0.0f },
+		{  0.0f, -0.4f,  0.0f },
+
+		{  0.4f,  0.0f,  0.0f },
+		{  0.0f, -0.4f,  0.0f },
+		{  0.8f, -0.4f,  0.0f },
+
+		{  0.0f,  0.4f,  0.0f },
+		{ -0.4f,  0.0f,  0.0f },
+		{  0.4f,  0.0f,  0.0f }
+
+	};
+
+	bool wireframe = false;
+	add_keycallback(&wireframe,
+	[](void* userdata, const int key, const int action) {
+		bool& wireframe_on = *reinterpret_cast<bool*>(userdata);
+		if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+			wireframe_on = !wireframe_on;
+			set_wireframe_mode(wireframe_on);
+		}
+	});
+
 	while (update_display()) {
 		clear_display({0, 0, 0, 1});
-		draw(GL_TRIANGLES, verts, inds);
+		draw_arrays(GL_TRIANGLES, t0);
 	}
 
 	return EXIT_SUCCESS;
