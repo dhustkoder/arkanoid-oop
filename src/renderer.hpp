@@ -6,8 +6,10 @@
 
 namespace gp {
 
+
 struct Vertex {
-	Vec3f pos;
+	Vec2f pos;
+	Vec2f tex;
 	Vec4f color;
 };
 
@@ -24,5 +26,5 @@ inline void set_wireframe_mode(const bool on)
 }
 
 
-}
+} // namespace gp
 #endif

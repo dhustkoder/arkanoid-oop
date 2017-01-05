@@ -56,6 +56,8 @@ bool initialize_display(const char* const title, const int w, const int h)
 		return false;
 	}
 
+	glViewport(0, 0, w, h);
+
 	puts("OpenGL");
 	for (size_t i = 0; i < infosize; ++i)
 		printf("%s: %s\n", infostrs[i], glGetString(infonums[i]));

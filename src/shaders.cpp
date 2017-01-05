@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <GL/glew.h>
-#include "shader.hpp"
+#include "shaders.hpp"
 
 namespace gp {
 
@@ -19,14 +19,14 @@ static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
 
 
-bool initialize_shader(const std::vector<std::pair<std::string, std::string>>& programs)
+bool initialize_shaders(const std::vector<std::pair<std::string, std::string>>& programs)
 {
 	programs_ids.reserve(programs.size());
 	shaders_ids.reserve(programs.size());
 
 	for (const auto& program : programs) {
 		if (!compile_and_link(program.first, program.second)) {
-			terminate_shader();
+			terminate_shaders();
 			return false;
 		}
 	}
@@ -35,9 +35,9 @@ bool initialize_shader(const std::vector<std::pair<std::string, std::string>>& p
 }
 
 
-void terminate_shader()
+void terminate_shaders()
 {
-	unbind_shader_program();	
+	unbind_shader();	
 	for (size_t i = 0; i < programs_ids.size(); ++i) {
 		const auto program_id = programs_ids[i];
 		const auto vertex_id = shaders_ids[i].first;
@@ -169,5 +169,3 @@ bool read_sources(const std::string& vertex_filepath, const std::string& fragmen
 
 
 } // namespace gp
-
-

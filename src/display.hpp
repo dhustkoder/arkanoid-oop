@@ -13,10 +13,12 @@ extern bool initialize_display(const char* title, int w, int h);
 extern void terminate_display();
 extern bool add_keycallback(void* userdata, KeyCallback callback);
 
+
 inline void set_display_vsync(const bool vsync)
 {
 	glfwSwapInterval(vsync ? 1 : 0);
 }
+
 
 inline bool update_display()
 {
@@ -25,6 +27,7 @@ inline bool update_display()
 	glfwSwapBuffers(glfw_window);
 	return glfwWindowShouldClose(glfw_window) == 0;
 }
+
 
 inline void clear_display(const Vec4f& color)
 {
