@@ -14,6 +14,7 @@
 static bool initialize_systems();
 static void terminate_systems();
 
+
 int main(int /*argc*/, char** /*argv*/)
 {
 	using namespace gp;
@@ -41,14 +42,23 @@ int main(int /*argc*/, char** /*argv*/)
 		{ {-0.5f,  0.5f }, { 0, 1 }, { 1, 1, 0, 1 } }
 	};
 
+/*
+	const std::vector<Vertex> triangle {
+		{ { -0.8f, 0.8f }, { 0.5f, 1.0f }, { 1, 0, 0, 1 } },
+		{ { -1.0f, 0.6f }, { 0.0f, 0.0f }, { 0, 1, 0, 1 } },
+		{ { -0.6f, 0.6f }, { 1.0f, 0.0f }, { 0, 0, 1, 1 } }
+	};
+*/
 	const std::vector<GLuint> indices {
 		0, 1, 3,
 		1, 2, 3
 	};
 
+
 	while (update_display()) {
 		clear_display({0, 0, 0, 1});
 		draw_elements(GL_TRIANGLES, vertices, indices);
+		//draw_arrays(GL_TRIANGLES, triangle);
 	}
 
 	return EXIT_SUCCESS;
@@ -75,7 +85,7 @@ bool initialize_systems()
 	}
 
 	gp::bind_shader(0);
-	gp::bind_texture(GL_TEXTURE0, 0);
+	gp::bind_texture(0);
 	return true;
 }
 
