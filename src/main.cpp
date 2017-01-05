@@ -10,7 +10,6 @@
 static bool initialize_systems();
 static void terminate_systems();
 
-
 int main(int /*argc*/, char** /*argv*/)
 {
 	using namespace gp;
@@ -49,13 +48,18 @@ int main(int /*argc*/, char** /*argv*/)
 
 bool initialize_systems()
 {
+	const std::vector<std::pair<std::string, std::string>> shaders {
+		{ "shaders/vertex.glsl", "shaders/fragment.glsl" }
+	};
+
 	if (!gp::initialize_display("Hello GProj", 800, 600) || 
 	    !gp::initialize_renderer() ||
-	    !gp::initialize_shader()) {
+	    !gp::initialize_shader(shaders)) {
 		terminate_systems();
 		return false;
 	}
 
+	gp::bind_shader_program(0);
 	return true;
 }
 
