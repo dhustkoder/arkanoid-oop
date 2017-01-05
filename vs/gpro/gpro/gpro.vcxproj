@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\color.hpp" />
     <ClInclude Include="..\..\..\src\display.hpp" />
     <ClInclude Include="..\..\..\src\finally.hpp" />
     <ClInclude Include="..\..\..\src\renderer.hpp" />

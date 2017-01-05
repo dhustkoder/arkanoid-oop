@@ -7,17 +7,23 @@ namespace gp {
 
 template<class T>
 struct Vector2 {
-	T x, y;
+	union { T x, r, s; };
+	union { T y, g, t; };
 };
 
 template<class T>
 struct Vector3 {
-	T x, y, z;
+	union { T x, r, s; };
+	union { T y, g, t; };
+	union { T z, b, p; };
 };
 
 template<class T>
 struct Vector4 {
-	T x, y, z, w;
+	union { T x, r, s; };
+	union { T y, g, t; };
+	union { T z, b, p; };
+	union { T w, a, q; };
 };
 
 using Vec2f = Vector2<GLfloat>;

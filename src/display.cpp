@@ -13,6 +13,7 @@ static long key_callbacks_count = 0;
 static void glfw_error_callback(int error, const char* description);
 static void glfw_key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
 
+
 bool initialize_display(const char* const title, const int w, const int h)
 {
 	constexpr const auto infosize = 4;
@@ -64,6 +65,7 @@ bool initialize_display(const char* const title, const int w, const int h)
 	return true;
 }
 
+
 void terminate_display()
 {
 	glfwDestroyWindow(glfw_window);
@@ -71,6 +73,7 @@ void terminate_display()
 	glfw_window = nullptr;
 	key_callbacks_count = 0;
 }
+
 
 bool add_keycallback(void* const userdata, const KeyCallback callback)
 {
@@ -84,11 +87,11 @@ bool add_keycallback(void* const userdata, const KeyCallback callback)
 	return false;
 }
 
+
 void glfw_error_callback(const int error, const char* const description)
 {
 	fprintf(stderr, "Error %d: %s\n", error, description);
 }
-
 
 
 void glfw_key_callback(GLFWwindow* const win,

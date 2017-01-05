@@ -14,8 +14,7 @@ static GLuint vertex_shader_id = 0;
 static GLuint fragment_shader_id = 0;
 
 static std::string read_source(const char* filepath);
-static bool compile_and_link(const std::string& vertex,
-                             const std::string& fragment);
+static bool compile_and_link(const std::string& vertex, const std::string& fragment);
 static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
 
@@ -49,6 +48,14 @@ void terminate_shader()
 	glDeleteProgram(program_id);
 }
 
+
+void set_shader_uniform(const std::string& name, const Vec4f& value)
+{
+	const auto location = glGetUniformLocation(program_id, name.c_str());
+	glUniform4f(location, value.x, value.y, value.z, value.w);
+}
+
+
 bool compile_and_link(const std::string& vertex, const std::string& fragment)
 {
 	vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
@@ -78,6 +85,7 @@ bool compile_and_link(const std::string& vertex, const std::string& fragment)
 	return true;
 }
 
+
 bool validate_compilation(const GLuint shader_id)
 {
 	GLint success;
@@ -105,7 +113,6 @@ bool validate_linkage(const GLuint program)
 		if (success == GL_FALSE) {
 			glGetProgramInfoLog(program, kErrorMsgBufferSize,
 			                    nullptr, error_msg_buffer);
-
 			fprintf(stderr, "%s\n", error_msg_buffer);
 			return true;
 		}

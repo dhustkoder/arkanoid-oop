@@ -17,7 +17,6 @@ inline void set_wireframe_mode(const bool on)
 	glPolygonMode(GL_FRONT_AND_BACK, on ? GL_LINE : GL_FILL);
 }
 
+
 }
-
 #endif
-

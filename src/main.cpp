@@ -48,6 +48,8 @@ int main(int /*argc*/, char** /*argv*/)
 
 	};
 
+	Vec4f t0_color { 1, 1, 0, 1 };
+
 	bool wireframe = false;
 	add_keycallback(&wireframe,
 	[](void* userdata, const int key, const int action) {
@@ -60,11 +62,17 @@ int main(int /*argc*/, char** /*argv*/)
 
 	while (update_display()) {
 		clear_display({0, 0, 0, 1});
+		const auto time = glfwGetTime();
+		t0_color.r = static_cast<GLfloat>((cosl(time) / 2) + 0.5f);
+		t0_color.g = static_cast<GLfloat>((sinl(time) / 2) + 0.5f);
+		t0_color.b = static_cast<GLfloat>((tanl(time) / 2) + 0.5f);
+		set_shader_uniform("uni_color", t0_color);
 		draw_arrays(GL_TRIANGLES, t0);
 	}
 
 	return EXIT_SUCCESS;
 }
+
 
 bool initialize_systems()
 {
@@ -77,6 +85,7 @@ bool initialize_systems()
 
 	return true;
 }
+
 
 void terminate_systems()
 {
