@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <GL/glew.h>
 #include "renderer.hpp"
+#include "finally.hpp"
 
 namespace gp {
 
@@ -13,6 +14,9 @@ static void fill_vbo(const Vertex* const vertices, const long count);
 
 bool initialize_renderer()
 {
+	auto failure_guard = finally([] {
+		terminate_renderer();
+	});
 
 	glGenVertexArrays(1, &vao_id);
 	glBindVertexArray(vao_id);
@@ -22,10 +26,10 @@ bool initialize_renderer()
 
 	if (!vao_id || !vbo_id || !ebo_id) {
 		fprintf(stderr, "%s\n", glewGetErrorString(glGetError()));
-		terminate_renderer();
 		return false;
 	}
 
+	failure_guard.Abort();
 	return true;
 }
 

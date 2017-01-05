@@ -33,20 +33,15 @@ bool initialize_display(const char* const title, const int w, const int h)
 	if (glfwInit() != GLFW_TRUE)
 		return false;
 
-	auto glfw_guard = finally([] {
-		glfwTerminate();
+	auto failure_guard = finally([] {
+		terminate_display();
 	});
-	
+
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfw_window = glfwCreateWindow(w, h, title, NULL, NULL);
 
 	if (glfw_window == nullptr)
 		return false;
-
-	auto glfw_window_guard = finally([] {
-		glfwDestroyWindow(glfw_window);
-		glfw_window = nullptr;
-	});
 
 	glfwSetKeyCallback(glfw_window, &glfw_key_callback);
 	glfwMakeContextCurrent(glfw_window);
@@ -59,11 +54,10 @@ bool initialize_display(const char* const title, const int w, const int h)
 	glViewport(0, 0, w, h);
 
 	puts("OpenGL");
-	for (size_t i = 0; i < infosize; ++i)
+	for (int i = 0; i < infosize; ++i)
 		printf("%s: %s\n", infostrs[i], glGetString(infonums[i]));
 
-	glfw_guard.Abort();
-	glfw_window_guard.Abort();
+	failure_guard.Abort();
 	return true;
 }
 

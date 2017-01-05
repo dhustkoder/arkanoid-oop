@@ -75,18 +75,28 @@ bool initialize_systems()
 		"container.jpg"
 	};
 
-	if (!gp::initialize_display("Hello GProj", 800, 600) || 
-	    !gp::initialize_renderer() ||
-	    !gp::initialize_shaders(shaders) ||
-	    !gp::initialize_textures(textures)) 
-	{
-		terminate_systems();
-		return false;
-	}
+	if (!gp::initialize_display("Hello GProj", 800, 600))
+		goto display_failed;
+	if (!gp::initialize_renderer())
+		goto renderer_failed;
+	if (!gp::initialize_shaders(shaders))
+		goto shaders_failed;
+	if (!gp::initialize_textures(textures))
+		goto textures_failed;
+
 
 	gp::bind_shader(0);
 	gp::bind_texture(0);
 	return true;
+
+textures_failed:
+	gp::terminate_shaders();
+shaders_failed:
+	gp::terminate_renderer();
+renderer_failed:
+	gp::terminate_display();
+display_failed:
+	return false;
 }
 
 

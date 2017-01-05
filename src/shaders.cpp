@@ -2,6 +2,7 @@
 #include <fstream>
 #include <GL/glew.h>
 #include "shaders.hpp"
+#include "finally.hpp"
 
 namespace gp {
 
@@ -21,16 +22,19 @@ static bool validate_linkage(GLuint program_id);
 
 bool initialize_shaders(const std::vector<std::pair<std::string, std::string>>& programs)
 {
+	auto failure_guard = finally([] {
+		terminate_shaders();
+	});
+
 	programs_ids.reserve(programs.size());
 	shaders_ids.reserve(programs.size());
 
 	for (const auto& program : programs) {
-		if (!compile_and_link(program.first, program.second)) {
-			terminate_shaders();
+		if (!compile_and_link(program.first, program.second))
 			return false;
-		}
 	}
 
+	failure_guard.Abort();
 	return true;
 }
 
