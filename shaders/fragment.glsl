@@ -3,9 +3,9 @@
 in vec2 fragment_tex_coords;
 in vec4 fragment_color;
 
-out vec4 pixel_color;
-
 uniform sampler2D texture_unit;
+
+out vec4 pixel_color;
 
 void main(void)
 {
