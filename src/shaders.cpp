@@ -15,7 +15,7 @@ static std::vector<std::pair<GLuint, GLuint>> shaders_ids;
 static bool read_sources(const std::string& vertex_file, const std::string& fragment_file,
                         std::string* vertex_source, std::string* fragment_source);
 
-static bool compile_and_link(const std::string& vertex_file, const std::string& fragment_file);
+static bool push_new_shader_program(const std::pair<std::string, std::string>& program);
 static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
 
@@ -30,7 +30,7 @@ bool initialize_shaders(const std::vector<std::pair<std::string, std::string>>& 
 	shaders_ids.reserve(programs.size());
 
 	for (const auto& program : programs) {
-		if (!compile_and_link(program.first, program.second))
+		if (!push_new_shader_program(program))
 			return false;
 	}
 
@@ -59,11 +59,11 @@ void terminate_shaders()
 }
 
 
-bool compile_and_link(const std::string& vertex_file, const std::string& fragment_file)
+bool push_new_shader_program(const std::pair<std::string, std::string>& program)
 {
 	std::string vertex_source, fragment_source;
 
-	if (!read_sources(vertex_file, fragment_file,
+	if (!read_sources(program.first, program.second,
 	                  &vertex_source, &fragment_source)) {
 		return false;
 	}

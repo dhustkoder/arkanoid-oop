@@ -3,6 +3,7 @@
 
 namespace gp {
 
+
 template<class Fn>
 class Finally {
 public:
@@ -11,7 +12,8 @@ public:
 
 
 	Finally(Fn&& func) :
-		m_func(static_cast<Fn&&>(func)), m_abort(false)
+		m_func(static_cast<Fn&&>(func)),
+		m_abort(false)
 	{
 	}
 	
@@ -34,6 +36,7 @@ public:
 	{
 		m_abort = true;
 	}
+
 
 private:
 	Fn m_func;

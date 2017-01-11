@@ -4,12 +4,11 @@
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
 
-#include "finally.hpp"
 #include "display.hpp"
 #include "renderer.hpp"
 #include "shaders.hpp"
 #include "textures.hpp"
-
+#include "finally.hpp"
 
 static bool initialize_systems();
 static void terminate_systems();

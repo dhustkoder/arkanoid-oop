@@ -38,3 +38,4 @@ inline void clear_display(const Vec4f& color)
 
 } // namespace gp
 #endif
+

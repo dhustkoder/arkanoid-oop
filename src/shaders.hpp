@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 #include "vectors.hpp"
 
-
 namespace gp {
 
 
