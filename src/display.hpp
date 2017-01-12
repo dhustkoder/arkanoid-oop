@@ -2,7 +2,7 @@
 #define GPROJ_DISPLAY_HPP_
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "vectors.hpp"
+#include "math_types.hpp"
 
 namespace gp {
 
@@ -29,7 +29,7 @@ inline bool update_display()
 }
 
 
-inline void clear_display(const Vec4f& color)
+inline void clear_display(const Vec4& color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

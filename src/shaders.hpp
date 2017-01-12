@@ -4,14 +4,14 @@
 #include <vector>
 #include <utility>
 #include <GL/glew.h>
-#include "vectors.hpp"
+#include "math_types.hpp"
 
 namespace gp {
 
 
 extern bool initialize_shaders(const std::vector<std::pair<std::string, std::string>>& programs);
 extern void terminate_shaders();
-extern void set_shader_uniform(size_t program, const std::string& name, const Vec4f& value);
+extern void set_shader_uniform(size_t program, const std::string& name, const Vec4& value);
 
 
 inline void bind_shader(const size_t program_index)

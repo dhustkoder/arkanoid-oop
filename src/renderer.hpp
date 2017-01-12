@@ -2,15 +2,15 @@
 #define GPROJ_RENDERER_HPP_
 #include <vector>
 #include <GL/glew.h>
-#include "vectors.hpp"
+#include "math_types.hpp"
 
 namespace gp {
 
 
 struct Vertex {
-	Vec2f pos;
-	Vec2f tex;
-	Vec4f color;
+	Vec2 pos;
+	Vec2 tex;
+	Vec4 color;
 };
 
 

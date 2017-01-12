@@ -1,15 +1,12 @@
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
+#include "math_types.hpp"
 #include "textures.hpp"
-#include "vectors.hpp"
 #include "finally.hpp"
 
 namespace gp {
 
-
 std::vector<GLuint> textures_ids;
-static std::vector<Vector2<int>> textures_sizes;
-
 
 bool initialize_textures(const std::vector<std::string>& textures_files)
 {
@@ -19,13 +16,11 @@ bool initialize_textures(const std::vector<std::string>& textures_files)
 
 	const auto num_textures = textures_files.size();
 	textures_ids.resize(num_textures);
-	textures_sizes.resize(num_textures);
 	glGenTextures(num_textures, textures_ids.data());
 
 	for (size_t i = 0; i < num_textures; ++i) {
 		const auto tex_id = textures_ids[i];
 		const auto& tex_file = textures_files[i];
-		auto& tex_size = textures_sizes[i];
 
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 
@@ -35,10 +30,10 @@ bool initialize_textures(const std::vector<std::string>& textures_files)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
+		int width, height;
 		unsigned char* const image =
 		  SOIL_load_image(tex_file.c_str(),
-		                  &tex_size.x, &tex_size.y,
+		                  &width, &height,
 		                  nullptr, SOIL_LOAD_RGB);
 
 		if (image == nullptr) {
@@ -47,7 +42,7 @@ bool initialize_textures(const std::vector<std::string>& textures_files)
 		}
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-		             tex_size.x, tex_size.y,
+		             width, height,
 			     0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -65,7 +60,6 @@ void terminate_textures()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDeleteTextures(textures_ids.size(), textures_ids.data());
 	textures_ids.clear();
-	textures_sizes.clear();
 }
 
 

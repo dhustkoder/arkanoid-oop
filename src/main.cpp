@@ -9,6 +9,7 @@
 #include "shaders.hpp"
 #include "textures.hpp"
 #include "finally.hpp"
+#include "matrix4.hpp"
 
 static bool initialize_systems();
 static void terminate_systems();
@@ -22,7 +23,6 @@ int main(int /*argc*/, char** /*argv*/)
 	const auto systems_terminator = finally([] {
 		terminate_systems();
 	});
-
 
 	bool wireframe = false;
 	add_keycallback(&wireframe,
