@@ -15,11 +15,17 @@ static void terminate_systems();
 int main(int /*argc*/, char** /*argv*/)
 {
 	using namespace gp;
+
+
 	if (!initialize_systems())
 		return EXIT_FAILURE;
+
 	const auto systems_terminator = finally([] {
 		terminate_systems();
 	});
+
+	bind_shader(0);
+	bind_texture(0);
 
 	bool wireframe = false;
 	add_keycallback(&wireframe,
@@ -38,23 +44,14 @@ int main(int /*argc*/, char** /*argv*/)
 		{ {-0.5f,  0.5f }, { 0, 1 }, { 1, 1, 0, 1 } }
 	};
 
-/*
-	const std::vector<Vertex> triangle {
-		{ { -0.8f, 0.8f }, { 0.5f, 1.0f }, { 1, 0, 0, 1 } },
-		{ { -1.0f, 0.6f }, { 0.0f, 0.0f }, { 0, 1, 0, 1 } },
-		{ { -0.6f, 0.6f }, { 1.0f, 0.0f }, { 0, 0, 1, 1 } }
-	};
-*/
 	const std::vector<GLuint> indices {
 		0, 1, 3,
 		1, 2, 3
 	};
 
-
 	while (update_display()) {
 		clear_display({0, 0, 0, 1});
 		draw_elements(GL_TRIANGLES, vertices, indices);
-		//draw_arrays(GL_TRIANGLES, triangle);
 	}
 
 	return EXIT_SUCCESS;
@@ -80,9 +77,6 @@ bool initialize_systems()
 	if (!gp::initialize_textures(textures))
 		goto textures_failed;
 
-
-	gp::bind_shader(0);
-	gp::bind_texture(0);
 	return true;
 
 textures_failed:
