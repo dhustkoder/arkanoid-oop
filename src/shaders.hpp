@@ -4,7 +4,6 @@
 #include <vector>
 #include <utility>
 #include <GL/glew.h>
-#include "math_types.hpp"
 
 namespace gp {
 

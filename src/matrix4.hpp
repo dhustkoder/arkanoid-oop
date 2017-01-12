@@ -82,6 +82,6 @@ Mat4& operator*=(Mat4& a, const Mat4& b)
 }
 
 
-}
+} // namespace gp
 #endif
 

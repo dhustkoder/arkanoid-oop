@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <fstream>
-#include <GL/glew.h>
 #include "shaders.hpp"
 #include "finally.hpp"
 

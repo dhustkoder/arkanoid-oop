@@ -44,6 +44,6 @@ Vec4& operator*=(Vec4& a, const float scalar)
 }
 
 
-}
+} // namespace gp
 #endif
 

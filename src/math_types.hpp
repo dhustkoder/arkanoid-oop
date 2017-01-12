@@ -30,6 +30,6 @@ struct Mat4 {
 
 
 
-}
+} // namespace gp
 #endif
 

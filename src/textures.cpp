@@ -1,12 +1,13 @@
-#include <GL/glew.h>
 #include <SOIL/SOIL.h>
-#include "math_types.hpp"
 #include "textures.hpp"
+#include "math_types.hpp"
 #include "finally.hpp"
 
 namespace gp {
 
+
 std::vector<GLuint> textures_ids;
+
 
 bool initialize_textures(const std::vector<std::string>& textures_files)
 {

@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <GL/glew.h>
 #include "renderer.hpp"
 #include "finally.hpp"
 
