@@ -1,7 +1,7 @@
 #ifndef GPROJ_RENDERER_HPP_
 #define GPROJ_RENDERER_HPP_
 #include <vector>
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include "math_types.hpp"
 
 namespace gp {
@@ -28,3 +28,4 @@ inline void set_wireframe_mode(const bool on)
 
 } // namespace gp
 #endif
+

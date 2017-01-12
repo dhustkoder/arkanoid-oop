@@ -1,15 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <GL/glew.h>
-#include <SOIL/SOIL.h>
 
 #include "display.hpp"
 #include "renderer.hpp"
 #include "shaders.hpp"
 #include "textures.hpp"
 #include "finally.hpp"
-#include "matrix4.hpp"
+
 
 static bool initialize_systems();
 static void terminate_systems();

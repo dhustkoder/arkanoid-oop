@@ -2,6 +2,7 @@
 #define GPROJ_TEXTURES_HPP_
 #include <vector>
 #include <string>
+#include <GL/gl.h>
 
 namespace gp {
 
