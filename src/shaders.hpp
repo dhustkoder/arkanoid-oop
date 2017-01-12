@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <utility>
-#include <GL/glew.h>
+#include <GL/gl.h>
 #include "math_types.hpp"
 
 namespace gp {

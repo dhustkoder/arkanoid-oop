@@ -1,7 +1,7 @@
 #ifndef GPROJ_RENDERER_HPP_
 #define GPROJ_RENDERER_HPP_
 #include <vector>
-#include <GL/glew.h>
+#include <GL/gl.h>
 #include "math_types.hpp"
 
 namespace gp {
