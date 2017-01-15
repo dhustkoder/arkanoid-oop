@@ -1,6 +1,6 @@
 #ifndef GPROJ_VECTOR2_HPP_
 #define GPROJ_VECTOR2_HPP_
-#include "math_types.h"
+#include "math_types.hpp"
 
 namespace gp {
 
@@ -23,21 +23,21 @@ constexpr Vec2 operator*(const Vec2& a, const float scalar)
 }
 
 
-Vec2& operator+=(Vec2& a, const Vec2& b)
+inline Vec2& operator+=(Vec2& a, const Vec2& b)
 {
 	a = a + b;
 	return a;
 }
 
 
-Vec2& operator-=(Vec2& a, const Vec2& b)
+inline Vec2& operator-=(Vec2& a, const Vec2& b)
 {
 	a = a - b;
 	return a;
 }
 
 
-Vec2& operator*=(Vec2& a, const float scalar)
+inline Vec2& operator*=(Vec2& a, const float scalar)
 {
 	a = a * scalar;
 	return a;

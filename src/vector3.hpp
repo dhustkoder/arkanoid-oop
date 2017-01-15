@@ -23,21 +23,21 @@ constexpr Vec3 operator*(const Vec3& a, const float scalar)
 }
 
 
-Vec3& operator+=(Vec3& a, const Vec3& b)
+inline Vec3& operator+=(Vec3& a, const Vec3& b)
 {
 	a = a + b;
 	return a;
 }
 
 
-Vec3& operator-=(Vec3& a, const Vec3& b)
+inline Vec3& operator-=(Vec3& a, const Vec3& b)
 {
 	a = a - b;
 	return a;
 }
 
 
-Vec3& operator*=(Vec3& a, const float scalar)
+inline Vec3& operator*=(Vec3& a, const float scalar)
 {
 	a = a * scalar;
 	return a;

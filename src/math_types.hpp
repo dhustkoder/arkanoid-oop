@@ -3,9 +3,13 @@
 
 namespace gp {
 
+	
+constexpr const float kPI = 3.14159265359;
+
+
 struct Vec2 {
 	union { float x, r, s; };
-	union { float y, g, t; };
+	union { float y, g, t; };	
 };
 
 
@@ -25,9 +29,10 @@ struct Vec4 {
 
 
 struct Mat4 {
-	Vec4 x, y, z, t;
+	float data[4][4];
+	constexpr const float (&operator[](int index) const)[4];
+	constexpr float (&operator[](int index))[4];
 };
-
 
 
 } // namespace gp

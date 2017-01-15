@@ -1,6 +1,7 @@
 #ifndef GPROJ_VECTOR4_HPP_
 #define GPROJ_VECTOR4_HPP_
-#include "math_types.h"
+#include "math_types.hpp"
+
 
 namespace gp {
 
@@ -23,25 +24,27 @@ constexpr Vec4 operator*(const Vec4& a, const float scalar)
 }
 
 
-Vec4& operator+=(Vec4& a, const Vec4& b)
+inline Vec4& operator+=(Vec4& a, const Vec4& b)
 {
 	a = a + b;
 	return a;
 }
 
 
-Vec4& operator-=(Vec4& a, const Vec4& b)
+inline Vec4& operator-=(Vec4& a, const Vec4& b)
 {
 	a = a - b;
 	return a;
 }
 
 
-Vec4& operator*=(Vec4& a, const float scalar)
+inline Vec4& operator*=(Vec4& a, const float scalar)
 {
 	a = a * scalar;
 	return a;
 }
+
+
 
 
 } // namespace gp

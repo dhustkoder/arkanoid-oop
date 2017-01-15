@@ -12,6 +12,21 @@ struct Vertex {
 };
 
 
+struct Indices {
+	unsigned int* data;
+	long count;
+};
+
+struct Vertices {
+	Vertex* data;
+	long count;
+};
+
+
+struct Elements {
+	Vertices vertices;
+	Indices indices;
+};
 
 
 

@@ -6,13 +6,13 @@ project(gproj)
 set(TARGET_OS "Linux" CACHE STRING "Specifies your target OS for build config")
 set(TARGET_CPU "native" CACHE STRING "Specifies the target CPU architecture for -march option")
 
+option(TESTS OFF)
 option(ASAN OFF)
 option(USAN OFF)
 option(ENABLE_LTO OFF)
 option(ASM_OUTPUT OFF)
 
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wshadow \
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Wshadow \
 	-Wstrict-aliasing -fno-exceptions -fno-rtti -Wno-missing-braces")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O3 -Werror -fstrict-aliasing \
@@ -57,10 +57,15 @@ elseif (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 	endif()
 endif()
 
+
 # gbx src directory
 set(GPROJ_SRC_DIR "./src")
+set(GPROJ_TEST_DIR "./tests")
+
+
 # include src directory
 include_directories("${GPROJ_SRC_DIR}")
+
 
 # specific platform builds
 if (${TARGET_OS} STREQUAL "Linux")
@@ -69,13 +74,25 @@ else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()
 
+
+
 # build
 file(GLOB GPROJ_SRC_FILES "${GPROJ_SRC_DIR}/*.cpp")
 add_executable(${PROJECT_NAME} ${GPROJ_SRC_FILES} ${GPROJ_PLATFORM_SRC_FILES})
 target_link_libraries(${PROJECT_NAME} ${GPROJ_LINK_LIBRARIES})
 
+if (${TESTS})
+	file(GLOB GPROJ_TEST_SRC "${GPROJ_TEST_DIR}/*.cpp")
+	add_executable("${PROJECT_NAME}_tests" ${GPROJ_TEST_SRC})
+	target_link_libraries("${PROJECT_NAME}_tests" ${GPROJ_LINK_LIBRARIES})
+endif()
+
+
 if (ASM_OUTPUT)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -S")
 	set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAG "-save-temps")
+	set_target_properties("${PROJECT_NAME}_tests" PROPERTIES COMPILE_FLAG "-save-temps")
 endif()
+
+
 
