@@ -13,19 +13,19 @@ struct Vertex {
 
 
 struct Indices {
-	unsigned int* data;
-	long count;
+	const unsigned int* const data;
+	const long count;
 };
 
 struct Vertices {
-	Vertex* data;
-	long count;
+	const Vertex* const data;
+	const long count;
 };
 
 
 struct Elements {
-	Vertices vertices;
-	Indices indices;
+	const Vertices vertices;
+	const Indices indices;
 };
 
 

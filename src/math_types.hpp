@@ -30,8 +30,8 @@ struct Vec4 {
 
 struct Mat4 {
 	float data[4][4];
-	constexpr const float (&operator[](int index) const)[4];
-	constexpr float (&operator[](int index))[4];
+	const float (&operator[](int index) const)[4];
+	float (&operator[](int index))[4];
 };
 
 

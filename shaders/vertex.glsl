@@ -8,9 +8,10 @@ out vec2 fragment_tex_coords;
 
 uniform mat4 transform;
 
+
 void main(void)
 {
-	gl_Position = transform * vec4(position, 0.0f, 1.0f);
+	gl_Position = transform * vec4(position, 0.f, 1.f);
 	fragment_color = color;
 	fragment_tex_coords = tex_coords;
 }

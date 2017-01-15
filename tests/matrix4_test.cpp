@@ -39,9 +39,9 @@ int main()
 	}};
 
 
-	constexpr const Mat4 add = a + b;
-	constexpr const Mat4 sub = a - b;
-	constexpr const Mat4 mul = a * b;
+	const Mat4 add = a + b;
+	const Mat4 sub = a - b;
+	const Mat4 mul = a * b;
 
 	print("A:", a);
 	print("\n\nB:", b);

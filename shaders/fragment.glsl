@@ -1,7 +1,7 @@
 #version 330 core
 
-in vec2 fragment_tex_coords;
 in vec4 fragment_color;
+in vec2 fragment_tex_coords;
 
 uniform sampler2D texture_unit;
 

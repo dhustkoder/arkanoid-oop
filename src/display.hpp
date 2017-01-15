@@ -14,9 +14,9 @@ extern void terminate_display();
 extern bool add_keycallback(void* userdata, KeyCallback callback);
 
 
-inline void set_display_vsync(const bool vsync)
+inline void set_vsync(const bool vsync_on)
 {
-	glfwSwapInterval(vsync ? 1 : 0);
+	glfwSwapInterval(static_cast<int>(vsync_on));
 }
 
 

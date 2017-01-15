@@ -12,7 +12,7 @@ option(USAN OFF)
 option(ENABLE_LTO OFF)
 option(ASM_OUTPUT OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Wshadow \
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall -Wextra -Wshadow \
 	-Wstrict-aliasing -fno-exceptions -fno-rtti -Wno-missing-braces")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O3 -Werror -fstrict-aliasing \
@@ -69,7 +69,7 @@ include_directories("${GPROJ_SRC_DIR}")
 
 # specific platform builds
 if (${TARGET_OS} STREQUAL "Linux")
-	set(GPROJ_LINK_LIBRARIES "-lc -lstdc++ -lglfw -lGLEW -lSOIL -lGL")
+	set(GPROJ_LINK_LIBRARIES "-lc -lm -lstdc++ -lglfw -lGLEW -lSOIL -lGL")
 else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()

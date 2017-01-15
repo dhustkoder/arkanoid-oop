@@ -4,7 +4,6 @@
 #include "renderer.hpp"
 #include "finally.hpp"
 #include "matrix4.hpp"
-#include "vector4.hpp"
 
 static bool initialize_systems();
 static void terminate_systems();
@@ -21,6 +20,7 @@ int main(int /*argc*/, char** /*argv*/)
 		terminate_systems();
 	});
 
+	set_vsync(true);
 	bind_shader(0);
 	bind_texture(0);
 
@@ -34,34 +34,31 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 	});
 
-	std::vector<Vertex> vertices {
-		{ { 0.5f,  0.5f }, { 1, 1 }, { 1, 0, 0, 1 } },
-		{ { 0.5f, -0.5f }, { 1, 0 }, { 0, 1, 0, 1 } },
-		{ {-0.5f, -0.5f }, { 0, 0 }, { 0, 0, 1, 1 } },
-		{ {-0.5f,  0.5f }, { 0, 1 }, { 1, 1, 0, 1 } }
+	constexpr const Vertex vertices[4] {
+		{ { 0.5f,  0.5f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 0.5f, -0.5f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-0.5f, -0.5f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-0.5f,  0.5f }, { 0, 0 }, { 1, 1, 0, 1 } }
 	};
 
-	std::vector<GLuint> indices {
+	constexpr const GLuint indices[6] {
 		0, 1, 3,
 		1, 2, 3
 	};
 
-	Mat4 identity {{
-		{ 1, 0, 0, 0 },
-		{ 0, 1, 0, 0 },
-		{ 0, 0, 1, 0 },
-		{ 0, 0, 0, 1 }
-	}};
-
 	const Elements elements {
-		{ &vertices[0], (long)vertices.size() },
-		{ &indices[0], (long)indices.size() }
+		{ vertices, sizeof(vertices)/sizeof(vertices[0]) },
+		{ indices, sizeof(indices)/sizeof(indices[0]) }
 	};
 
 
-	set_uniform(0, identity, "transform");
-
+	
 	while (update_display()) {
+		const auto time = glfwGetTime();
+		Mat4 trans = translate(identity_mat4(), {sinf(time) * 0.5f, cosf(time) * 0.5f, 0});
+		trans = scale(trans, {0.5, 0.5, 0.5});
+		trans = rotate(trans, (kPI * 0.5) * time, {1, 0, 1});
+		set_uniform(0, trans, "transform");
 		clear_display({0, 0, 0, 1});
 		draw(GL_TRIANGLES, elements);
 	}
@@ -78,7 +75,7 @@ bool initialize_systems()
 	};
 
 	const std::vector<std::string> textures {
-		"container.jpg"
+		"container.png"
 	};
 
 	if (!gp::initialize_display("Hello GProj", 800, 600))
