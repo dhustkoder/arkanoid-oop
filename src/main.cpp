@@ -54,10 +54,10 @@ int main(int /*argc*/, char** /*argv*/)
 
 	
 	while (update_display()) {
-		const auto time = glfwGetTime();
+		const auto time = static_cast<float>(glfwGetTime());
 		Mat4 trans = translate(identity_mat4(), {sinf(time) * 0.5f, cosf(time) * 0.5f, 0});
-		trans = scale(trans, {0.5, 0.5, 0.5});
-		trans = rotate(trans, (kPI * 0.5) * time, {1, 0, 1});
+		trans = scale(trans, {0.5f, 0.5f, 0.5f});
+		trans = rotate(trans, (kPI * 0.5f) * time, {1, 0, 1});
 		set_uniform(0, trans, "transform");
 		clear_display({0, 0, 0, 1});
 		draw(GL_TRIANGLES, elements);

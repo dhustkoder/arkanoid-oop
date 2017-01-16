@@ -4,7 +4,7 @@
 namespace gp {
 
 	
-constexpr const float kPI = 3.14159265359;
+constexpr const float kPI = 3.14159265359f;
 
 
 struct Vec2 {

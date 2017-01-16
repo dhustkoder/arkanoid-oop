@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <fstream>
-#include <SOIL/SOIL.h>
+#include "SOIL.h"
 #include "renderer.hpp"
 #include "finally.hpp"
 
