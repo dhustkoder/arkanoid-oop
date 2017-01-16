@@ -24,16 +24,6 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_shader(0);
 	bind_texture(0);
 
-	bool wireframe = false;
-	add_keycallback(&wireframe,
-	[](void* userdata, const int key, const int action) {
-		bool& wireframe_on = *reinterpret_cast<bool*>(userdata);
-		if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-			wireframe_on = !wireframe_on;
-			set_wireframe_mode(wireframe_on);
-		}
-	});
-
 	constexpr const Vertex vertices[4] {
 		{ { 0.5f,  0.5f }, { 1, 0 }, { 1, 0, 0, 1 } },
 		{ { 0.5f, -0.5f }, { 1, 1 }, { 0, 1, 0, 1 } },
@@ -71,12 +61,19 @@ int main(int /*argc*/, char** /*argv*/)
 
 bool initialize_systems()
 {
-	const std::vector<std::pair<std::string, std::string>> shaders {
-		{ "../shaders/vertex.glsl", "../shaders/fragment.glsl" }
+	const char* const vertexfiles[1] { "../shaders/vertex.glsl" };
+	const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
+	const char* const texturefiles[1] { "container.jpg" };
+	
+	const gp::ShadersProgramsFiles shaders {
+		vertexfiles,
+		fragmentfiles,
+		1
 	};
 
-	const std::vector<std::string> textures {
-		"container.jpg"
+	const gp::TexturesFiles textures {
+		texturefiles,
+		1
 	};
 
 	if (!gp::initialize_display("Hello GProj", 800, 600))

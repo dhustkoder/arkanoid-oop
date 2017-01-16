@@ -21,6 +21,7 @@ struct Indices {
 	const int count;
 };
 
+
 struct Vertices {
 	const Vertex* const data;
 	const int count;
@@ -32,6 +33,18 @@ struct Elements {
 	const Indices indices;
 };
 
+
+struct ShadersProgramsFiles {
+	const char* const* const vertex;
+	const char* const* const fragment;
+	const int count;
+};
+
+
+struct TexturesFiles {
+	const char* const* const files;
+	const int count;
+};
 
 
 } // namespace gp

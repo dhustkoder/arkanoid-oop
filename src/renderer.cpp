@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <fstream>
 #include <SOIL/SOIL.h>
 #include "renderer.hpp"
 #include "finally.hpp"
@@ -18,8 +17,8 @@ static GLchar error_msg_buffer[kErrorMsgBufferSize] { 0 };
 
 
 static bool create_glbuffers();
-static bool create_textures(const std::vector<std::string>& textures_files);
-static bool create_shaders(const std::vector<std::pair<std::string, std::string>>& programs);
+static bool create_textures(const TexturesFiles& textures_files);
+static bool create_shaders(const ShadersProgramsFiles& programs);
 static void free_glbuffers();
 static void free_textures();
 static void free_shaders();
@@ -27,25 +26,24 @@ static void free_shaders();
 
 static void fill_vbo(const Vertex* const vertices, const int count);
 
-static bool read_sources(const std::string& vertex_file, const std::string& fragment_file,
-                         std::string* vertex_source, std::string* fragment_source);
+static bool read_sources(const char* vertexfilepath, const char* fragmentfilepath,
+                         char* vertexsource, char* fragmentsource, int size);
 
-static bool push_new_shader_program(const std::pair<std::string, std::string>& program, int index);
+static bool push_new_shader_program(const char* vertexfile, const char* fragmentfile, int index);
 static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
 
 
 
-bool initialize_renderer(const std::vector<std::string>& textures_files,
-                         const std::vector<std::pair<std::string, std::string>>& shaders_programs)
+bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders)
 {
 	auto failure_guard = finally([] {
 		terminate_renderer();
 	});
 
 	if (!create_glbuffers() ||
-	    !create_textures(textures_files) ||
-	    !create_shaders(shaders_programs))
+	    !create_textures(textures) ||
+	    !create_shaders(shaders))
 		return false;
 
 	failure_guard.Abort();
@@ -153,19 +151,20 @@ void free_glbuffers()
 }
 
 
-bool create_textures(const std::vector<std::string>& textures_files)
+bool create_textures(const TexturesFiles& textures_files)
 {
-	if (textures_files.size() > kMaxTextures) {
+	const int num_textures = textures_files.count;
+
+	if (num_textures > kMaxTextures) {
 		fprintf(stderr, "Max textures: %i\n", kMaxTextures);
 		return false;
 	}
 
-	const int num_textures = static_cast<int>(textures_files.size());
 	glGenTextures(num_textures, textures_ids);
 
 	for (int i = 0; i < num_textures; ++i) {
 		const auto tex_id = textures_ids[i];
-		const auto& tex_file = textures_files[i];
+		const char* const tex_file = textures_files.files[i];
 
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 
@@ -176,12 +175,12 @@ bool create_textures(const std::vector<std::string>& textures_files)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		int width, height;
-		unsigned char* const image = SOIL_load_image(tex_file.c_str(),
+		unsigned char* const image = SOIL_load_image(tex_file,
                                                              &width, &height,
 		                                             nullptr, SOIL_LOAD_RGB);
 
 		if (image == nullptr) {
-			fprintf(stderr, "Couldn't load texture \'%s\' %s\n", tex_file.c_str(), SOIL_last_result());
+			fprintf(stderr, "Couldn't load texture \'%s\' %s\n", tex_file, SOIL_last_result());
 			return false;
 		}
 
@@ -202,16 +201,17 @@ void free_textures()
 }
 
 
-bool create_shaders(const std::vector<std::pair<std::string, std::string>>& programs)
+bool create_shaders(const ShadersProgramsFiles& programs)
 {
-	if (programs.size() > kMaxShaders) {
+	const int programs_count = programs.count;
+
+	if (programs_count > kMaxShaders) {
 		fprintf(stderr, "Max shaders: %i\n", kMaxShaders);
 		return false;
 	}
 
-	int index = 0;
-	for (const auto& program : programs) {
-		if (!push_new_shader_program(program, index++))
+	for (int i = 0; i < programs_count; ++i) {
+		if (!push_new_shader_program(programs.vertex[i], programs.fragment[i], i))
 			return false;
 	}
 
@@ -239,23 +239,23 @@ void free_shaders()
 }
 
 
-bool push_new_shader_program(const std::pair<std::string, std::string>& program, const int index)
+bool push_new_shader_program(const char* vertexfile, const char* fragmentfile, const int index)
 {
-	std::string vertex_source, fragment_source;
+	char vertexsource[512];
+	char fragmentsource[512];
 
-	if (!read_sources(program.first, program.second,
-	                  &vertex_source, &fragment_source)) {
+	if (!read_sources(vertexfile, fragmentfile, vertexsource, fragmentsource, 512))
 		return false;
-	}
 
 	const char* sources[] {
-		vertex_source.c_str(),
-		fragment_source.c_str()
+		&vertexsource[0],
+		&fragmentsource[0]
 	};
 
 	const auto program_id = glCreateProgram();
 	const auto vertex_id = glCreateShader(GL_VERTEX_SHADER);
 	const auto fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
+
 	programs_ids[index] = program_id;
 	shaders_ids[index][0] = vertex_id;
 	shaders_ids[index][1] = fragment_id;
@@ -325,29 +325,54 @@ bool validate_linkage(const GLuint program)
 }
 
 
-bool read_sources(const std::string& vertex_filepath, const std::string& fragment_filepath,
-                 std::string* const vertex_source, std::string* const fragment_source)
+bool read_sources(const char* vertexfilepath,
+                  const char* fragmentfilepath,
+                  char* const vertexsource,
+                  char* const fragmentsource,
+                  const int size)
 {
-	std::ifstream vertex_file(vertex_filepath);
-	std::ifstream fragment_file(fragment_filepath);
-	
-	if (!vertex_file.good()) {
-		fprintf(stderr, "Couldn't read \'%s\' source file\n",
-		        vertex_filepath.c_str());
-		return false;
-	} else if (!fragment_file.good()) {
-		fprintf(stderr, "Couldn't read \'%s\' source file\n",
-		        fragment_filepath.c_str());
+	FILE* const vertexfile = fopen(vertexfilepath, "r");
+	if (vertexfile == nullptr) {
+		fprintf(stderr, "Couldn't read \'%s\' source file\n", vertexfilepath);
 		return false;
 	}
 
-	*vertex_source =
-	  std::string{ std::istreambuf_iterator<GLchar>(vertex_file),
-	               std::istreambuf_iterator<GLchar>() };
+	const auto vertexfile_guard = finally([vertexfile] {
+		fclose(vertexfile);
+	});
 
-	*fragment_source =
-	  std::string{ std::istreambuf_iterator<GLchar>(fragment_file),
-	               std::istreambuf_iterator<GLchar>() };
+
+
+	FILE* const fragmentfile = fopen(fragmentfilepath, "r");
+
+	if (fragmentfile == nullptr) {
+		fprintf(stderr, "Couldn't read \'%s\' source file\n", fragmentfilepath);
+		return false;
+	}
+
+	const auto fragmentfile_guard = finally([fragmentfile] {
+		fclose(fragmentfile);
+	});
+
+	fseek(vertexfile, 0, SEEK_END);
+	fseek(fragmentfile, 0, SEEK_END);
+	
+	const auto vertexsize = ftell(vertexfile);
+	const auto fragmentsize = ftell(fragmentfile);
+
+	if (vertexsize >= size || fragmentsize >= size) {
+		fprintf(stderr, "Shader files are too big, max size: %i\n", size);
+		return false;
+	}
+
+	fseek(vertexfile, 0, SEEK_SET);
+	fseek(fragmentfile, 0, SEEK_SET);
+
+	fread(vertexsource, 1, vertexsize, vertexfile);
+	fread(fragmentsource, 1, fragmentsize, fragmentfile);
+
+	vertexsource[vertexsize - 1] = '\0';
+	fragmentsource[fragmentsize - 1] = '\0';
 
 	return true;
 }

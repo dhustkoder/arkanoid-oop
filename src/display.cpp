@@ -1,14 +1,11 @@
 #include <stdio.h>
 #include "display.hpp"
+#include "renderer.hpp"
 #include "finally.hpp"
 
 namespace gp {
 
 GLFWwindow* glfw_window = nullptr;
-static KeyCallback key_callbacks[kMaxKeyCallbacks] { nullptr };
-static void* key_callbacks_userdata[kMaxKeyCallbacks] { nullptr };
-static int key_callbacks_count = 0;
-
 
 static void glfw_error_callback(int error, const char* description);
 static void glfw_key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
@@ -67,20 +64,6 @@ void terminate_display()
 	glfwDestroyWindow(glfw_window);
 	glfwTerminate();
 	glfw_window = nullptr;
-	key_callbacks_count = 0;
-}
-
-
-bool add_keycallback(void* const userdata, const KeyCallback callback)
-{
-	if (key_callbacks_count < kMaxKeyCallbacks) {
-		key_callbacks[key_callbacks_count] = callback;
-		key_callbacks_userdata[key_callbacks_count] = userdata;
-		++key_callbacks_count;
-		return true;
-	}
-
-	return false;
 }
 
 
@@ -96,10 +79,15 @@ void glfw_key_callback(GLFWwindow* const win,
                        const int action,
                        const int /*mods*/)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(win, GLFW_TRUE);
-	for (int i = 0; i < key_callbacks_count; ++i)
-		key_callbacks[i](key_callbacks_userdata[i], key, action);
+	} else {
+		static bool wireframe_on = false;
+		if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+			wireframe_on = !wireframe_on;
+			set_wireframe_mode(wireframe_on);
+		}
+	}
 }
 
 

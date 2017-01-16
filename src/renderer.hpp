@@ -1,15 +1,11 @@
 #ifndef GPROJ_RENDERER_HPP_
 #define GPROJ_RENDERER_HPP_
-#include <vector>
-#include <string>
 #include <GL/glew.h>
 #include "renderer_types.hpp"
 
 namespace gp {
 
-extern bool initialize_renderer(const std::vector<std::string>& textures_files,
-                                const std::vector<std::pair<std::string, std::string>>& shaders_programs);
-
+extern bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders);
 extern void terminate_renderer();
 
 
