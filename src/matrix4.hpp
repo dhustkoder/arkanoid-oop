@@ -5,6 +5,7 @@
 
 namespace gp {
 
+	
 inline const float (&Mat4::operator[](int index) const)[4]
 {
 	return data[index];
@@ -103,28 +104,13 @@ inline Mat4 translation_mat4(const float x = 1, const float y = 1, const float z
 
 inline Mat4 translate(const Mat4& m, const Vec3& v)
 {
-	return m * translation_mat4(v.x, v.y, v.z);
+	return translation_mat4(v.x, v.y, v.z) * m;
 }
 
 
 inline Mat4 scale(Mat4 m, const Vec3& v)
 {
-	return m * identity_mat4(v.x, v.y, v.z);
-}
-
-
-inline Mat4 rotate_z(const Mat4& m, const float radians)
-{
-	const auto c = cosf(radians);
-	const auto s = sinf(radians);
-
-	Mat4 tmp = identity_mat4();
-	tmp[0][0] = c;
-	tmp[0][1] = -s;
-	tmp[1][0] = s;
-	tmp[1][1] = c;
-
-	return m * tmp;
+	return identity_mat4(v.x, v.y, v.z) * m;
 }
 
 
