@@ -15,7 +15,7 @@ extern void terminate_renderer();
 
 extern void draw(GLenum mode, const Elements& elements);
 extern void draw(GLenum mode, const Vertices& vertices);
-extern void set_uniform(const long program, const Mat4& mat4, const char* name);
+extern void set_uniform(const int program, const Mat4& mat4, const char* name);
 
 
 inline void set_wireframe_mode(const bool on)
@@ -24,27 +24,27 @@ inline void set_wireframe_mode(const bool on)
 }
 
 
-inline void bind_texture(const long index)
+inline void bind_texture(const int index)
 {
-	extern std::vector<GLuint> textures_ids;
+	extern GLuint textures_ids[kMaxTextures];
 	glBindTexture(GL_TEXTURE_2D, textures_ids[index]);
 }
 
 
-inline void unbind_texture()
+inline void unbind_textures()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
-inline void bind_shader(const long program_index)
+inline void bind_shader(const int program_index)
 {
-	extern std::vector<GLuint> programs_ids;
+	extern GLuint programs_ids[kMaxShaders];
 	glUseProgram(programs_ids[program_index]);
 }
 
 
-inline void unbind_shader()
+inline void unbind_shaders()
 {
 	glUseProgram(0);
 }

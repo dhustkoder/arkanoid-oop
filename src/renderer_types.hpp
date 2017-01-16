@@ -4,6 +4,10 @@
 
 namespace gp {
 
+constexpr const int kMaxTextures = 1;
+constexpr const int kMaxShaders = 1;
+constexpr const int kErrorMsgBufferSize = 1024;
+
 
 struct Vertex {
 	Vec2 pos;
@@ -14,12 +18,12 @@ struct Vertex {
 
 struct Indices {
 	const unsigned int* const data;
-	const long count;
+	const int count;
 };
 
 struct Vertices {
 	const Vertex* const data;
-	const long count;
+	const int count;
 };
 
 

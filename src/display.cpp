@@ -7,7 +7,7 @@ namespace gp {
 GLFWwindow* glfw_window = nullptr;
 static KeyCallback key_callbacks[kMaxKeyCallbacks] { nullptr };
 static void* key_callbacks_userdata[kMaxKeyCallbacks] { nullptr };
-static long key_callbacks_count = 0;
+static int key_callbacks_count = 0;
 
 
 static void glfw_error_callback(int error, const char* description);
@@ -98,7 +98,7 @@ void glfw_key_callback(GLFWwindow* const win,
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(win, GLFW_TRUE);
-	for (long i = 0; i < key_callbacks_count; ++i)
+	for (int i = 0; i < key_callbacks_count; ++i)
 		key_callbacks[i](key_callbacks_userdata[i], key, action);
 }
 

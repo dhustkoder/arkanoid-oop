@@ -10,12 +10,11 @@ static GLuint vao_id = 0;
 static GLuint vbo_id = 0;
 static GLuint ebo_id = 0;
 
-std::vector<GLuint> textures_ids;
 
-constexpr const auto kErrorMsgBufferSize = 1024;
-static GLchar error_msg_buffer[kErrorMsgBufferSize];
-std::vector<GLuint> programs_ids;
-static std::vector<std::pair<GLuint, GLuint>> shaders_ids;
+GLuint textures_ids[kMaxTextures] { 0 };
+GLuint programs_ids[kMaxShaders] { 0 };
+static GLuint shaders_ids[kMaxShaders][2] { 0 };
+static GLchar error_msg_buffer[kErrorMsgBufferSize] { 0 };
 
 
 static bool create_glbuffers();
@@ -26,12 +25,12 @@ static void free_textures();
 static void free_shaders();
 
 
-static void fill_vbo(const Vertex* const vertices, const long count);
+static void fill_vbo(const Vertex* const vertices, const int count);
 
 static bool read_sources(const std::string& vertex_file, const std::string& fragment_file,
                          std::string* vertex_source, std::string* fragment_source);
 
-static bool push_new_shader_program(const std::pair<std::string, std::string>& program);
+static bool push_new_shader_program(const std::pair<std::string, std::string>& program, int index);
 static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
 
@@ -66,7 +65,7 @@ void draw(const GLenum mode, const Elements& elements)
 {
 	const Vertices& vertices = elements.vertices;
 	const Indices& indices = elements.indices;
-	const long ind_count = indices.count;
+	const GLsizei ind_count = indices.count;
 
 	glBindVertexArray(vao_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
@@ -85,7 +84,7 @@ void draw(const GLenum mode, const Elements& elements)
 
 void draw(const GLenum mode, const Vertices& vertices)
 {
-	const long count = vertices.count;
+	const int count = vertices.count;
 	glBindVertexArray(vao_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
@@ -97,15 +96,14 @@ void draw(const GLenum mode, const Vertices& vertices)
 }
 
 
-void set_uniform(const long program, const Mat4& mat4, const char* name)
+void set_uniform(const int program, const Mat4& mat4, const char* name)
 {
-	extern std::vector<GLuint> programs_ids;
 	GLint location = glGetUniformLocation(programs_ids[program], name);
 	glUniformMatrix4fv(location, 1, GL_FALSE, &mat4.data[0][0]);
 }
 
 
-void fill_vbo(const Vertex* vertices, const long count)
+void fill_vbo(const Vertex* vertices, const int count)
 {
 	constexpr auto vertsize = sizeof(*vertices);
 	const auto buffsize = vertsize * count;
@@ -157,11 +155,15 @@ void free_glbuffers()
 
 bool create_textures(const std::vector<std::string>& textures_files)
 {
-	const auto num_textures = textures_files.size();
-	textures_ids.resize(num_textures);
-	glGenTextures(num_textures, textures_ids.data());
+	if (textures_files.size() > kMaxTextures) {
+		fprintf(stderr, "Max textures: %i\n", kMaxTextures);
+		return false;
+	}
 
-	for (size_t i = 0; i < num_textures; ++i) {
+	const int num_textures = static_cast<int>(textures_files.size());
+	glGenTextures(num_textures, textures_ids);
+
+	for (int i = 0; i < num_textures; ++i) {
 		const auto tex_id = textures_ids[i];
 		const auto& tex_file = textures_files[i];
 
@@ -174,7 +176,9 @@ bool create_textures(const std::vector<std::string>& textures_files)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		int width, height;
-		unsigned char* const image = SOIL_load_image(tex_file.c_str(), &width, &height, nullptr, SOIL_LOAD_RGB);
+		unsigned char* const image = SOIL_load_image(tex_file.c_str(),
+                                                             &width, &height,
+		                                             nullptr, SOIL_LOAD_RGB);
 
 		if (image == nullptr) {
 			fprintf(stderr, "Couldn't load texture \'%s\' %s\n", tex_file.c_str(), SOIL_last_result());
@@ -182,7 +186,6 @@ bool create_textures(const std::vector<std::string>& textures_files)
 		}
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-
 		glGenerateMipmap(GL_TEXTURE_2D);
 		SOIL_free_image_data(image);
 	}
@@ -194,19 +197,21 @@ bool create_textures(const std::vector<std::string>& textures_files)
 
 void free_textures()
 {
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDeleteTextures(textures_ids.size(), textures_ids.data());
-	textures_ids.clear();	
+	unbind_textures();
+	glDeleteTextures(kMaxTextures, textures_ids);
 }
 
 
 bool create_shaders(const std::vector<std::pair<std::string, std::string>>& programs)
 {
-	programs_ids.reserve(programs.size());
-	shaders_ids.reserve(programs.size());
+	if (programs.size() > kMaxShaders) {
+		fprintf(stderr, "Max shaders: %i\n", kMaxShaders);
+		return false;
+	}
 
+	int index = 0;
 	for (const auto& program : programs) {
-		if (!push_new_shader_program(program))
+		if (!push_new_shader_program(program, index++))
 			return false;
 	}
 
@@ -216,11 +221,14 @@ bool create_shaders(const std::vector<std::pair<std::string, std::string>>& prog
 
 void free_shaders()
 {
-	unbind_shader();	
-	for (size_t i = 0; i < programs_ids.size(); ++i) {
+	unbind_shaders();
+	for (int i = 0; i < kMaxShaders; ++i) {
 		const auto program_id = programs_ids[i];
-		const auto vertex_id = shaders_ids[i].first;
-		const auto fragment_id = shaders_ids[i].second;
+		if (program_id == 0)
+			break;
+		
+		const auto vertex_id = shaders_ids[i][0];
+		const auto fragment_id = shaders_ids[i][1];
 
 		glDetachShader(program_id, vertex_id);
 		glDetachShader(program_id, fragment_id);
@@ -228,13 +236,10 @@ void free_shaders()
 		glDeleteShader(fragment_id);
 		glDeleteProgram(program_id);	
 	}
-
-	programs_ids.clear();
-	shaders_ids.clear();
 }
 
 
-bool push_new_shader_program(const std::pair<std::string, std::string>& program)
+bool push_new_shader_program(const std::pair<std::string, std::string>& program, const int index)
 {
 	std::string vertex_source, fragment_source;
 
@@ -251,8 +256,9 @@ bool push_new_shader_program(const std::pair<std::string, std::string>& program)
 	const auto program_id = glCreateProgram();
 	const auto vertex_id = glCreateShader(GL_VERTEX_SHADER);
 	const auto fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
-	programs_ids.push_back(program_id);
-	shaders_ids.push_back({vertex_id, fragment_id});
+	programs_ids[index] = program_id;
+	shaders_ids[index][0] = vertex_id;
+	shaders_ids[index][1] = fragment_id;
 
 	glShaderSource(vertex_id, 1, &sources[0], nullptr);
 	glCompileShader(vertex_id);
