@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stddef.h>
 #include <SOIL/SOIL.h>
 #include "renderer.hpp"
 #include "finally.hpp"

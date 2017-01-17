@@ -88,7 +88,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\Rafael\Documents\Projects\gproj\externals\soil\src;$(SolutionDir)..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\x86\include\;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\..\externals\soil\include\;$(SolutionDir)\..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\x86\include\;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)..\..\externals\freeglut\include\;$(SolutionDir)..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\include;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
