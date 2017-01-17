@@ -20,7 +20,7 @@ inline float (&Mat4::operator[](int index))[4]
 	
 inline Mat4 operator+(const Mat4& a, const Mat4& b)
 {
-	Mat4 result {};
+	Mat4 result;
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -32,7 +32,7 @@ inline Mat4 operator+(const Mat4& a, const Mat4& b)
 
 inline Mat4 operator-(const Mat4& a, const Mat4& b)
 {
-	Mat4 result {};
+	Mat4 result;
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -44,7 +44,7 @@ inline Mat4 operator-(const Mat4& a, const Mat4& b)
 
 inline Mat4 operator*(const Mat4& a, const Mat4& b)
 {
-	Mat4 result {};
+	Mat4 result;
 
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
