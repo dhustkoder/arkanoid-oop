@@ -2,6 +2,8 @@
 #define GPROJ_MATRIX4_HPP_
 #include <math.h>
 #include "math_types.hpp"
+#include "vector3.hpp"
+
 
 namespace gp {
 
@@ -122,16 +124,17 @@ inline Mat4 rotate(const Mat4& m, const float radians, const Vec3& v)
 {
 	const float c = cosf(radians);
 	const float s = sinf(radians);
-	const float x = v.x, y = v.y, z = v.z;
+	const Vec3 uni = normalize(v);
+	const float x = uni.x, y = uni.y, z = uni.z;
 
-	const Mat4 tmp {{
+	const Mat4 rotation {{
 		{ c + (x*x) * (1 - c), x * y * (1 - c) - z * s,  x * z * (1 - c) + y * s, 0 },
 		{ y * x * (1 - c) + z * s, c + (y*y) * (1 - c), y * z * (1 - c) - x * s, 0 },
 		{ z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + (z*z) * (1 - c), 0 },
 		{ 0, 0, 0, 1 }
 	}};
 
-	return tmp * m;
+	return rotation * m;
 }
 
 
