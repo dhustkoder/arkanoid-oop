@@ -59,10 +59,14 @@ inline Mat4 operator*(const Mat4& a, const Mat4& b)
 }
 
 
-inline Mat4& operator+=(Mat4& a, const Mat4& b)
+inline bool operator==(const Mat4& a, const Mat4& b)
 {
-	a = a + b;
-	return a;
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			if (a[i][j] != b[i][j])
+				return false;
+
+	return true;
 }
 
 
