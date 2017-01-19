@@ -22,6 +22,7 @@ constexpr const int kWinHeight = 768;
 float yaw = -90;
 float pitch = 0;
 Vec3 camera_front { 0, 0, -1 };
+Vec3 camera_right { 1, 0, 0 };
 Vec3 camera_pos { 0, 0, 3 };
 Vec3 cameta_up { 0, 1, 0 };
 Vec2 cursor;
@@ -153,6 +154,17 @@ int main(int /*argc*/, char** /*argv*/)
 		const auto tcos = cosf(time * 3) * 0.7f;
 //		const glm::mat4 view = glm::lookAt(togv(camera_pos), togv(camera_front), glm::vec3{0, 1, 0});
 //		set_uniform(0, tom(view), "view");
+//
+		const float speed = 0.2f;
+		if (is_key_pressed(GLFW_KEY_W))
+			camera_pos += camera_front * speed;
+		else if (is_key_pressed(GLFW_KEY_S))
+			camera_pos -= camera_front * speed;
+		if (is_key_pressed(GLFW_KEY_D))
+			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * speed;
+		else if (is_key_pressed(GLFW_KEY_A))
+			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * speed;
+		camera_pos.y = 0;
 		Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 		set_uniform(0, view, "view");
 
