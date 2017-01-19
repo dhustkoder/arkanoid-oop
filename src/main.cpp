@@ -9,32 +9,19 @@
 #include "matrix4.hpp"
 #include "vector2.hpp"
 
-namespace gp {
-	extern GLFWwindow* window;
-}
-
-using namespace gp;
-
 
 constexpr const int kWinWidth = 1366;
-constexpr const int kWinHeight = 768;
-
-float yaw = -90;
-float pitch = 0;
-Vec3 camera_front { 0, 0, -1 };
-Vec3 camera_right { 1, 0, 0 };
-Vec3 camera_pos { 0, 0, 3 };
-Vec3 cameta_up { 0, 1, 0 };
-Vec2 cursor;
+constexpr const int kWinHeight = 766;
 
 
-void mouse_callback(GLFWwindow* win, double xpos, double ypos);
+static gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos, float* yaw, float* pitch);
 static bool initialize_systems();
 static void terminate_systems();
 
 
 int main(int /*argc*/, char** /*argv*/)
 {
+	using namespace gp;
 
 	if (!initialize_systems())
 		return EXIT_FAILURE;
@@ -112,59 +99,38 @@ int main(int /*argc*/, char** /*argv*/)
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
 	set_uniform(0, projection, "projection");
 
-	const auto tom = [] (const glm::mat4& gm) {
-		Mat4 m;
-		
-		for (int i = 0; i < 4; ++i)
-			for (int j = 0; j < 4; ++j)
-				m[i][j] = gm[i][j];
 
-		return m;
+	Vec2 lastcursor, newcursor;
+	get_cursor_pos(&lastcursor);
 
-	};
+	const float camera_speed = 0.2f;
+	float yaw = -90;
+	float pitch = 0;
+	Vec3 camera_pos { 0, 0, 3 };
+	Vec3 camera_front { 0, 0, -1 };
 
-	const auto togm = [] (const Mat4& m) {
-		glm::mat4 gm;
-		for (int i = 0; i < 4; ++i)
-			for (int j = 0; j < 4; ++j)
-				gm[i][j] = m[i][j];
-
-		return gm;
-
-	};
-
-	const auto togv = [] (const Vec3& v) {
-		return glm::vec3 { v.x, v.y, v.z };
-	};
-	const auto tov = [] (const glm::vec3& gv) {
-		return Vec3 { gv.x,  gv.y, gv.z };
-	};
-	
-
-
-	get_cursor_pos(&cursor);
-
-	glfwSetCursorPosCallback(window, &mouse_callback);
 
 	while (update_display()) {
-		clear_display({0, 0, 0, 1});
+		clear_display({0, 0, 0, 0});
 
 		const auto time = static_cast<float>(glfwGetTime());
 		const auto tsin = sinf(time * 3) * 0.7f;
 		const auto tcos = cosf(time * 3) * 0.7f;
-//		const glm::mat4 view = glm::lookAt(togv(camera_pos), togv(camera_front), glm::vec3{0, 1, 0});
-//		set_uniform(0, tom(view), "view");
-//
-		const float speed = 0.2f;
+
+		get_cursor_pos(&newcursor);
+		if (newcursor != lastcursor)
+			camera_front = process_cursor_movement(newcursor, &lastcursor, &yaw, &pitch);
+
+
 		if (is_key_pressed(GLFW_KEY_W))
-			camera_pos += camera_front * speed;
+			camera_pos += camera_front * camera_speed;
 		else if (is_key_pressed(GLFW_KEY_S))
-			camera_pos -= camera_front * speed;
+			camera_pos -= camera_front * camera_speed;
 		if (is_key_pressed(GLFW_KEY_D))
-			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * speed;
+			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * camera_speed;
 		else if (is_key_pressed(GLFW_KEY_A))
-			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * speed;
-		camera_pos.y = 0;
+			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * camera_speed;
+
 		Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 		set_uniform(0, view, "view");
 
@@ -182,34 +148,39 @@ int main(int /*argc*/, char** /*argv*/)
 
 
 
-void mouse_callback(GLFWwindow* win, double xpos, double ypos)
+gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos, float* const yaw, float* const pitch)
 {
-	GLfloat xoffset = xpos - cursor.x;
-	GLfloat yoffset = cursor.y - ypos; // Reversed since y-coordinates go from bottom to left
-	cursor = Vec2 { (float)xpos, (float)ypos };
+	using namespace gp;
 
-	GLfloat sensitivity = 0.05;	// Change this value to your liking
+	float xoffset = newpos.x - oldpos->x;
+	float yoffset = oldpos->y - newpos.y; // Reversed since y-coordinates go from bottom to left
+	*oldpos = newpos;
+
+	float sensitivity = 0.05f; // Change this value to your liking
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
-	yaw   += xoffset;
-	pitch += yoffset;
+	*yaw   += xoffset;
+	*pitch += yoffset;
 
 	// Make sure that when pitch is out of bounds, screen doesn't get flipped
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+	if (*pitch > 89.0f)
+		*pitch = 89.0f;
+	if (*pitch < -89.0f)
+		*pitch = -89.0f;
 
 	const auto radians = [](float x) {
 		return x * (kPI / 180);
 	};
 
+	const auto rp = radians(*pitch);
+	const auto ry = radians(*yaw);
+
 	Vec3 front;
-	front.x = cos(radians(yaw)) * cos(radians(pitch));
-	front.y = sin(radians(pitch));
-	front.z = sin(radians(yaw)) * cos(radians(pitch));
-	camera_front = normalize(front);
+	front.x = cos(ry) * cos(rp);
+	front.y = sin(rp);
+	front.z = sin(ry) * cos(rp);
+	return normalize(front);
 }
 
 

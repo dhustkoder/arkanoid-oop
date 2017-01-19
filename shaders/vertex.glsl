@@ -13,7 +13,7 @@ uniform mat4 projection;
 void main(void)
 {
 	gl_Position = projection * view * model * vec4(position, 1.0f);
-	fragment_color = vec4(1, 1, 1, 1); //color;
+	fragment_color = vec4(1, 1, 1, 0.1f); //color;
 	fragment_tex_coords = tex_coords;
 }
 
