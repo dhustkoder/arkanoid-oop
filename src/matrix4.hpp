@@ -138,6 +138,45 @@ inline Mat4 rotate(const Mat4& m, const float radians, const Vec3& v)
 }
 
 
+inline Mat4 perspective(const float fov, const float aspect, const float near, const float far)
+{
+	const float tanfov = tanf(fov * 0.5f);
+	Mat4 res {};
+
+	res[0][0] = 1.0f / (tanfov * aspect);
+	res[1][1] = 1.0f / tanfov;
+	res[2][2] = - (far + near) / (far - near);
+	res[2][3] = -1.0f;
+	res[3][2] = - (2.0f * far * near) / (far - near);
+	return res;
+}
+
+
+inline Mat4 look_at(const Vec3& eye, const Vec3& center, const Vec3& up)
+{
+	const Vec3 f = normalize(center - eye);
+	const Vec3 s = normalize(cross(f, up));
+	const Vec3 u = cross(s, f);
+
+	Mat4 res = identity_mat4();
+
+	res[0][0] = s.x;
+	res[1][0] = s.y;
+	res[2][0] = s.z;
+	res[0][1] = u.x;
+	res[1][1] = u.y;
+	res[2][1] = u.z;
+	res[0][2] = -f.x;
+	res[1][2] = -f.y;
+	res[2][2] = -f.z;
+	res[3][0] = -dot(s, eye);
+	res[3][1] = -dot(u, eye);
+	res[3][2] = dot(f, eye);
+
+	return res;
+}
+
+
 } // namespace gp
 #endif
 

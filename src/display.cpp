@@ -2,22 +2,25 @@
 #include "display.hpp"
 #include "renderer.hpp"
 #include "finally.hpp"
+#include "vector3.hpp"
 
 namespace gp {
 
-GLFWwindow* glfw_window = nullptr;
+GLFWwindow* window = nullptr;
+bool keystate[1024] { false };
 
-static void glfw_error_callback(int error, const char* description);
-static void glfw_key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
-
+static void error_callback(int error, const char* description);
+static void key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
 
 bool initialize_display(const char* const title, const int w, const int h)
 {
-	constexpr const auto infosize = 4;
+	constexpr const int infosize = 4;
+
 	constexpr GLenum infonums[infosize] {
 		GL_VENDOR, GL_RENDERER, GL_VERSION,
 		GL_SHADING_LANGUAGE_VERSION
 	};
+
 	constexpr const char* const infostrs[infosize] {
 		"VENDOR", "RENDERER", "VERSION",
 		"SHADING LANGUAGE VERSION"
@@ -25,7 +28,7 @@ bool initialize_display(const char* const title, const int w, const int h)
 
 	GLenum errcode;
 
-	glfwSetErrorCallback(&glfw_error_callback);
+	glfwSetErrorCallback(&error_callback);
 
 	if (glfwInit() != GLFW_TRUE)
 		return false;
@@ -35,25 +38,27 @@ bool initialize_display(const char* const title, const int w, const int h)
 	});
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	glfw_window = glfwCreateWindow(w, h, title, NULL, NULL);
+	window = glfwCreateWindow(w, h, title, NULL, NULL);
 
-	if (glfw_window == nullptr)
+	if (window == nullptr)
 		return false;
 
-	glfwSetKeyCallback(glfw_window, &glfw_key_callback);
-	glfwMakeContextCurrent(glfw_window);
+	glfwSetKeyCallback(window, &key_callback);
+	glfwMakeContextCurrent(window);
 
 	if ((errcode = glewInit()) != GLEW_OK) {
 		fprintf(stderr, "%s\n", glewGetErrorString(errcode));
 		return false;
 	}
 
-	glViewport(0, 0, w, h);
-
 	puts("OpenGL");
 	for (int i = 0; i < infosize; ++i)
 		printf("%s: %s\n", infostrs[i], glGetString(infonums[i]));
 
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glViewport(0, 0, w, h);
+	glEnable(GL_DEPTH_TEST);
 	failure_guard.Abort();
 	return true;
 }
@@ -61,19 +66,19 @@ bool initialize_display(const char* const title, const int w, const int h)
 
 void terminate_display()
 {
-	glfwDestroyWindow(glfw_window);
+	glfwDestroyWindow(window);
 	glfwTerminate();
-	glfw_window = nullptr;
+	window = nullptr;
 }
 
 
-void glfw_error_callback(const int error, const char* const description)
+void error_callback(const int error, const char* const description)
 {
 	fprintf(stderr, "Error %d: %s\n", error, description);
 }
 
 
-void glfw_key_callback(GLFWwindow* const win,
+void key_callback(GLFWwindow* const win,
                        const int key,
                        const int /*scancode*/,
                        const int action,
@@ -81,12 +86,12 @@ void glfw_key_callback(GLFWwindow* const win,
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(win, GLFW_TRUE);
-	} else {
+	} else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 		static bool wireframe_on = false;
-		if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-			wireframe_on = !wireframe_on;
-			set_wireframe_mode(wireframe_on);
-		}
+		wireframe_on = !wireframe_on;
+		set_wireframe_mode(wireframe_on);
+	} else {
+		keystate[key] = action != GLFW_RELEASE;
 	}
 }
 

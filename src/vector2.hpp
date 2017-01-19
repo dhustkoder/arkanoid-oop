@@ -44,6 +44,24 @@ inline Vec2& operator*=(Vec2& a, const float scalar)
 }
 
 
+
+inline bool operator==(const Vec2& a, const Vec2& b)
+{
+	if (fabs(a.x - b.x) > 0.00001)
+		return false;
+	else if (fabs(a.y - b.y) > 0.00001)
+		return false;
+	return true;
+}
+
+
+inline bool operator!=(const Vec2& a, const Vec2& b)
+{
+	return !(a == b);
+}
+
+
+
 } // namespace gp
 #endif
 

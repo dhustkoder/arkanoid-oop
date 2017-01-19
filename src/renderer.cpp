@@ -111,11 +111,11 @@ void fill_vbo(const Vertex* vertices, const int count)
 	const auto col_offset = (GLvoid*) offsetof(Vertex, color);
 
 	glBufferData(GL_ARRAY_BUFFER, buffsize, vertices, GL_STREAM_DRAW);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, vertsize, pos_offset);
+	glVertexAttribPointer(0, sizeof(Vertex::pos)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, pos_offset);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, vertsize, tex_offset);
+	glVertexAttribPointer(1, sizeof(Vertex::tex)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, tex_offset);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, vertsize, col_offset);
+	glVertexAttribPointer(2, sizeof(Vertex::color)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, col_offset);
 	glEnableVertexAttribArray(2);
 }
 

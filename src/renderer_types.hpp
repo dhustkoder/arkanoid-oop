@@ -10,7 +10,7 @@ constexpr const int kErrorMsgBufferSize = 1024;
 
 
 struct Vertex {
-	Vec2 pos;
+	Vec3 pos;
 	Vec2 tex;
 	Vec4 color;
 };
