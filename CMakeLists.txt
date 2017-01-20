@@ -64,23 +64,29 @@ set(GPROJ_SRC_DIR "./src")
 set(GPROJ_TEST_DIR "./tests")
 
 
-# include src directory
-include_directories("${GPROJ_SRC_DIR}")
-
-
-# specific platform builds
+# specific platform configurations
 if (${TARGET_OS} STREQUAL "Linux")
-	set(GPROJ_LINK_LIBRARIES "-lc -lm -lglfw -lGLEW -lSOIL -lGL")
+	set(GPROJ_LINK_LIBRARIES "-lc -lm")
 else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()
 
+# dependencies
+add_subdirectory(./externals/glew/build/cmake)
+add_subdirectory(./externals/glfw)
+add_subdirectory(./externals/soil)
 
+
+# include src directory
+include_directories("${GPROJ_SRC_DIR}")
+include_directories("./externals/glew/include")
+include_directories("./externals/glfw/include")
+#include_directories("./externals/soil/include")
 
 # build
 file(GLOB GPROJ_SRC_FILES "${GPROJ_SRC_DIR}/*.cpp")
 add_executable(${PROJECT_NAME} ${GPROJ_SRC_FILES} ${GPROJ_PLATFORM_SRC_FILES})
-target_link_libraries(${PROJECT_NAME} ${GPROJ_LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${GPROJ_LINK_LIBRARIES} glew_s glfw soil)
 
 if (${TESTS})
 	file(GLOB GPROJ_TEST_SRC "${GPROJ_TEST_DIR}/*.cpp")

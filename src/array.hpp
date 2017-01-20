@@ -1,6 +1,7 @@
 #ifndef GPROJ_ARRAY_HPP_
 #define GPROJ_ARRAY_HPP_
 #include <stdlib.h>
+#include <limits.h>
 #include <assert.h>
 #include "array_type.hpp"
 
