@@ -9,7 +9,6 @@ namespace gp {
 
 extern bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders);
 extern void terminate_renderer();
-extern void draw(GLenum mode);
 
 
 inline void set_wireframe_mode(const bool on)

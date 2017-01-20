@@ -98,7 +98,6 @@ endif()
 if (ASM_OUTPUT)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -S")
 	set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAG "-save-temps")
-	set_target_properties("${PROJECT_NAME}_tests" PROPERTIES COMPILE_FLAG "-save-temps")
 endif()
 
 

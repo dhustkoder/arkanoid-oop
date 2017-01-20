@@ -76,7 +76,6 @@ Array<T>& Array<T>::operator=(Array&& arr)
 	arr.data = data_aux;
 	arr.size = size_aux;
 	arr.capacity = cap_aux;
-	arr.~Array();
 }
 
 
