@@ -65,7 +65,7 @@ void terminate_renderer()
 	free_glbuffers();
 }
 
-
+/*
 void draw(const GLenum mode, const Elements& elements)
 {
 	const Vertices& vertices = elements.vertices;
@@ -85,7 +85,7 @@ void draw(const GLenum mode, const Elements& elements)
 	glBindVertexArray(0);
 
 }
-
+*/
 
 void fill_vbo(const Vertex* vertices, const int count)
 {
