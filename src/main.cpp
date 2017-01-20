@@ -7,8 +7,8 @@
 #include "vector2.hpp"
 
 
-constexpr const int kWinWidth = 1366;
-constexpr const int kWinHeight = 766;
+constexpr const int kWinWidth = 800;
+constexpr const int kWinHeight = 600;
 
 
 static gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos, float* yaw, float* pitch);
@@ -110,7 +110,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 
 	while (update_display()) {
-		clear_display({0.67, 0.23, 0.45, 1});
+		clear_display({0, 0, 0, 1});
 
 		const auto time = static_cast<float>(glfwGetTime());
 		delta_time = time - last_frame;
@@ -176,9 +176,9 @@ gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos,
 	const auto ry = radians(*yaw);
 
 	Vec3 front;
-	front.x = cos(ry) * cos(rp);
-	front.y = sin(rp);
-	front.z = sin(ry) * cos(rp);
+	front.x = cosf(ry) * cosf(rp);
+	front.y = sinf(rp);
+	front.z = sinf(ry) * cosf(rp);
 	return normalize(front);
 }
 

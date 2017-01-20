@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <SOIL/SOIL.h>
+#include "array.hpp"
 #include "renderer.hpp"
 #include "finally.hpp"
 
@@ -10,9 +11,9 @@ static GLuint vao_id = 0;
 static GLuint vbo_id = 0;
 static GLuint ebo_id = 0;
 
-
 GLuint textures_ids[kMaxTextures] { 0 };
 GLuint programs_ids[kMaxShaders] { 0 };
+
 static GLuint shaders_ids[kMaxShaders][2] { 0 };
 static GLchar error_msg_buffer[kErrorMsgBufferSize] { 0 };
 

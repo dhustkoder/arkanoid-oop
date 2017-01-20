@@ -1,9 +1,9 @@
+[submodule "externals/soil"]
+	path = externals/soil
+	url = https://github.com/dhustkoder/soil
 [submodule "externals/glew"]
 	path = externals/glew
 	url = https://github.com/dhustkoder/glew
 [submodule "externals/glfw"]
 	path = externals/glfw
 	url = https://github.com/dhustkoder/glfw
-[submodule "externals/soil"]
-	path = externals/soil
-	url = https://github.com/dhustkoder/soil

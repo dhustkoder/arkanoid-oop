@@ -19,20 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\display.cpp" />
-    <ClCompile Include="..\..\..\src\main.cpp" />
-    <ClCompile Include="..\..\..\src\renderer.cpp" />
+    <ClInclude Include="..\src\array.hpp" />
+    <ClInclude Include="..\src\array_type.hpp" />
+    <ClInclude Include="..\src\display.hpp" />
+    <ClInclude Include="..\src\finally.hpp" />
+    <ClInclude Include="..\src\math_types.hpp" />
+    <ClInclude Include="..\src\matrix4.hpp" />
+    <ClInclude Include="..\src\renderer.hpp" />
+    <ClInclude Include="..\src\renderer_types.hpp" />
+    <ClInclude Include="..\src\vector2.hpp" />
+    <ClInclude Include="..\src\vector3.hpp" />
+    <ClInclude Include="..\src\vector4.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\display.hpp" />
-    <ClInclude Include="..\..\..\src\finally.hpp" />
-    <ClInclude Include="..\..\..\src\math_types.hpp" />
-    <ClInclude Include="..\..\..\src\matrix4.hpp" />
-    <ClInclude Include="..\..\..\src\renderer.hpp" />
-    <ClInclude Include="..\..\..\src\renderer_types.hpp" />
-    <ClInclude Include="..\..\..\src\vector2.hpp" />
-    <ClInclude Include="..\..\..\src\vector3.hpp" />
-    <ClInclude Include="..\..\..\src\vector4.hpp" />
+    <ClCompile Include="..\src\display.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\renderer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C27FFEE3-91A7-4CB2-8AE0-730CFFC43648}</ProjectGuid>
@@ -85,7 +87,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include\;$(SolutionDir)..\..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\..\..\externals\soil\include\;$(SolutionDir)\..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\x86\include\;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
@@ -101,10 +103,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS ;_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32sd.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
