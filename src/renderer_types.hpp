@@ -23,8 +23,8 @@ struct Indices {
 
 
 struct Vertices {
-	const Vertex* const data;
-	const int count;
+	const Vertex* data;
+	int count;
 };
 
 
@@ -44,6 +44,15 @@ struct ShadersProgramsFiles {
 struct TexturesFiles {
 	const char* const* const files;
 	const int count;
+};
+
+
+struct ShaderLocs {
+	int projection, view, model;
+};
+
+struct ShaderIds {
+	unsigned int vertex, fragment;
 };
 
 

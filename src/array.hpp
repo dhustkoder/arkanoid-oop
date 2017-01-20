@@ -8,7 +8,7 @@
 namespace gp {
 
 template<class T>
-const T& Array<T>::operator[](const long index) const
+const T& Array<T>::operator[](const int index) const
 {
 	assert(index < this->size);
 	return this->data[index];
@@ -16,7 +16,7 @@ const T& Array<T>::operator[](const long index) const
 
 
 template<class T>
-T& Array<T>::operator[](const long index)
+T& Array<T>::operator[](const int index)
 {
 	assert(index < this->size);
 	return this->data[index];
@@ -66,8 +66,8 @@ template<class T>
 Array<T>& Array<T>::operator=(Array&& arr)
 {
 	T* const data_aux = this->data;
-	const long size_aux = this->size;
-	const long cap_aux = this->capacity;
+	const int size_aux = this->size;
+	const int cap_aux = this->capacity;
 
 	this->data = arr.data;
 	this->size = arr.size;
@@ -101,7 +101,7 @@ Array<T> make_array()
 
 
 template<class T>
-void resize(const long newsize, Array<T>* const arr)
+void resize(const int newsize, Array<T>* const arr)
 {
 	arr->data = static_cast<T*>(realloc(arr->data, sizeof(T) * newsize));
 	assert(arr->data != nullptr);
@@ -113,7 +113,7 @@ template<class T>
 void push(const T& elem, Array<T>* const arr)
 {
 	if (arr->size == arr->capacity) {
-		assert(arr->size < LONG_MAX);
+		assert(arr->size < INT_MAX);
 		resize(arr->size + 1, arr);
 	}
 

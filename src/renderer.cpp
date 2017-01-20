@@ -7,14 +7,19 @@
 
 namespace gp {
 
-static GLuint vao_id = 0;
-static GLuint vbo_id = 0;
+
+GLuint vao_id = 0;
+GLuint vbo_id = 0;
 static GLuint ebo_id = 0;
 
-GLuint textures_ids[kMaxTextures] { 0 };
-GLuint programs_ids[kMaxShaders] { 0 };
+Array<Vertices> vertexbuffers = make_array<Vertices>();
+Vertices bound_vertex_buffer { nullptr, 0 };
 
-static GLuint shaders_ids[kMaxShaders][2] { 0 };
+GLuint textures_ids[kMaxTextures] { 0 };
+
+GLuint programs_ids[kMaxShaders] { 0 };
+ShaderLocs shaders_locs[kMaxShaders];
+ShaderIds shaders_ids[kMaxShaders];
 static GLchar error_msg_buffer[kErrorMsgBufferSize] { 0 };
 
 
@@ -26,7 +31,7 @@ static void free_textures();
 static void free_shaders();
 
 
-static void fill_vbo(const Vertex* const vertices, const int count);
+void fill_vbo(const Vertex* const vertices, const int count);
 
 static bool read_sources(const char* vertexfilepath, const char* fragmentfilepath,
                          char* vertexsource, char* fragmentsource, int size);
@@ -82,27 +87,6 @@ void draw(const GLenum mode, const Elements& elements)
 }
 
 
-void draw(const GLenum mode, const Vertices& vertices)
-{
-	const int count = vertices.count;
-	glBindVertexArray(vao_id);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-
-	fill_vbo(vertices.data, count);
-
-	glDrawArrays(mode, 0, count);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-}
-
-
-void set_uniform(const int program, const Mat4& mat4, const char* name)
-{
-	GLint location = glGetUniformLocation(programs_ids[program], name);
-	glUniformMatrix4fv(location, 1, GL_FALSE, &mat4.data[0][0]);
-}
-
-
 void fill_vbo(const Vertex* vertices, const int count)
 {
 	constexpr auto vertsize = sizeof(*vertices);
@@ -111,7 +95,7 @@ void fill_vbo(const Vertex* vertices, const int count)
 	const auto tex_offset = (GLvoid*) offsetof(Vertex, tex);
 	const auto col_offset = (GLvoid*) offsetof(Vertex, color);
 
-	glBufferData(GL_ARRAY_BUFFER, buffsize, vertices, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, buffsize, vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, sizeof(Vertex::pos)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, pos_offset);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, sizeof(Vertex::tex)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, tex_offset);
@@ -215,6 +199,9 @@ bool create_shaders(const ShadersProgramsFiles& programs)
 	for (int i = 0; i < programs_count; ++i) {
 		if (!push_new_shader_program(programs.vertex[i], programs.fragment[i], i))
 			return false;
+		shaders_locs[i].view = glGetUniformLocation(programs_ids[i], "view");
+		shaders_locs[i].model = glGetUniformLocation(programs_ids[i], "model");
+		shaders_locs[i].projection = glGetUniformLocation(programs_ids[i], "projection");
 	}
 
 	return true;
@@ -229,8 +216,8 @@ void free_shaders()
 		if (program_id == 0)
 			break;
 		
-		const auto vertex_id = shaders_ids[i][0];
-		const auto fragment_id = shaders_ids[i][1];
+		const auto vertex_id = shaders_ids[i].vertex;
+		const auto fragment_id = shaders_ids[i].fragment;
 
 		glDetachShader(program_id, vertex_id);
 		glDetachShader(program_id, fragment_id);
@@ -259,8 +246,8 @@ bool push_new_shader_program(const char* vertexfile, const char* fragmentfile, c
 	const auto fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
 
 	programs_ids[index] = program_id;
-	shaders_ids[index][0] = vertex_id;
-	shaders_ids[index][1] = fragment_id;
+	shaders_ids[index].vertex = vertex_id;
+	shaders_ids[index].fragment = fragment_id;
 
 	glShaderSource(vertex_id, 1, &sources[0], nullptr);
 	glCompileShader(vertex_id);

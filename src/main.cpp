@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "display.hpp"
 #include "renderer.hpp"
 #include "finally.hpp"
@@ -27,7 +28,7 @@ int main(int /*argc*/, char** /*argv*/)
 		terminate_systems();
 	});
 
-	set_vsync(true);
+	set_vsync(false);
 	bind_shader(0);
 	bind_texture(0);
 
@@ -80,6 +81,8 @@ int main(int /*argc*/, char** /*argv*/)
 		sizeof(data)/sizeof(data[0])
 	};
 
+	bind_vertex_buffer(register_vertex_buffer(vertices));
+
 	constexpr const Vec3 positions[10] {
 		{ 0.0f, 0.0f, 0.0f },
 		{ 2.0f, 5.0f, -15.0f },
@@ -94,7 +97,7 @@ int main(int /*argc*/, char** /*argv*/)
 	};
 
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
-	set_uniform(0, projection, "projection");
+	set_shader_projection(0, projection);
 
 
 	Vec2 lastcursor, newcursor;
@@ -108,13 +111,15 @@ int main(int /*argc*/, char** /*argv*/)
 	Vec3 camera_pos { 0, 0, 3 };
 	Vec3 camera_front { 0, 0, -1 };
 
+	time_t clk = time(nullptr);
+	long fps = 0;
 
 	while (update_display()) {
 		clear_display({0, 0, 0, 1});
 
-		const auto time = static_cast<float>(glfwGetTime());
-		delta_time = time - last_frame;
-		last_frame = time;
+		const auto glfwtime = static_cast<float>(glfwGetTime());
+		delta_time = glfwtime - last_frame;
+		last_frame = glfwtime;
 
 		get_cursor_pos(&newcursor);
 		if (newcursor != lastcursor)
@@ -131,13 +136,22 @@ int main(int /*argc*/, char** /*argv*/)
 			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * camspeed;
 
 		Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
-		set_uniform(0, view, "view");
+		set_shader_view(0, view);
 
 		for (int i = 0; i < 10; ++i) {
 			Mat4 model = translate(identity_mat4(), positions[i]);
-			model = rotate(model, time * i * 0.2f, {0.2f, 0.3f, 0.4f});
-			set_uniform(0, model, "model");
-			draw(GL_TRIANGLES, vertices);
+			model = rotate(model, glfwtime * i * 0.2f, {0.2f, 0.3f, 0.4f});
+			set_shader_model(0, model);
+			draw(GL_TRIANGLES);
+		}
+
+		++fps;
+
+		time_t clk_end = time(nullptr);
+		if ((clk_end - clk) >= 1) {
+			printf("FPS: %ld\n", fps);
+			fps = 0;
+			clk = clk_end;
 		}
 	}
 

@@ -6,8 +6,8 @@ namespace gp {
 template<class T>
 struct Array {
 	T* data;
-	long size;
-	long capacity;
+	int size;
+	int capacity;
 
 	Array(const Array&) = delete;
 	Array& operator=(const Array&) = delete;
@@ -23,8 +23,8 @@ struct Array {
 	T* begin();
 	T* end();
 
-	const T& operator[](long index) const;
-	T& operator[](long index);
+	const T& operator[](int index) const;
+	T& operator[](int index);
 };
 
 
