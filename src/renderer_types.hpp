@@ -17,8 +17,8 @@ struct Vertex {
 
 
 struct Indices {
-	const unsigned int* const data;
-	const int count;
+	const unsigned int* data;
+	int count;
 };
 
 
@@ -29,8 +29,8 @@ struct Vertices {
 
 
 struct Elements {
-	const Vertices vertices;
-	const Indices indices;
+	Vertices vertices;
+	Indices indices;
 };
 
 

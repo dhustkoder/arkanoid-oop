@@ -54,6 +54,15 @@ inline int register_vertex_buffer(const Vertices& vertices)
 }
 
 
+inline int register_element_buffer(const Elements& elements)
+{
+	extern Array<Elements> elementbuffers;
+	const int offset = elementbuffers.size;
+	push(elements, &elementbuffers);
+	return offset;
+}
+
+
 inline void bind_vertex_buffer(const int offset)
 {
 	extern GLuint vao_id;
@@ -69,15 +78,54 @@ inline void bind_vertex_buffer(const int offset)
 }
 
 
-inline void draw(const GLenum mode)
+inline void bind_element_buffer(const int offset)
+{
+	extern GLuint vao_id;
+	extern GLuint vbo_id;
+	extern GLuint ebo_id;
+	extern Array<Elements> elementbuffers;
+	extern Elements bound_element_buffer;
+	extern void fill_vbo(const Vertex* const vertices, const int count);
+
+	bound_element_buffer = elementbuffers[offset];
+	const Vertices& vertices = bound_element_buffer.vertices;
+	const Indices& indices = bound_element_buffer.indices;
+	const GLsizei ind_count = bound_element_buffer.indices.count;
+
+	glBindVertexArray(vao_id);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+
+	fill_vbo(vertices.data, vertices.count);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(*indices.data) * ind_count, indices.data, GL_STREAM_DRAW);
+}
+
+
+inline void draw_vertex_buffer(const GLenum mode)
 {
 	extern Vertices bound_vertex_buffer;
 	glDrawArrays(mode, 0, bound_vertex_buffer.count);
 }
 
 
+inline void draw_element_buffer(const GLenum mode)
+{
+	extern Elements bound_element_buffer;
+	glDrawElements(mode, bound_element_buffer.indices.count, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
+}
+
+
 inline void unbind_vertex_buffers()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+
+inline void unbind_element_buffers()
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }

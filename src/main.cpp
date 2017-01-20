@@ -32,73 +32,75 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_shader(0);
 	bind_texture(0);
 
-	constexpr const Vertex data[36] {
-		{ {-0.5f, -0.5f, -0.5f}, { 0.0f, 0.0f }, { 1, 0, 0, 1 } },
-		{ {0.5f, -0.5f, -0.5f},  {1.0f, 0.0f},   { 0, 1, 0, 1 } },
-		{ {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f},   { 0, 0, 1, 1 } },
-		{ {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f},   { 1, 1, 0, 1 } },
-		{ {-0.5f,  0.5f, -0.5f},  {0.0f, 1.0f},  { 1, 0, 0, 1 } },
-		{ {-0.5f, -0.5f, -0.5f},  {0.0f, 0.0f},  { 0, 1, 0, 1 } }, 
+	constexpr const Vertex data[] {
+		// front
+		{ { 0.5f, 0.5f, 0.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-0.5f, 0.5f, 0.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
 
-		{ {-0.5f, -0.5f,  0.5f},  {0.0f, 0.0f},  { 1, 0, 0, 1 } },
-		{ {0.5f, -0.5f,  0.5f},  {1.0f, 0.0f},   { 0, 1, 0, 1 } },
-		{ {0.5f,  0.5f,  0.5f},  {1.0f, 1.0f},   { 0, 0, 1, 1 } },
-		{ {0.5f,  0.5f,  0.5f},  {1.0f, 1.0f},   { 1, 1, 0, 1 } },
-		{ {-0.5f,  0.5f,  0.5f},  {0.0f, 1.0f},  { 1, 0, 0, 1 } },
-		{ {-0.5f, -0.5f,  0.5f},  {0.0f, 0.0f},  { 0, 1, 0, 1 } },
 
-		{ {-0.5f,  0.5f,  0.5f},  {1.0f, 0.0f}, { 1, 0, 0, 1 } },
-		{ {-0.5f,  0.5f, -0.5f},  {1.0f, 1.0f}, { 0, 1, 0, 1 } },
-		{ {-0.5f, -0.5f, -0.5f},  {0.0f, 1.0f}, { 0, 0, 1, 1 } },
-		{ {-0.5f, -0.5f, -0.5f},  {0.0f, 1.0f}, { 1, 1, 0, 1 } },
-		{ {-0.5f, -0.5f,  0.5f}, { 0.0f, 0.0f}, { 1, 0, 0, 1 } },
-		{ {-0.5f,  0.5f,  0.5f},  {1.0f, 0.0f}, { 0, 1, 0, 1 } },
+		// left
+		{ {-0.5f, 0.5f, 0.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ {-0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-0.5f,-0.5f,-1.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
 
-		{ {0.5f,  0.5f,  0.5f},  {1.0f, 0.0f}, { 1, 0, 0, 1 } },
-		{ {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f}, { 0, 1, 0, 1 } },
-		{ {0.5f, -0.5f, -0.5f},  {0.0f, 1.0f}, { 0, 0, 1, 1 } },
-		{ {0.5f, -0.5f, -0.5f}, { 0.0f, 1.0f}, { 1, 1, 0, 1 } },
-		{ {0.5f, -0.5f,  0.5f},  {0.0f, 0.0f}, { 1, 0, 0, 1 } },
-		{ {0.5f,  0.5f,  0.5f},  {1.0f, 0.0f}, { 0, 1, 0, 1 } },
 
-		{ {-0.5f, -0.5f, -0.5f},  {0.0f, 1.0f}, { 1, 0, 0, 1 } },
-		{ {0.5f, -0.5f, -0.5f},  {1.0f, 1.0f},  { 0, 1, 0, 1 } },
-		{ {0.5f, -0.5f,  0.5f},  {1.0f, 0.0f},  { 0, 0, 1, 1 } },
-		{ {0.5f, -0.5f,  0.5f},  {1.0f, 0.0f},  { 1, 1, 0, 1 } },
-		{ {-0.5f, -0.5f,  0.5f},  {0.0f, 0.0f}, { 1, 0, 0, 1 } },
-		{ {-0.5f, -0.5f, -0.5f}, { 0.0f, 1.0f}, { 0, 1, 0, 1 } },
+		// back
+		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 0.5f,-0.5f,-1.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-0.5f,-0.5f,-1.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
 
-		{ {-0.5f,  0.5f, -0.5f}, { 0.0f, 1.0f}, { 1, 0, 0, 1 } },
-		{ {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f},  { 0, 1, 0, 1 } },
-		{ {0.5f,  0.5f,  0.5f},  {1.0f, 0.0f},  { 0, 0, 1, 1 } },
-		{ {0.5f,  0.5f,  0.5f},  {1.0f, 0.0f},  { 1, 1, 0, 1 } },
-		{ {-0.5f,  0.5f,  0.5f},  {0.0f, 0.0f}, { 1, 0, 0, 1 } },
-		{ {-0.5f,  0.5f, -0.5f},  {0.0f, 1.0f}, { 0, 1, 0, 1 } }
+
+		// right
+		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 0.5f,-0.5f,-1.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ { 0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ { 0.5f, 0.5f, 0.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
+
+
+		// up
+		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 0.5f, 0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-0.5f, 0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
+
+		// down
+		{ { 0.5f,-0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-0.5f,-0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } }
+
 	};
 
-	const Vertices vertices {
-		&data[0],
-		sizeof(data)/sizeof(data[0])
+	constexpr const unsigned int indices[] {
+		0, 1, 3,
+		2, 1, 3,
+		4, 5, 7,
+		6, 5, 7,
+		8, 9, 11,
+		10, 9, 11,
+		12, 13, 15,
+		14, 13, 15,
+		16, 17, 19,
+		18, 17, 19,
+		20, 21, 23,
+		22, 21, 23
 	};
 
-	bind_vertex_buffer(register_vertex_buffer(vertices));
-
-	constexpr const Vec3 positions[10] {
-		{ 0.0f, 0.0f, 0.0f },
-		{ 2.0f, 5.0f, -15.0f },
-		{-1.5f, -2.2f, -2.5f },
-		{-3.8f, -2.0f, -12.3f },
-		{ 2.4f, -0.4f, -3.5f },
-		{-1.7f, 3.0f, -7.5f },
-		{ 1.3f, -2.0f, -2.5f },
-		{ 1.5f, 2.0f, -2.5f },
-		{ 1.5f, 0.2f, -1.5f },
-		{-1.3f, 1.0f, -1.5f }
+	constexpr Vec3 positions[] {
+		{ 0, 0, 0 },
+		{ -5, 0, 0 }
 	};
 
-	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
-	set_shader_projection(0, projection);
+	const Elements elements {
+		{ &data[0], sizeof(data)/sizeof(data[0]) },
+		{ &indices[0], sizeof(indices)/sizeof(indices[0]) }
+	};
 
+	bind_element_buffer(register_element_buffer(elements));
 
 	Vec2 lastcursor, newcursor;
 	get_cursor_pos(&lastcursor);
@@ -111,6 +113,11 @@ int main(int /*argc*/, char** /*argv*/)
 	Vec3 camera_pos { 0, 0, 3 };
 	Vec3 camera_front { 0, 0, -1 };
 
+	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
+	set_shader_projection(0, projection);
+	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
+	set_shader_view(0, view);
+
 	time_t clk = time(nullptr);
 	long fps = 0;
 
@@ -120,29 +127,40 @@ int main(int /*argc*/, char** /*argv*/)
 		const auto glfwtime = static_cast<float>(glfwGetTime());
 		delta_time = glfwtime - last_frame;
 		last_frame = glfwtime;
+		
+		bool need_view_update = false;
 
 		get_cursor_pos(&newcursor);
-		if (newcursor != lastcursor)
+		if (newcursor != lastcursor) {
 			camera_front = process_cursor_movement(newcursor, &lastcursor, &yaw, &pitch);
+			need_view_update = true;
+		}
 
 		const float camspeed = camera_speed * delta_time;
-		if (is_key_pressed(GLFW_KEY_W))
+	
+		if (is_key_pressed(GLFW_KEY_W)) {
 			camera_pos += camera_front * camspeed;
-		else if (is_key_pressed(GLFW_KEY_S))
+			need_view_update = true;
+		} else if (is_key_pressed(GLFW_KEY_S)) {
 			camera_pos -= camera_front * camspeed;
-		if (is_key_pressed(GLFW_KEY_D))
+			need_view_update = true;
+		} if (is_key_pressed(GLFW_KEY_D)) {
 			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * camspeed;
-		else if (is_key_pressed(GLFW_KEY_A))
+			need_view_update = true;
+		} else if (is_key_pressed(GLFW_KEY_A)) {
 			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * camspeed;
+			need_view_update = true;
+		}
 
-		Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
-		set_shader_view(0, view);
+		if (need_view_update) {
+			view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
+			set_shader_view(0, view);
+		}
 
-		for (int i = 0; i < 10; ++i) {
-			Mat4 model = translate(identity_mat4(), positions[i]);
-			model = rotate(model, glfwtime * i * 0.2f, {0.2f, 0.3f, 0.4f});
+		for (const auto& pos : positions) {
+			const Mat4 model = translate(identity_mat4(), pos);
 			set_shader_model(0, model);
-			draw(GL_TRIANGLES);
+			draw_element_buffer(GL_TRIANGLES);
 		}
 
 		++fps;

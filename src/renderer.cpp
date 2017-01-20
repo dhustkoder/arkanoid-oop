@@ -10,10 +10,13 @@ namespace gp {
 
 GLuint vao_id = 0;
 GLuint vbo_id = 0;
-static GLuint ebo_id = 0;
+GLuint ebo_id = 0;
 
 Array<Vertices> vertexbuffers = make_array<Vertices>();
+Array<Elements> elementbuffers = make_array<Elements>();
+
 Vertices bound_vertex_buffer { nullptr, 0 };
+Elements bound_element_buffer { { nullptr, 0 }, { nullptr, 0 } };
 
 GLuint textures_ids[kMaxTextures] { 0 };
 
@@ -65,27 +68,8 @@ void terminate_renderer()
 	free_glbuffers();
 }
 
-/*
-void draw(const GLenum mode, const Elements& elements)
-{
-	const Vertices& vertices = elements.vertices;
-	const Indices& indices = elements.indices;
-	const GLsizei ind_count = indices.count;
 
-	glBindVertexArray(vao_id);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
-	fill_vbo(vertices.data, vertices.count);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(*indices.data) * ind_count, indices.data, GL_STREAM_DRAW);
-	glDrawElements(mode, ind_count, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-}
-*/
 
 void fill_vbo(const Vertex* vertices, const int count)
 {
