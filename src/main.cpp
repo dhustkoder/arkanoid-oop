@@ -1,8 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "display.hpp"
 #include "renderer.hpp"
 #include "finally.hpp"
@@ -103,7 +100,9 @@ int main(int /*argc*/, char** /*argv*/)
 	Vec2 lastcursor, newcursor;
 	get_cursor_pos(&lastcursor);
 
-	const float camera_speed = 0.2f;
+	const float camera_speed = 2.0f;
+	float delta_time = 0.0f;
+	float last_frame = 0.0f;
 	float yaw = -90;
 	float pitch = 0;
 	Vec3 camera_pos { 0, 0, 3 };
@@ -111,25 +110,25 @@ int main(int /*argc*/, char** /*argv*/)
 
 
 	while (update_display()) {
-		clear_display({0, 0, 0, 0});
+		clear_display({0.67, 0.23, 0.45, 1});
 
 		const auto time = static_cast<float>(glfwGetTime());
-		const auto tsin = sinf(time * 3) * 0.7f;
-		const auto tcos = cosf(time * 3) * 0.7f;
+		delta_time = time - last_frame;
+		last_frame = time;
 
 		get_cursor_pos(&newcursor);
 		if (newcursor != lastcursor)
 			camera_front = process_cursor_movement(newcursor, &lastcursor, &yaw, &pitch);
 
-
+		const float camspeed = camera_speed * delta_time;
 		if (is_key_pressed(GLFW_KEY_W))
-			camera_pos += camera_front * camera_speed;
+			camera_pos += camera_front * camspeed;
 		else if (is_key_pressed(GLFW_KEY_S))
-			camera_pos -= camera_front * camera_speed;
+			camera_pos -= camera_front * camspeed;
 		if (is_key_pressed(GLFW_KEY_D))
-			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * camera_speed;
+			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * camspeed;
 		else if (is_key_pressed(GLFW_KEY_A))
-			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * camera_speed;
+			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * camspeed;
 
 		Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 		set_uniform(0, view, "view");
@@ -147,8 +146,8 @@ int main(int /*argc*/, char** /*argv*/)
 }
 
 
-
-gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos, float* const yaw, float* const pitch)
+gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos,
+                                 float* const yaw, float* const pitch)
 {
 	using namespace gp;
 
