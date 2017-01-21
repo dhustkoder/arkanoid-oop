@@ -33,16 +33,12 @@ static void free_glbuffers();
 static void free_textures();
 static void free_shaders();
 
-
-void fill_vbo(const Vertex* const vertices, const int count);
-
 static bool read_sources(const char* vertexfilepath, const char* fragmentfilepath,
                          char* vertexsource, char* fragmentsource, int size);
 
 static bool push_new_shader_program(const char* vertexfile, const char* fragmentfile, int index);
 static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
-
 
 
 bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders)

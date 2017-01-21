@@ -166,7 +166,6 @@ int main(int /*argc*/, char** /*argv*/)
 			set_shader_view(0, view);
 		}
 
-
 		set_shader_light_source(0, { 1, 1, 1 });
 		draw_element_buffer(GL_TRIANGLES, 0, 36);
 		set_shader_light_source(0, { tsin, tcos, 0.5f });
@@ -228,7 +227,7 @@ bool initialize_systems()
 {
 	const char* const vertexfiles[1] { "../shaders/vertex.glsl" };
 	const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
-	const char* const texturefiles[1] { "container.jpg" };
+	const char* const texturefiles[1] { "../container.jpg" };
 	
 	const gp::ShadersProgramsFiles shaders {
 		vertexfiles,
