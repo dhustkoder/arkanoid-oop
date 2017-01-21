@@ -12,11 +12,11 @@ GLuint vao_id = 0;
 GLuint vbo_id = 0;
 GLuint ebo_id = 0;
 
-Array<Vertices> vertexbuffers = make_array<Vertices>();
-Array<Elements> elementbuffers = make_array<Elements>();
+Array<const Vertices*> vertexbuffers = make_array<const Vertices*>();
+Array<const Elements*> elementbuffers = make_array<const Elements*>();
 
-Vertices bound_vertex_buffer { nullptr, 0 };
-Elements bound_element_buffer { { nullptr, 0 }, { nullptr, 0 } };
+const Vertices* bound_vertex_buffer = nullptr;
+const Elements* bound_element_buffer = nullptr;
 
 GLuint textures_ids[kMaxTextures] { 0 };
 
@@ -186,6 +186,7 @@ bool create_shaders(const ShadersProgramsFiles& programs)
 		shaders_locs[i].view = glGetUniformLocation(programs_ids[i], "view");
 		shaders_locs[i].model = glGetUniformLocation(programs_ids[i], "model");
 		shaders_locs[i].projection = glGetUniformLocation(programs_ids[i], "projection");
+		shaders_locs[i].light_source = glGetUniformLocation(programs_ids[i], "light_source");
 	}
 
 	return true;

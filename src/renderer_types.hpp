@@ -48,7 +48,7 @@ struct TexturesFiles {
 
 
 struct ShaderLocs {
-	int projection, view, model;
+	int projection, view, model, light_source;
 };
 
 struct ShaderIds {

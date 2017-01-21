@@ -71,8 +71,13 @@ int main(int /*argc*/, char** /*argv*/)
 		{ { 0.5f,-0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
 		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
 		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-0.5f,-0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } }
+		{ {-0.5f,-0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
 
+		// ground
+		{ { 10.0f,-0.5f,-10.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
+		{ { 10.0f,-0.5f, 10.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
+		{ {-10.0f,-0.5f, 10.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
+		{ {-10.0f,-0.5f,-10.0f }, { 0, 0 }, { 1, 1, 0, 1 } }
 	};
 
 	constexpr const unsigned int indices[] {
@@ -87,13 +92,11 @@ int main(int /*argc*/, char** /*argv*/)
 		16, 17, 19,
 		18, 17, 19,
 		20, 21, 23,
-		22, 21, 23
+		22, 21, 23,
+		24, 25, 27,
+		26, 25, 27
 	};
 
-	constexpr Vec3 positions[] {
-		{ 0, 0, 0 },
-		{ -5, 0, 0 }
-	};
 
 	const Elements elements {
 		{ &data[0], sizeof(data)/sizeof(data[0]) },
@@ -115,6 +118,8 @@ int main(int /*argc*/, char** /*argv*/)
 
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
 	set_shader_projection(0, projection);
+	const Mat4 model = translate(identity_mat4(), {0, 0, 0});
+	set_shader_model(0, model);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 	set_shader_view(0, view);
 
@@ -127,6 +132,9 @@ int main(int /*argc*/, char** /*argv*/)
 		const auto glfwtime = static_cast<float>(glfwGetTime());
 		delta_time = glfwtime - last_frame;
 		last_frame = glfwtime;
+
+		const auto tsin = sinf(glfwtime);
+		const auto tcos = cosf(glfwtime);
 		
 		bool need_view_update = false;
 
@@ -153,15 +161,16 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 
 		if (need_view_update) {
+			camera_pos.y = 0;
 			view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 			set_shader_view(0, view);
 		}
 
-		for (const auto& pos : positions) {
-			const Mat4 model = translate(identity_mat4(), pos);
-			set_shader_model(0, model);
-			draw_element_buffer(GL_TRIANGLES);
-		}
+
+		set_shader_light_source(0, { 1, 1, 1 });
+		draw_element_buffer(GL_TRIANGLES, 0, 36);
+		set_shader_light_source(0, { tsin, tcos, 0.5f });
+		draw_element_buffer(GL_TRIANGLES, 36, 42);
 
 		++fps;
 
