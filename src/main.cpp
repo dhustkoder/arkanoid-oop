@@ -31,7 +31,7 @@ int main(int /*argc*/, char** /*argv*/)
 	set_vsync(false);
 	bind_shader(0);
 	bind_texture(0);
-
+/*
 	constexpr const Vertex data[] {
 		// front
 		{ { 0.5f, 0.5f, 0.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
@@ -96,7 +96,40 @@ int main(int /*argc*/, char** /*argv*/)
 		24, 25, 27,
 		26, 25, 27
 	};
+*/
 
+
+	constexpr const Vertex data[] {
+		// front
+		{ { 0.0f, 5.0f, 0.0f }, { 0.5f, 0.0f }, {} },
+		{ { 2.0f, 2.5f, 0.0f }, { 1.0f, 0.5f }, {} },
+		{ {-2.0f, 2.5f, 0.0f }, { 0.0f, 0.5f }, {} },
+		{ {-2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, {} },
+		{ { 2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, {} },
+
+		// back
+		{ { 2.0f, 0.0f,-5.0f }, { 1.0f, 0.0f }, {} },
+		{ {-2.0f, 0.0f,-5.0f }, { 0.0f, 0.0f }, {} },
+		{ {-2.0f, 2.5f,-5.0f }, { 0.0f, 0.5f }, {} },
+		{ { 2.0f, 2.5f,-5.0f }, { 1.0f, 0.5f }, {} },
+		{ { 0.0f, 5.0f,-5.0f }, { 0.5f, 0.0f }, {} }
+	};
+
+	constexpr const unsigned int indices[] {
+		0, 1, 2,
+		2, 3, 1,
+		1, 3, 4,
+		4, 1, 8,
+		5, 4, 8,
+		8, 5, 7,
+		5, 6, 7,
+		7, 8, 9,
+		9, 0, 8,
+		8, 1, 0,
+		0, 2, 9,
+		9, 7, 2
+
+	};
 
 	const Elements elements {
 		{ &data[0], sizeof(data)/sizeof(data[0]) },
@@ -122,6 +155,7 @@ int main(int /*argc*/, char** /*argv*/)
 	set_shader_model(0, model);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 	set_shader_view(0, view);
+	set_shader_light_source(0, {1, 1, 1});
 
 	time_t clk = time(nullptr);
 	long fps = 0;
@@ -161,16 +195,11 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 
 		if (need_view_update) {
-			camera_pos.y = 0;
 			view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 			set_shader_view(0, view);
 		}
 
-
-		set_shader_light_source(0, { 1, 1, 1 });
-		draw_element_buffer(GL_TRIANGLES, 0, 36);
-		set_shader_light_source(0, { tsin, tcos, 0.5f });
-		draw_element_buffer(GL_TRIANGLES, 36, 42);
+		draw_element_buffer(GL_TRIANGLES, 0, elements.indices.count);
 
 		++fps;
 
@@ -228,7 +257,7 @@ bool initialize_systems()
 {
 	const char* const vertexfiles[1] { "../shaders/vertex.glsl" };
 	const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
-	const char* const texturefiles[1] { "container.jpg" };
+	const char* const texturefiles[1] { "container.png" };
 	
 	const gp::ShadersProgramsFiles shaders {
 		vertexfiles,
