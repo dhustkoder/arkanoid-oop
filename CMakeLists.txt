@@ -25,8 +25,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG -O0 -g3")
 
 
 if (NOT CMAKE_BUILD_TYPE)
-	message(STATUS "No build type selected, defaulted to Release")
-	set(CMAKE_BUILD_TYPE "Release")
+	message(STATUS "No build type selected, defaulted to Debug")
+	set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 if (${USAN} OR ${ASAN} AND NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
@@ -60,7 +60,7 @@ endif()
 
 
 # gbx src directory
-set(GPROJ_SRC_DIR "./src")
+set(GPROJ_SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(GPROJ_TEST_DIR "./tests")
 
 
@@ -76,24 +76,16 @@ add_subdirectory(./externals/glew/build/cmake)
 add_subdirectory(./externals/glfw)
 add_subdirectory(./externals/soil)
 
-
 # include src directory
 include_directories("${GPROJ_SRC_DIR}")
 include_directories("./externals/glew/include")
 include_directories("./externals/glfw/include")
-#include_directories("./externals/soil/include")
+include_directories("./externals/soil/include")
 
 # build
-file(GLOB GPROJ_SRC_FILES "${GPROJ_SRC_DIR}/*.cpp")
+file(GLOB_RECURSE GPROJ_SRC_FILES "${GPROJ_SRC_DIR}/*.cpp")
 add_executable(${PROJECT_NAME} ${GPROJ_SRC_FILES} ${GPROJ_PLATFORM_SRC_FILES})
 target_link_libraries(${PROJECT_NAME} ${GPROJ_LINK_LIBRARIES} glew_s glfw soil)
-
-if (${TESTS})
-	file(GLOB GPROJ_TEST_SRC "${GPROJ_TEST_DIR}/*.cpp")
-	add_executable("${PROJECT_NAME}_tests" ${GPROJ_TEST_SRC})
-	target_link_libraries("${PROJECT_NAME}_tests" ${GPROJ_LINK_LIBRARIES})
-endif()
-
 
 if (ASM_OUTPUT)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -S")

@@ -161,8 +161,9 @@ bool read_sources(const char* const vertexfilepath,
 	constexpr auto numfiles = sizeof(filepaths)/sizeof(filepaths[0]);
 	constexpr auto numsources = sizeof(sources)/sizeof(sources[0]);
 	static_assert(numfiles == numsources && numfiles < INT_MAX, "");
+	constexpr int numlimit = static_cast<int>(numfiles);
 
-	for (int i = 0; i < numfiles; ++i) {
+	for (int i = 0; i < numlimit; ++i) {
 		FILE* const file = fopen(filepaths[i], "r");
 
 		if (file == nullptr) {

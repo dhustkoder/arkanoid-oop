@@ -10,8 +10,8 @@
 #include "math/vector2.hpp"
 
 
-constexpr const int kWinWidth = 800;
-constexpr const int kWinHeight = 600;
+constexpr const int kWinWidth = 1366;
+constexpr const int kWinHeight = 766;
 
 
 static gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos, float* yaw, float* pitch);
@@ -195,8 +195,8 @@ int main(int /*argc*/, char** /*argv*/)
 		delta_time = glfwtime - last_frame;
 		last_frame = glfwtime;
 
-		const auto tsin = sinf(glfwtime);
-		const auto tcos = cosf(glfwtime);
+		const float tsin = sinf(glfwtime);
+		const float tcos = cosf(glfwtime);
 
 		bool need_view_update = false;
 
@@ -290,13 +290,13 @@ bool initialize_systems()
 	constexpr const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
 	constexpr const char* const texturefiles[1] { "../container.jpg" };
 	
-	constexpr const gp::ShadersProgramsFiles shaders {
+	const gp::ShadersProgramsFiles shaders {
 		vertexfiles,
 		fragmentfiles,
 		1
 	};
 
-	constexpr const gp::TexturesFiles textures {
+	const gp::TexturesFiles textures {
 		texturefiles,
 		1
 	};

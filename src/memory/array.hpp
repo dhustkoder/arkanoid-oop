@@ -19,31 +19,31 @@ Array<T>::Array() :
 
 
 template<class T>
-Array<T>::Array(Array&& arr)
-	: data(arr.data), 
-	size(arr.size), 
-	capacity(arr.capacity)
+Array<T>::Array(Array&& other)
+	: data(other.data), 
+	size(other.size), 
+	capacity(other.capacity)
 {
-	arr.data = nullptr;
-	arr.size = 0;
-	arr.capacity = 0;
+	other.data = nullptr;
+	other.size = 0;
+	other.capacity = 0;
 }
 
 
 template<class T>
-Array<T>& Array<T>::operator=(Array&& arr)
+Array<T>& Array<T>::operator=(Array&& other)
 {
 	T* const data_aux = this->data;
 	const int size_aux = this->size;
 	const int cap_aux = this->capacity;
 
-	this->data = arr.data;
-	this->size = arr.size;
-	this->capacity = arr.capacity;
+	this->data = other.data;
+	this->size = other.size;
+	this->capacity = other.capacity;
 
-	arr.data = data_aux;
-	arr.size = size_aux;
-	arr.capacity = cap_aux;
+	other.data = data_aux;
+	other.size = size_aux;
+	other.capacity = cap_aux;
 }
 
 
@@ -147,6 +147,7 @@ void push_back(const T& elem, Array<T>* const arr)
 template<class T>
 T pop_back(Array<T>* const arr)
 {
+	assert(arr->size > 0);
 	return arr->data[--arr->size];
 }
 
@@ -160,3 +161,4 @@ void clear(Array<T>* const arr)
 
 }
 #endif
+
