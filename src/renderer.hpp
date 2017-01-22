@@ -69,7 +69,7 @@ inline void bind_vertex_buffer(const int offset)
 	extern GLuint vbo_id;
 	extern Array<const Vertices*> vertexbuffers;
 	extern const Vertices* bound_vertex_buffer;
-	extern void fill_vbo(const Vertex* const vertices, const int count);
+	extern void fill_vbo(const Vertex* vertices, const int count);
 
 	bound_vertex_buffer = vertexbuffers[offset];
 	glBindVertexArray(vao_id);
@@ -85,7 +85,7 @@ inline void bind_element_buffer(const int offset)
 	extern GLuint ebo_id;
 	extern Array<const Elements*> elementbuffers;
 	extern const Elements* bound_element_buffer;
-	extern void fill_vbo(const Vertex* const vertices, const int count);
+	extern void fill_vbo(const Vertex* vertices, const int count);
 
 	bound_element_buffer = elementbuffers[offset];
 	const Vertices& vertices = bound_element_buffer->vertices;
@@ -153,10 +153,10 @@ inline void set_shader_model(const int program, const Mat4& mat4)
 }
 
 
-inline void set_shader_light_source(const int program, const Vec3& vec3)
+inline void set_shader_light_color(const int program, const Vec3& vec3)
 {
 	extern ShaderLocs shaders_locs[kMaxShaders];
-	glUniform3f(shaders_locs[program].light_source, vec3.r, vec3.g, vec3.b);
+	glUniform3f(shaders_locs[program].light_color, vec3.r, vec3.g, vec3.b);
 }
 
 

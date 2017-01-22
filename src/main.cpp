@@ -98,24 +98,42 @@ int main(int /*argc*/, char** /*argv*/)
 	};
 */
 
+	constexpr const Vec4 kCoral { 1, 0.5f, 0.31f, 1 };
+	constexpr const Vec4 kWhite { 1, 1, 1, 1 };
 
 	constexpr const Vertex data[] {
+		// house:
 		// front
-		{ { 0.0f, 5.0f, 0.0f }, { 0.5f, 0.0f }, {} },
-		{ { 2.0f, 2.5f, 0.0f }, { 1.0f, 0.5f }, {} },
-		{ {-2.0f, 2.5f, 0.0f }, { 0.0f, 0.5f }, {} },
-		{ {-2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, {} },
-		{ { 2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, {} },
+		{ { 0.0f, 5.0f, 0.0f }, { 0.5f, 0.0f }, kCoral },
+		{ { 2.0f, 2.5f, 0.0f }, { 1.0f, 0.5f }, kCoral },
+		{ {-2.0f, 2.5f, 0.0f }, { 0.0f, 0.5f }, kCoral },
+		{ {-2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, kCoral },
+		{ { 2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, kCoral },
 
 		// back
-		{ { 2.0f, 0.0f,-5.0f }, { 1.0f, 0.0f }, {} },
-		{ {-2.0f, 0.0f,-5.0f }, { 0.0f, 0.0f }, {} },
-		{ {-2.0f, 2.5f,-5.0f }, { 0.0f, 0.5f }, {} },
-		{ { 2.0f, 2.5f,-5.0f }, { 1.0f, 0.5f }, {} },
-		{ { 0.0f, 5.0f,-5.0f }, { 0.5f, 0.0f }, {} }
+		{ { 2.0f, 0.0f,-5.0f }, { 1.0f, 0.0f }, kCoral },
+		{ {-2.0f, 0.0f,-5.0f }, { 0.0f, 0.0f }, kCoral },
+		{ {-2.0f, 2.5f,-5.0f }, { 0.0f, 0.5f }, kCoral },
+		{ { 2.0f, 2.5f,-5.0f }, { 1.0f, 0.5f }, kCoral },
+		{ { 0.0f, 5.0f,-5.0f }, { 0.5f, 0.0f }, kCoral },
+
+		// cube
+		// front
+		{ { 0.5f, 0.5f + 7, 0.0f }, { 1, 0 }, kWhite },
+		{ { 0.5f,-0.5f + 7, 0.0f }, { 1, 1 }, kWhite },
+		{ {-0.5f,-0.5f + 7, 0.0f }, { 0, 1 }, kWhite },
+		{ {-0.5f, 0.5f + 7, 0.0f }, { 0, 0 }, kWhite },
+
+
+		// back
+		{ { 0.5f, 0.5f + 7,-1.0f }, { 1, 0 }, kWhite },
+		{ { 0.5f,-0.5f + 7,-1.0f }, { 1, 1 }, kWhite },
+		{ {-0.5f,-0.5f + 7,-1.0f }, { 0, 1 }, kWhite },
+		{ {-0.5f, 0.5f + 7,-1.0f }, { 0, 0 }, kWhite }
 	};
 
 	constexpr const unsigned int indices[] {
+		// house
 		0, 1, 2,
 		2, 3, 1,
 		1, 3, 4,
@@ -127,7 +145,19 @@ int main(int /*argc*/, char** /*argv*/)
 		9, 0, 8,
 		8, 1, 0,
 		0, 2, 9,
-		9, 7, 2
+		9, 7, 2,
+
+		// cube
+		10, 11, 13,
+		12, 11, 13,
+		13, 12, 17,
+		16, 12, 17,
+		17, 16, 14,
+		15, 16, 14,
+		14, 15, 10,
+		11, 15, 10
+
+
 
 	};
 
@@ -146,7 +176,7 @@ int main(int /*argc*/, char** /*argv*/)
 	float last_frame = 0.0f;
 	float yaw = -90;
 	float pitch = 0;
-	Vec3 camera_pos { 0, 0, 3 };
+	Vec3 camera_pos { 0, 2, 3 };
 	Vec3 camera_front { 0, 0, -1 };
 
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
@@ -155,7 +185,7 @@ int main(int /*argc*/, char** /*argv*/)
 	set_shader_model(0, model);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 	set_shader_view(0, view);
-	set_shader_light_source(0, {1, 1, 1});
+	set_shader_light_color(0, {1, 1, 1});
 
 	time_t clk = time(nullptr);
 	long fps = 0;
@@ -200,7 +230,6 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 
 		draw_element_buffer(GL_TRIANGLES, 0, elements.indices.count);
-
 		++fps;
 
 		time_t clk_end = time(nullptr);

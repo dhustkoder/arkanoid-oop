@@ -33,16 +33,12 @@ static void free_glbuffers();
 static void free_textures();
 static void free_shaders();
 
-
-void fill_vbo(const Vertex* const vertices, const int count);
-
 static bool read_sources(const char* vertexfilepath, const char* fragmentfilepath,
                          char* vertexsource, char* fragmentsource, int size);
 
 static bool push_new_shader_program(const char* vertexfile, const char* fragmentfile, int index);
 static bool validate_compilation(GLuint shader_id);
 static bool validate_linkage(GLuint program_id);
-
 
 
 bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders)
@@ -186,7 +182,7 @@ bool create_shaders(const ShadersProgramsFiles& programs)
 		shaders_locs[i].view = glGetUniformLocation(programs_ids[i], "view");
 		shaders_locs[i].model = glGetUniformLocation(programs_ids[i], "model");
 		shaders_locs[i].projection = glGetUniformLocation(programs_ids[i], "projection");
-		shaders_locs[i].light_source = glGetUniformLocation(programs_ids[i], "light_source");
+		shaders_locs[i].light_color = glGetUniformLocation(programs_ids[i], "light_color");
 	}
 
 	return true;
