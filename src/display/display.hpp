@@ -2,7 +2,7 @@
 #define GPROJ_DISPLAY_HPP_
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "math_types.hpp"
+#include "math/math_types.hpp"
 
 namespace gp {
 

@@ -20,6 +20,8 @@ struct Array {
 
 	const T* cbegin() const;
 	const T* cend() const;
+	const T* begin() const;
+	const T* end() const;
 	T* begin();
 	T* end();
 

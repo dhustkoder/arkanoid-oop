@@ -38,17 +38,32 @@ const T* Array<T>::cend() const
 
 
 template<class T>
+const T* Array<T>::begin() const
+{
+	return this->cbegin();
+}
+
+
+template<class T>
+const T* Array<T>::end() const
+{
+	return this->cend();
+}
+
+
+template<class T>
 T* Array<T>::begin()
 {
-	return &this->data[0];
+	return const_cast<T*>(this->cbegin());
 }
 
 
 template<class T>
 T* Array<T>::end()
 {
-	return &this->data[0] + this->size;
+	return const_cast<T*>(this->cend());
 }
+
 
 template<class T>
 Array<T>::Array(Array&& arr)
@@ -100,8 +115,9 @@ Array<T> make_array()
 
 
 template<class T>
-void resize(const int newsize, Array<T>* const arr)
+void reserve(const long newsize, Array<T>* const arr)
 {
+	assert(newsize < INT_MAX);
 	arr->data = static_cast<T*>(realloc(arr->data, sizeof(T) * newsize));
 	assert(arr->data != nullptr);
 	arr->capacity = newsize;
@@ -109,11 +125,19 @@ void resize(const int newsize, Array<T>* const arr)
 
 
 template<class T>
-void push(const T& elem, Array<T>* const arr)
+void resize(const long newsize, Array<T>* const arr)
+{
+	reserve(newsize, arr);
+	arr->size = newsize;
+}
+
+
+template<class T>
+void push_back(const T& elem, Array<T>* const arr)
 {
 	if (arr->size == arr->capacity) {
 		assert(arr->size < INT_MAX);
-		resize(arr->size + 1, arr);
+		reserve(arr->size + 1, arr);
 	}
 
 	arr->data[arr->size++] = elem;

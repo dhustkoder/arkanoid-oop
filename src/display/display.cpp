@@ -1,8 +1,7 @@
 #include <stdio.h>
+#include "renderer/renderer.hpp"
+#include "utils/finally.hpp"
 #include "display.hpp"
-#include "renderer.hpp"
-#include "finally.hpp"
-#include "vector3.hpp"
 
 namespace gp {
 

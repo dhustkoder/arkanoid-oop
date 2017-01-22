@@ -19,22 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\array.hpp" />
-    <ClInclude Include="..\src\array_type.hpp" />
-    <ClInclude Include="..\src\display.hpp" />
-    <ClInclude Include="..\src\finally.hpp" />
-    <ClInclude Include="..\src\math_types.hpp" />
-    <ClInclude Include="..\src\matrix4.hpp" />
-    <ClInclude Include="..\src\renderer.hpp" />
-    <ClInclude Include="..\src\renderer_types.hpp" />
-    <ClInclude Include="..\src\vector2.hpp" />
-    <ClInclude Include="..\src\vector3.hpp" />
-    <ClInclude Include="..\src\vector4.hpp" />
+    <ClInclude Include="..\src\display\display.hpp" />
+    <ClInclude Include="..\src\math\math_types.hpp" />
+    <ClInclude Include="..\src\math\matrix4.hpp" />
+    <ClInclude Include="..\src\math\vector2.hpp" />
+    <ClInclude Include="..\src\math\vector3.hpp" />
+    <ClInclude Include="..\src\math\vector4.hpp" />
+    <ClInclude Include="..\src\memory\array.hpp" />
+    <ClInclude Include="..\src\memory\array_type.hpp" />
+    <ClInclude Include="..\src\renderer\renderer.hpp" />
+    <ClInclude Include="..\src\renderer\renderer_types.hpp" />
+    <ClInclude Include="..\src\renderer\shaders.hpp" />
+    <ClInclude Include="..\src\renderer\textures.hpp" />
+    <ClInclude Include="..\src\utils\finally.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\display.cpp" />
+    <ClCompile Include="..\src\display\display.cpp" />
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\renderer.cpp" />
+    <ClCompile Include="..\src\renderer\renderer.cpp" />
+    <ClCompile Include="..\src\renderer\shaders.cpp" />
+    <ClCompile Include="..\src\renderer\textures.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C27FFEE3-91A7-4CB2-8AE0-730CFFC43648}</ProjectGuid>
@@ -88,7 +92,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include\;$(SolutionDir)..\..\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include\;$(SolutionDir)..\src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\..\..\externals\soil\include\;$(SolutionDir)\..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\x86\include\;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>

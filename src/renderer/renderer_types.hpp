@@ -1,6 +1,6 @@
 #ifndef GPROJ_RENDER_TYPES_HPP_
 #define GPROJ_RENDER_TYPES_HPP_
-#include "math_types.hpp"
+#include "math/math_types.hpp"
 
 namespace gp {
 

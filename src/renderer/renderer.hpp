@@ -2,8 +2,8 @@
 #define GPROJ_RENDERER_HPP_
 #include <assert.h>
 #include <GL/glew.h>
+#include "memory/array.hpp"
 #include "renderer_types.hpp"
-#include "array.hpp"
 
 namespace gp {
 
@@ -17,39 +17,11 @@ inline void set_wireframe_mode(const bool on)
 }
 
 
-inline void bind_texture(const int index)
-{
-	extern GLuint textures_ids[kMaxTextures];
-	assert(index < kMaxTextures);
-	glBindTexture(GL_TEXTURE_2D, textures_ids[index]);
-}
-
-
-inline void unbind_textures()
-{
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-inline void bind_shader(const int program_index)
-{
-	extern GLuint programs_ids[kMaxShaders];
-	assert(program_index < kMaxShaders);
-	glUseProgram(programs_ids[program_index]);
-}
-
-
-inline void unbind_shaders()
-{
-	glUseProgram(0);
-}
-
-
 inline int register_vertex_buffer(const Vertices& vertices)
 {
 	extern Array<const Vertices*> vertexbuffers;
 	const int offset = vertexbuffers.size;
-	push(&vertices, &vertexbuffers);
+	push_back(&vertices, &vertexbuffers);
 	return offset;
 }
 
@@ -58,7 +30,7 @@ inline int register_element_buffer(const Elements& elements)
 {
 	extern Array<const Elements*> elementbuffers;
 	const int offset = elementbuffers.size;
-	push(&elements, &elementbuffers);
+	push_back(&elements, &elementbuffers);
 	return offset;
 }
 
@@ -132,34 +104,5 @@ inline void unbind_element_buffers()
 }
 
 
-inline void set_shader_projection(const int program, const Mat4& mat4)
-{
-	extern ShaderLocs shaders_locs[kMaxShaders];
-	glUniformMatrix4fv(shaders_locs[program].projection, 1, GL_FALSE, &mat4[0][0]);
-}
-
-
-inline void set_shader_view(const int program, const Mat4& mat4)
-{
-	extern ShaderLocs shaders_locs[kMaxShaders];
-	glUniformMatrix4fv(shaders_locs[program].view, 1, GL_FALSE, &mat4[0][0]);
-}
-
-
-inline void set_shader_model(const int program, const Mat4& mat4)
-{
-	extern ShaderLocs shaders_locs[kMaxShaders];
-	glUniformMatrix4fv(shaders_locs[program].model, 1, GL_FALSE, &mat4[0][0]);
-}
-
-
-inline void set_shader_light_color(const int program, const Vec3& vec3)
-{
-	extern ShaderLocs shaders_locs[kMaxShaders];
-	glUniform3f(shaders_locs[program].light_color, vec3.r, vec3.g, vec3.b);
-}
-
-
 } // namespace gp
 #endif
-

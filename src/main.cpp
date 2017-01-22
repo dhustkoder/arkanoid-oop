@@ -1,11 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "display.hpp"
-#include "renderer.hpp"
-#include "finally.hpp"
-#include "matrix4.hpp"
-#include "vector2.hpp"
+#include "display/display.hpp"
+#include "renderer/renderer.hpp"
+#include "renderer/shaders.hpp"
+#include "renderer/textures.hpp"
+#include "utils/finally.hpp"
+#include "math/matrix4.hpp"
+#include "math/vector2.hpp"
 
 
 constexpr const int kWinWidth = 800;
@@ -32,6 +34,7 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_shader(0);
 	bind_texture(0);
 /*
+	// cube
 	constexpr const Vertex data[] {
 		// front
 		{ { 0.5f, 0.5f, 0.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
@@ -99,23 +102,23 @@ int main(int /*argc*/, char** /*argv*/)
 */
 
 	constexpr const Vec4 kCoral { 1, 0.5f, 0.31f, 1 };
-	constexpr const Vec4 kWhite { 1, 1, 1, 1 };
+	constexpr const Vec4 kWhite { 0.5f, 0.5f, 0.5f, 1 };
 
 	constexpr const Vertex data[] {
 		// house:
 		// front
-		{ { 0.0f, 5.0f, 0.0f }, { 0.5f, 0.0f }, kCoral },
-		{ { 2.0f, 2.5f, 0.0f }, { 1.0f, 0.5f }, kCoral },
-		{ {-2.0f, 2.5f, 0.0f }, { 0.0f, 0.5f }, kCoral },
-		{ {-2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, kCoral },
-		{ { 2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, kCoral },
+		{ { 0.0f, 5.0f, 0.0f }, { 0.5f, 0.0f }, { 1, 0, 0, 1 } },
+		{ { 2.0f, 2.5f, 0.0f }, { 1.0f, 0.5f }, { 0, 1, 0, 1 } },
+		{ {-2.0f, 2.5f, 0.0f }, { 0.0f, 0.5f }, { 0, 0, 1, 1 } },
+		{ {-2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1, 1, 0, 1 } },
+		{ { 2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1, 1, 1, 1 } },
 
 		// back
-		{ { 2.0f, 0.0f,-5.0f }, { 1.0f, 0.0f }, kCoral },
-		{ {-2.0f, 0.0f,-5.0f }, { 0.0f, 0.0f }, kCoral },
-		{ {-2.0f, 2.5f,-5.0f }, { 0.0f, 0.5f }, kCoral },
-		{ { 2.0f, 2.5f,-5.0f }, { 1.0f, 0.5f }, kCoral },
-		{ { 0.0f, 5.0f,-5.0f }, { 0.5f, 0.0f }, kCoral },
+		{ { 2.0f, 0.0f,-5.0f }, { 1.0f, 0.0f }, { 1, 0, 0, 1 } },
+		{ {-2.0f, 0.0f,-5.0f }, { 0.0f, 0.0f }, { 0, 1, 0, 1 } },
+		{ {-2.0f, 2.5f,-5.0f }, { 0.0f, 0.5f }, { 0, 0, 1, 1 } },
+		{ { 2.0f, 2.5f,-5.0f }, { 1.0f, 0.5f }, { 1, 1, 0, 1 } },
+		{ { 0.0f, 5.0f,-5.0f }, { 0.5f, 0.0f }, { 1, 1, 1, 1 } },
 
 		// cube
 		// front
@@ -123,7 +126,6 @@ int main(int /*argc*/, char** /*argv*/)
 		{ { 0.5f,-0.5f + 7, 0.0f }, { 1, 1 }, kWhite },
 		{ {-0.5f,-0.5f + 7, 0.0f }, { 0, 1 }, kWhite },
 		{ {-0.5f, 0.5f + 7, 0.0f }, { 0, 0 }, kWhite },
-
 
 		// back
 		{ { 0.5f, 0.5f + 7,-1.0f }, { 1, 0 }, kWhite },
@@ -147,7 +149,7 @@ int main(int /*argc*/, char** /*argv*/)
 		0, 2, 9,
 		9, 7, 2,
 
-		// cube
+		// upper cube
 		10, 11, 13,
 		12, 11, 13,
 		13, 12, 17,
@@ -156,9 +158,6 @@ int main(int /*argc*/, char** /*argv*/)
 		15, 16, 14,
 		14, 15, 10,
 		11, 15, 10
-
-
-
 	};
 
 	const Elements elements {
@@ -185,13 +184,12 @@ int main(int /*argc*/, char** /*argv*/)
 	set_shader_model(0, model);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 	set_shader_view(0, view);
-	set_shader_light_color(0, {1, 1, 1});
 
 	time_t clk = time(nullptr);
 	long fps = 0;
 
 	while (update_display()) {
-		clear_display({0, 0, 0, 1});
+		clear_display({ 0, 0, 0, 1 });
 
 		const auto glfwtime = static_cast<float>(glfwGetTime());
 		delta_time = glfwtime - last_frame;
@@ -199,7 +197,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 		const auto tsin = sinf(glfwtime);
 		const auto tcos = cosf(glfwtime);
-		
+
 		bool need_view_update = false;
 
 		get_cursor_pos(&newcursor);
@@ -209,7 +207,7 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 
 		const float camspeed = camera_speed * delta_time;
-	
+
 		if (is_key_pressed(GLFW_KEY_W)) {
 			camera_pos += camera_front * camspeed;
 			need_view_update = true;
@@ -217,19 +215,23 @@ int main(int /*argc*/, char** /*argv*/)
 			camera_pos -= camera_front * camspeed;
 			need_view_update = true;
 		} if (is_key_pressed(GLFW_KEY_D)) {
-			camera_pos += normalize(cross(camera_front, {0, 1, 0})) * camspeed;
+			camera_pos += normalize(cross(camera_front, { 0, 1, 0 })) * camspeed;
 			need_view_update = true;
 		} else if (is_key_pressed(GLFW_KEY_A)) {
-			camera_pos -= normalize(cross(camera_front, {0, 1, 0})) * camspeed;
+			camera_pos -= normalize(cross(camera_front, { 0, 1, 0 })) * camspeed;
 			need_view_update = true;
 		}
 
 		if (need_view_update) {
-			view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
+			view = look_at(camera_pos, camera_pos + camera_front, { 0, 1, 0 });
 			set_shader_view(0, view);
 		}
 
-		draw_element_buffer(GL_TRIANGLES, 0, elements.indices.count);
+		set_shader_light_color(0, { 1, 1, 1 });
+		draw_element_buffer(GL_TRIANGLES, 36, elements.indices.count);
+		set_shader_light_color(0, {kWhite.r, kWhite.g, kWhite.b});
+		draw_element_buffer(GL_TRIANGLES, 0, 36);
+
 		++fps;
 
 		time_t clk_end = time(nullptr);
@@ -284,17 +286,17 @@ gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos,
 
 bool initialize_systems()
 {
-	const char* const vertexfiles[1] { "../shaders/vertex.glsl" };
-	const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
-	const char* const texturefiles[1] { "container.png" };
+	constexpr const char* const vertexfiles[1] { "../shaders/vertex.glsl" };
+	constexpr const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
+	constexpr const char* const texturefiles[1] { "../container.jpg" };
 	
-	const gp::ShadersProgramsFiles shaders {
+	constexpr const gp::ShadersProgramsFiles shaders {
 		vertexfiles,
 		fragmentfiles,
 		1
 	};
 
-	const gp::TexturesFiles textures {
+	constexpr const gp::TexturesFiles textures {
 		texturefiles,
 		1
 	};
