@@ -7,10 +7,6 @@
 namespace gp {
 
 
-extern bool initialize_display(const char* title, int w, int h);
-extern void terminate_display();
-
-
 inline void set_vsync(const bool vsync_on)
 {
 	glfwSwapInterval(static_cast<int>(vsync_on));

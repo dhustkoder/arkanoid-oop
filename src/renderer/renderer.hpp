@@ -7,7 +7,12 @@
 
 namespace gp {
 
-extern bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders);
+extern bool initialize_renderer(const char* title,
+                                int width,
+				int height,
+                                const TexturesFiles& textures,
+				const ShadersProgramsFiles& shaders);
+
 extern void terminate_renderer();
 
 

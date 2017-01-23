@@ -18,28 +18,54 @@ const Vertices* bound_vertex_buffer = nullptr;
 const Elements* bound_element_buffer = nullptr;
 
 
+extern bool create_display(const char* title, int w, int h);
+extern void free_display();
+
 static bool create_glbuffers();
 static void free_glbuffers();
 
-
 extern bool create_textures(const TexturesFiles& textures_files);
 extern void free_textures();
-
 
 extern bool create_shaders(const ShadersProgramsFiles& programs);
 extern void free_shaders();
 
 
-bool initialize_renderer(const TexturesFiles& textures, const ShadersProgramsFiles& shaders)
+bool initialize_renderer(const char* title,
+                         const int width,
+			 const int height,
+			 const TexturesFiles& textures,
+			 const ShadersProgramsFiles& shaders)
 {
 	auto failure_guard = finally([] {
 		terminate_renderer();
 	});
 
-	if (!create_glbuffers() ||
+	if (!create_display(title, width, height) ||
+	    !create_glbuffers() ||
 	    !create_textures(textures) ||
 	    !create_shaders(shaders))
 		return false;
+
+	glViewport(0, 0, width, height);
+	glEnable(GL_DEPTH_TEST);
+
+	constexpr const int infosize = 4;
+
+	constexpr GLenum infonums[infosize] {
+		GL_VENDOR, GL_RENDERER, GL_VERSION,
+		GL_SHADING_LANGUAGE_VERSION
+	};
+
+	constexpr const char* const infostrs[infosize] {
+		"VENDOR", "RENDERER", "VERSION",
+		"SHADING LANGUAGE VERSION"
+	};
+
+
+	puts("OpenGL");
+	for (int i = 0; i < infosize; ++i)
+		printf("%s: %s\n", infostrs[i], glGetString(infonums[i]));
 
 	failure_guard.Abort();
 	return true;
@@ -51,9 +77,8 @@ void terminate_renderer()
 	free_shaders();
 	free_textures();
 	free_glbuffers();
+	free_display();
 }
-
-
 
 
 void fill_vbo(const Vertex* vertices, const int count)

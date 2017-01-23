@@ -11,30 +11,14 @@ bool keystate[1024] { false };
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
 
-bool initialize_display(const char* const title, const int w, const int h)
+bool create_display(const char* const title, const int w, const int h)
 {
-	constexpr const int infosize = 4;
-
-	constexpr GLenum infonums[infosize] {
-		GL_VENDOR, GL_RENDERER, GL_VERSION,
-		GL_SHADING_LANGUAGE_VERSION
-	};
-
-	constexpr const char* const infostrs[infosize] {
-		"VENDOR", "RENDERER", "VERSION",
-		"SHADING LANGUAGE VERSION"
-	};
-
 	GLenum errcode;
 
 	glfwSetErrorCallback(&error_callback);
 
 	if (glfwInit() != GLFW_TRUE)
 		return false;
-
-	auto failure_guard = finally([] {
-		terminate_display();
-	});
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	window = glfwCreateWindow(w, h, title, NULL, NULL);
@@ -50,20 +34,13 @@ bool initialize_display(const char* const title, const int w, const int h)
 		return false;
 	}
 
-	puts("OpenGL");
-	for (int i = 0; i < infosize; ++i)
-		printf("%s: %s\n", infostrs[i], glGetString(infonums[i]));
-
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glViewport(0, 0, w, h);
-	glEnable(GL_DEPTH_TEST);
-	failure_guard.Abort();
 	return true;
 }
 
 
-void terminate_display()
+void free_display()
 {
 	glfwDestroyWindow(window);
 	glfwTerminate();

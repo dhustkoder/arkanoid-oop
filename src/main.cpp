@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "display/display.hpp"
+#include "renderer/display.hpp"
 #include "renderer/renderer.hpp"
 #include "renderer/shaders.hpp"
 #include "renderer/textures.hpp"
@@ -9,7 +9,7 @@
 #include "math/matrix4.hpp"
 #include "math/vector2.hpp"
 
-
+constexpr const char* kWinTitle = "GProj";
 constexpr const int kWinWidth = 1366;
 constexpr const int kWinHeight = 766;
 
@@ -302,16 +302,12 @@ bool initialize_systems()
 		0
 	};
 
-	if (!gp::initialize_display("Hello GProj", kWinWidth, kWinHeight))
-		goto display_failed;
-	if (!gp::initialize_renderer(textures, shaders))
+	if (!gp::initialize_renderer(kWinTitle, kWinWidth, kWinHeight, textures, shaders))
 		goto renderer_failed;
 
 	return true;
 
 renderer_failed:
-	gp::terminate_display();
-display_failed:
 	return false;
 }
 
@@ -319,6 +315,5 @@ display_failed:
 void terminate_systems()
 {
 	gp::terminate_renderer();
-	gp::terminate_display();
 }
 
