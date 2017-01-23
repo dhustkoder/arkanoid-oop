@@ -37,126 +37,75 @@ int main(int /*argc*/, char** /*argv*/)
 
 	set_vsync(false);	
 
-	constexpr const Vec4 kCoral { 1, 0.5f, 0.31f, 1 };
-	constexpr const Vec4 kWhite { 1, 1, 1, 1 };
+	const Vec3 kCoral { 1, 0.5f, 0.31f };
+	const Vec3 kObjectPos { 0, 0, 0 };
+	Vec3 light_pos { 0, 2, -3 };
 
-	// cube
-	constexpr const Vertex data[] {
+	constexpr const Vertex data [] {
 		// front
-		{ { 0.5f, 0.5f, 0.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-0.5f, 0.5f, 0.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
+		{ { 0.5f, 0.5f, 0.5f }, { 0, 0, 1 } }, 
+		{ { 0.5f,-0.5f, 0.5f }, { 0, 0, 1 } }, 
+		{ {-0.5f,-0.5f, 0.5f }, { 0, 0, 1 } }, 
+		{ {-0.5f, 0.5f, 0.5f }, { 0, 0, 1 } },
 
-
-		// left
-		{ {-0.5f, 0.5f, 0.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ {-0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ {-0.5f,-0.5f,-1.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
-
+		// left 
+		{ {-0.5f, 0.5f, 0.5f }, {-1, 0, 0 } },
+		{ {-0.5f,-0.5f, 0.5f }, {-1, 0, 0 } },
+		{ {-0.5f,-0.5f,-0.5f }, {-1, 0, 0 } },
+		{ {-0.5f, 0.5f,-0.5f }, {-1, 0, 0 } },
 
 		// back
-		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ { 0.5f,-0.5f,-1.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ {-0.5f,-0.5f,-1.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
-
+		{ { 0.5f, 0.5f,-0.5f }, { 0, 0,-1 } },
+		{ { 0.5f,-0.5f,-0.5f }, { 0, 0,-1 } },
+		{ {-0.5f,-0.5f,-0.5f }, { 0, 0,-1 } },
+		{ {-0.5f, 0.5f,-0.5f }, { 0, 0,-1 } },
 
 		// right
-		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ { 0.5f,-0.5f,-1.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ { 0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ { 0.5f, 0.5f, 0.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
-
+		{ { 0.5f, 0.5f,-0.5f }, { 1, 0, 0 } },
+		{ { 0.5f,-0.5f,-0.5f }, { 1, 0, 0 } },
+		{ { 0.5f,-0.5f, 0.5f }, { 1, 0, 0 } },
+		{ { 0.5f, 0.5f, 0.5f }, { 1, 0, 0 } },
 
 		// up
-		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ { 0.5f, 0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ {-0.5f, 0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
+		{ { 0.5f, 0.5f,-0.5f }, { 0, 1, 0 } },
+		{ { 0.5f, 0.5f, 0.5f }, { 0, 1, 0 } },
+		{ {-0.5f, 0.5f, 0.5f }, { 0, 1, 0 } },
+		{ {-0.5f, 0.5f,-0.5f }, { 0, 1, 0 } },
 
 		// down
-		{ { 0.5f,-0.5f,-1.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-0.5f,-0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
+		{ { 0.5f,-0.5f,-0.5f }, { 0,-1, 0 } },
+		{ { 0.5f,-0.5f, 0.5f }, { 0,-1, 0 } },
+		{ {-0.5f,-0.5f, 0.5f }, { 0,-1, 0 } },
+		{ {-0.5f,-0.5f,-0.5f }, { 0,-1, 0 } }
 	};
 
-	constexpr const unsigned int indices[] {
+	constexpr unsigned int indices[] {
+		// front
 		0, 1, 3,
 		2, 1, 3,
+
+		// left
 		4, 5, 7,
 		6, 5, 7,
+
+		// back
 		8, 9, 11,
 		10, 9, 11,
+
+		// right
 		12, 13, 15,
 		14, 13, 15,
+
+		// up
 		16, 17, 19,
 		18, 17, 19,
+
+		// down
 		20, 21, 23,
 		22, 21, 23
 	};
 
-/*
-	house & cube
 
-	constexpr const Vertex data[] {
-		// house:
-		// front
-		{ { 0.0f, 5.0f, 0.0f }, { 0.5f, 0.0f }, { 1, 0, 0, 1 } },
-		{ { 2.0f, 2.5f, 0.0f }, { 1.0f, 0.5f }, { 0, 1, 0, 1 } },
-		{ {-2.0f, 2.5f, 0.0f }, { 0.0f, 0.5f }, { 0, 0, 1, 1 } },
-		{ {-2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1, 1, 0, 1 } },
-		{ { 2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1, 1, 1, 1 } },
-
-		// back
-		{ { 2.0f, 0.0f,-5.0f }, { 1.0f, 0.0f }, { 1, 0, 0, 1 } },
-		{ {-2.0f, 0.0f,-5.0f }, { 0.0f, 0.0f }, { 0, 1, 0, 1 } },
-		{ {-2.0f, 2.5f,-5.0f }, { 0.0f, 0.5f }, { 0, 0, 1, 1 } },
-		{ { 2.0f, 2.5f,-5.0f }, { 1.0f, 0.5f }, { 1, 1, 0, 1 } },
-		{ { 0.0f, 5.0f,-5.0f }, { 0.5f, 0.0f }, { 1, 1, 1, 1 } },
-
-		// cube
-		// front
-		{ { 0.5f, 0.5f + 7, 0.0f }, { 1, 0 }, kWhite },
-		{ { 0.5f,-0.5f + 7, 0.0f }, { 1, 1 }, kWhite },
-		{ {-0.5f,-0.5f + 7, 0.0f }, { 0, 1 }, kWhite },
-		{ {-0.5f, 0.5f + 7, 0.0f }, { 0, 0 }, kWhite },
-
-		// back
-		{ { 0.5f, 0.5f + 7,-1.0f }, { 1, 0 }, kWhite },
-		{ { 0.5f,-0.5f + 7,-1.0f }, { 1, 1 }, kWhite },
-		{ {-0.5f,-0.5f + 7,-1.0f }, { 0, 1 }, kWhite },
-		{ {-0.5f, 0.5f + 7,-1.0f }, { 0, 0 }, kWhite }
-	};
-
-	constexpr const unsigned int indices[] {
-		// house
-		0, 1, 2,
-		2, 3, 1,
-		1, 3, 4,
-		4, 1, 8,
-		5, 4, 8,
-		8, 5, 7,
-		5, 6, 7,
-		7, 8, 9,
-		9, 0, 8,
-		8, 1, 0,
-		0, 2, 9,
-		9, 7, 2,
-
-		// upper cube
-		10, 11, 13,
-		12, 11, 13,
-		13, 12, 17,
-		16, 12, 17,
-		17, 16, 14,
-		15, 16, 14,
-		14, 15, 10,
-		11, 15, 10
-	};
-*/
 	const Elements elements {
 		{ &data[0], sizeof(data)/sizeof(data[0]) },
 		{ &indices[0], sizeof(indices)/sizeof(indices[0]) }
@@ -167,7 +116,7 @@ int main(int /*argc*/, char** /*argv*/)
 	Vec2 lastcursor, newcursor;
 	get_cursor_pos(&lastcursor);
 
-	const float camera_speed = 2.0f;
+	const float camera_speed = 3.0f;
 	float delta_time = 0.0f;
 	float last_frame = 0.0f;
 	float yaw = -90;
@@ -179,15 +128,20 @@ int main(int /*argc*/, char** /*argv*/)
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 
-	bind_shader(kLampShader);
-	
+	bind_shader(kLampShader);	
 	set_shader_projection(projection);
 	set_shader_view(view);
+	set_shader_model(translate(identity_mat4(), light_pos));
 
 	bind_shader(kLightingShader);
 	set_shader_projection(projection);
 	set_shader_view(view);
-	set_shader_light_color({0.4f, 0.4f, 0.4f});
+	set_shader_model(translate(identity_mat4(), kObjectPos));
+	set_shader_object_color(kCoral);
+	set_shader_light_color({1.0f, 1.0f, 1.0f});
+	set_shader_light_pos(light_pos);
+	set_shader_view_pos(camera_pos);
+
 
 	time_t clk = time(nullptr);
 	long fps = 0;
@@ -203,6 +157,7 @@ int main(int /*argc*/, char** /*argv*/)
 		const float tcos = cosf(glfwtime);
 
 		bool need_view_update = false;
+		bool need_light_pos_update = false;
 
 		get_cursor_pos(&newcursor);
 		if (newcursor != lastcursor) {
@@ -226,18 +181,51 @@ int main(int /*argc*/, char** /*argv*/)
 			need_view_update = true;
 		}
 
-		if (need_view_update)
-			view = look_at(camera_pos, camera_pos + camera_front, { 0, 1, 0 });
-		
-		bind_shader(kLampShader);
-		set_shader_model(translate(identity_mat4(), {0, 0, -3}));
-		set_shader_view(view);
-		draw_element_buffer(GL_TRIANGLES, 0, 36);
+		if (is_key_pressed(GLFW_KEY_UP)) {
+			if (is_key_pressed(GLFW_KEY_RIGHT_CONTROL))
+				light_pos.z += camspeed;
+			else
+				light_pos.y += camspeed;
 
+			need_light_pos_update = true;
+		} else if (is_key_pressed(GLFW_KEY_DOWN)) {
+			if (is_key_pressed(GLFW_KEY_RIGHT_CONTROL))
+				light_pos.z -= camspeed;
+			else
+				light_pos.y -= camspeed;
+
+			need_light_pos_update = true;
+		} if (is_key_pressed(GLFW_KEY_LEFT)) {
+			light_pos.x -= camspeed;
+			need_light_pos_update = true;
+		} else if (is_key_pressed(GLFW_KEY_RIGHT)) {
+			light_pos.x += camspeed;
+			need_light_pos_update = true;
+		}
+
+		if (need_view_update) {
+			view = look_at(camera_pos, camera_pos + camera_front, { 0, 1, 0 });
+
+			bind_shader(kLightingShader);
+			set_shader_view(view);
+			set_shader_view_pos(camera_pos);
+
+			bind_shader(kLampShader);
+			set_shader_view(view);
+		}
+
+		if (need_light_pos_update) {
+			bind_shader(kLightingShader);
+			set_shader_light_pos(light_pos);
+
+			bind_shader(kLampShader);
+			set_shader_model(translate(identity_mat4(), light_pos));
+		}
+
+		bind_shader(kLampShader);
+		draw_element_buffer(GL_TRIANGLES, 0, elements.indices.count);
 		bind_shader(kLightingShader);
-		set_shader_model(translate(identity_mat4(), {0, 0, 0}));
-		set_shader_view(view);
-		draw_element_buffer(GL_TRIANGLES, 0, 36);
+		draw_element_buffer(GL_TRIANGLES, 0, elements.indices.count);
 
 		++fps;
 

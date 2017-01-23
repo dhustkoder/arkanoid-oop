@@ -11,8 +11,7 @@ constexpr const int kErrorMsgBufferSize = 1024;
 
 struct Vertex {
 	Vec3 pos;
-	Vec2 tex;
-	Vec4 color;
+	Vec3 normal;
 };
 
 
@@ -48,8 +47,15 @@ struct TexturesFiles {
 
 
 struct ShaderLocs {
-	int projection, view, model, light_color;
+	int projection, 
+	view, 
+	model,
+	light_pos,
+	view_pos,
+	light_color,
+	object_color;
 };
+
 
 struct ShaderIds {
 	unsigned int vertex, fragment;

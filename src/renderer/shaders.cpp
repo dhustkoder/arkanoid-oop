@@ -36,7 +36,10 @@ bool create_shaders(const ShadersProgramsFiles& programs)
 		shaders_locs[i].view = glGetUniformLocation(programs_ids[i], "view");
 		shaders_locs[i].model = glGetUniformLocation(programs_ids[i], "model");
 		shaders_locs[i].projection = glGetUniformLocation(programs_ids[i], "projection");
+		shaders_locs[i].light_pos = glGetUniformLocation(programs_ids[i], "light_pos");
+		shaders_locs[i].view_pos = glGetUniformLocation(programs_ids[i], "view_pos");
 		shaders_locs[i].light_color = glGetUniformLocation(programs_ids[i], "light_color");
+		shaders_locs[i].object_color = glGetUniformLocation(programs_ids[i], "object_color");
 	}
 
 	return true;

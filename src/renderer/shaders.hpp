@@ -47,11 +47,35 @@ inline void set_shader_model(const Mat4& mat4)
 }
 
 
+inline void set_shader_light_pos(const Vec3& v)
+{
+	extern ShaderLocs shaders_locs[kMaxShaders];
+	extern int bound_shader_index;
+	glUniform3f(shaders_locs[bound_shader_index].light_pos, v.x, v.y, v.z);
+}
+
+
+inline void set_shader_view_pos(const Vec3& v)
+{
+	extern ShaderLocs shaders_locs[kMaxShaders];
+	extern int bound_shader_index;
+	glUniform3f(shaders_locs[bound_shader_index].view_pos, v.x, v.y, v.z);
+}
+
+
 inline void set_shader_light_color(const Vec3& v)
 {
 	extern ShaderLocs shaders_locs[kMaxShaders];
 	extern int bound_shader_index;
 	glUniform3f(shaders_locs[bound_shader_index].light_color, v.r, v.g, v.b);
+}
+
+
+inline void set_shader_object_color(const Vec3& v)
+{
+	extern ShaderLocs shaders_locs[kMaxShaders];
+	extern int bound_shader_index;
+	glUniform3f(shaders_locs[bound_shader_index].object_color, v.r, v.g, v.b);
 }
 
 
