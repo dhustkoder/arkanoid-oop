@@ -67,8 +67,8 @@ void free_shaders()
 
 bool push_new_shader_program(const char* vertexfile, const char* fragmentfile, const int index)
 {
-	Array<char> vertexsource = make_array<char>();
-	Array<char> fragmentsource = make_array<char>();
+	Array<char> vertexsource;
+	Array<char> fragmentsource;
 
 	if (!read_sources(vertexfile, fragmentfile, &vertexsource, &fragmentsource))
 		return false;
@@ -176,12 +176,16 @@ bool read_sources(const char* const vertexfilepath,
 			fclose(file);
 		});
 
+		Array<char>& source = *sources[i];
+
 		fseek(file, 0, SEEK_END);
 		const long filesize = ftell(file);
 		fseek(file, 0, SEEK_SET);
-		resize(filesize, sources[i]);
-		fread(sources[i]->data, 1, filesize, file);
-		sources[i]->data[filesize - 1] = '\0';
+
+		resize(filesize, &source);
+		fread(&source[0], 1, filesize, file);
+
+		source[filesize - 1] = '\0';
 	}
 
 	return true;

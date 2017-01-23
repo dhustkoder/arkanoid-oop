@@ -12,8 +12,8 @@ GLuint vao_id = 0;
 GLuint vbo_id = 0;
 GLuint ebo_id = 0;
 
-Array<const Vertices*> vertexbuffers = make_array<const Vertices*>();
-Array<const Elements*> elementbuffers = make_array<const Elements*>();
+Array<const Vertices*> vertexbuffers;
+Array<const Elements*> elementbuffers;
 const Vertices* bound_vertex_buffer = nullptr;
 const Elements* bound_element_buffer = nullptr;
 

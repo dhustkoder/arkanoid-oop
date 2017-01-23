@@ -7,6 +7,54 @@
 
 namespace gp {
 
+	
+template<class T>
+Array<T>::Array() :
+	data(nullptr),
+	size(0),
+	capacity(0)
+{
+	reserve(1, this);
+}
+
+
+template<class T>
+Array<T>::Array(Array&& arr)
+	: data(arr.data), 
+	size(arr.size), 
+	capacity(arr.capacity)
+{
+	arr.data = nullptr;
+	arr.size = 0;
+	arr.capacity = 0;
+}
+
+
+template<class T>
+Array<T>& Array<T>::operator=(Array&& arr)
+{
+	T* const data_aux = this->data;
+	const int size_aux = this->size;
+	const int cap_aux = this->capacity;
+
+	this->data = arr.data;
+	this->size = arr.size;
+	this->capacity = arr.capacity;
+
+	arr.data = data_aux;
+	arr.size = size_aux;
+	arr.capacity = cap_aux;
+}
+
+
+template<class T>
+Array<T>::~Array()
+{
+	if (this->data)
+		free(this->data);
+}
+
+
 template<class T>
 const T& Array<T>::operator[](const int index) const
 {
@@ -66,55 +114,6 @@ T* Array<T>::end()
 
 
 template<class T>
-Array<T>::Array(Array&& arr)
-	: data(arr.data), 
-	size(arr.size), 
-	capacity(arr.capacity)
-{
-	arr.data = nullptr;
-	arr.size = 0;
-	arr.capacity = 0;
-}
-
-
-template<class T>
-Array<T>& Array<T>::operator=(Array&& arr)
-{
-	T* const data_aux = this->data;
-	const int size_aux = this->size;
-	const int cap_aux = this->capacity;
-
-	this->data = arr.data;
-	this->size = arr.size;
-	this->capacity = arr.capacity;
-
-	arr.data = data_aux;
-	arr.size = size_aux;
-	arr.capacity = cap_aux;
-}
-
-
-template<class T>
-Array<T>::~Array()
-{
-	if (this->data)
-		free(this->data);
-}
-
-
-template<class T>
-Array<T> make_array()
-{
-	Array<T> arr;
-	arr.data = static_cast<T*>(malloc(sizeof(T)));
-	assert(arr.data != nullptr);
-	arr.size = 0;
-	arr.capacity = 1;
-	return arr;
-}
-
-
-template<class T>
 void reserve(const long newsize, Array<T>* const arr)
 {
 	assert(newsize < INT_MAX);
@@ -136,8 +135,9 @@ template<class T>
 void push_back(const T& elem, Array<T>* const arr)
 {
 	if (arr->size == arr->capacity) {
-		assert(arr->size < INT_MAX);
-		reserve(arr->size + 1, arr);
+		const long cursize = static_cast<long>(arr->size);
+		const long newsize = (cursize + 1l) + ((cursize + 1l) / 2l);
+		reserve(newsize, arr);
 	}
 
 	arr->data[arr->size++] = elem;
@@ -145,7 +145,7 @@ void push_back(const T& elem, Array<T>* const arr)
 
 
 template<class T>
-T pop(Array<T>* const arr)
+T pop_back(Array<T>* const arr)
 {
 	return arr->data[--arr->size];
 }

@@ -12,7 +12,7 @@ struct Array {
 	Array(const Array&) = delete;
 	Array& operator=(const Array&) = delete;
 
-	Array() = default;
+	Array();
 	Array(Array&&);
 	Array& operator=(Array&&);
 
@@ -29,6 +29,17 @@ struct Array {
 	T& operator[](int index);
 };
 
+
+template<class T>
+void reserve(const long newsize, Array<T>* const arr);
+template<class T>
+void resize(const long newsize, Array<T>* const arr);
+template<class T>
+void push_back(const T& elem, Array<T>* const arr);
+template<class T>
+T pop_back(Array<T>* const arr);
+template<class T>
+void clear(Array<T>* const arr);
 
 
 }

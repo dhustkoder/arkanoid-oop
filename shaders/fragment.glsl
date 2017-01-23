@@ -11,7 +11,7 @@ out vec4 pixel;
 void main(void)
 {
 //	pixel = texture(texture_unit, fragment_tex_coords) * vec4(light_source, 1) * fragment_color;
-	float ambient_strength = 0.1f;
+	float ambient_strength = 0.5f;
 	vec3 ambient = ambient_strength * light_color;
 	pixel = object_color * vec4(ambient, 1.0f);
 }
