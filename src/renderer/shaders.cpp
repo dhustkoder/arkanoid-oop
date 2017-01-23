@@ -12,6 +12,8 @@ namespace gp {
 GLuint programs_ids[kMaxShaders] { 0 };
 ShaderLocs shaders_locs[kMaxShaders];
 ShaderIds shaders_ids[kMaxShaders];
+GLuint bound_shader_id = 0;
+int bound_shader_index = 0;
 static GLchar error_msg_buffer[kErrorMsgBufferSize] { 0 };
 
 
@@ -26,11 +28,7 @@ static bool validate_linkage(GLuint program_id);
 bool create_shaders(const ShadersProgramsFiles& programs)
 {
 	const int programs_count = programs.count;
-
-	if (programs_count > kMaxShaders) {
-		fprintf(stderr, "Max shaders: %i\n", kMaxShaders);
-		return false;
-	}
+	assert(programs_count <= kMaxShaders);
 
 	for (int i = 0; i < programs_count; ++i) {
 		if (!push_new_shader_program(programs.vertex[i], programs.fragment[i], i))
@@ -183,10 +181,10 @@ bool read_sources(const char* const vertexfilepath,
 		const long filesize = ftell(file);
 		fseek(file, 0, SEEK_SET);
 
-		resize(filesize, &source);
+		resize(filesize + 1, &source);
 		fread(&source[0], 1, filesize, file);
 
-		source[filesize - 1] = '\0';
+		source[filesize] = '\0';
 	}
 
 	return true;

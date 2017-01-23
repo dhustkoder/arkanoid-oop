@@ -11,11 +11,7 @@ GLuint textures_ids[kMaxTextures] { 0 };
 bool create_textures(const TexturesFiles& textures_files)
 {
 	const int num_textures = textures_files.count;
-
-	if (num_textures > kMaxTextures) {
-		fprintf(stderr, "Max textures: %i\n", kMaxTextures);
-		return false;
-	}
+	assert(num_textures <= kMaxTextures);
 
 	glGenTextures(num_textures, textures_ids);
 

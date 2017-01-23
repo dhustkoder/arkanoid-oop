@@ -5,7 +5,7 @@
 namespace gp {
 
 constexpr const int kMaxTextures = 1;
-constexpr const int kMaxShaders = 1;
+constexpr const int kMaxShaders = 2;
 constexpr const int kErrorMsgBufferSize = 1024;
 
 

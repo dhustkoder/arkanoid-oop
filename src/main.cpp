@@ -13,6 +13,11 @@
 constexpr const int kWinWidth = 1366;
 constexpr const int kWinHeight = 766;
 
+enum ShaderIds {
+	kLightingShader = 0,
+	kLampShader = 1
+};
+
 
 static gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos, float* yaw, float* pitch);
 static bool initialize_systems();
@@ -30,10 +35,11 @@ int main(int /*argc*/, char** /*argv*/)
 		terminate_systems();
 	});
 
-	set_vsync(false);
-	bind_shader(0);
-	bind_texture(0);
-/*
+	set_vsync(false);	
+
+	constexpr const Vec4 kCoral { 1, 0.5f, 0.31f, 1 };
+	constexpr const Vec4 kWhite { 1, 1, 1, 1 };
+
 	// cube
 	constexpr const Vertex data[] {
 		// front
@@ -75,12 +81,6 @@ int main(int /*argc*/, char** /*argv*/)
 		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
 		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
 		{ {-0.5f,-0.5f,-1.0f }, { 0, 0 }, { 1, 1, 0, 1 } },
-
-		// ground
-		{ { 10.0f,-0.5f,-10.0f }, { 1, 0 }, { 1, 0, 0, 1 } },
-		{ { 10.0f,-0.5f, 10.0f }, { 1, 1 }, { 0, 1, 0, 1 } },
-		{ {-10.0f,-0.5f, 10.0f }, { 0, 1 }, { 0, 0, 1, 1 } },
-		{ {-10.0f,-0.5f,-10.0f }, { 0, 0 }, { 1, 1, 0, 1 } }
 	};
 
 	constexpr const unsigned int indices[] {
@@ -95,14 +95,11 @@ int main(int /*argc*/, char** /*argv*/)
 		16, 17, 19,
 		18, 17, 19,
 		20, 21, 23,
-		22, 21, 23,
-		24, 25, 27,
-		26, 25, 27
+		22, 21, 23
 	};
-*/
 
-	constexpr const Vec4 kCoral { 1, 0.5f, 0.31f, 1 };
-	constexpr const Vec4 kWhite { 0.5f, 0.5f, 0.5f, 1 };
+/*
+	house & cube
 
 	constexpr const Vertex data[] {
 		// house:
@@ -159,7 +156,7 @@ int main(int /*argc*/, char** /*argv*/)
 		14, 15, 10,
 		11, 15, 10
 	};
-
+*/
 	const Elements elements {
 		{ &data[0], sizeof(data)/sizeof(data[0]) },
 		{ &indices[0], sizeof(indices)/sizeof(indices[0]) }
@@ -178,12 +175,19 @@ int main(int /*argc*/, char** /*argv*/)
 	Vec3 camera_pos { 0, 2, 3 };
 	Vec3 camera_front { 0, 0, -1 };
 
+
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
-	set_shader_projection(0, projection);
-	const Mat4 model = translate(identity_mat4(), {0, 0, 0});
-	set_shader_model(0, model);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
-	set_shader_view(0, view);
+
+	bind_shader(kLampShader);
+	
+	set_shader_projection(projection);
+	set_shader_view(view);
+
+	bind_shader(kLightingShader);
+	set_shader_projection(projection);
+	set_shader_view(view);
+	set_shader_light_color({0.4f, 0.4f, 0.4f});
 
 	time_t clk = time(nullptr);
 	long fps = 0;
@@ -222,14 +226,17 @@ int main(int /*argc*/, char** /*argv*/)
 			need_view_update = true;
 		}
 
-		if (need_view_update) {
+		if (need_view_update)
 			view = look_at(camera_pos, camera_pos + camera_front, { 0, 1, 0 });
-			set_shader_view(0, view);
-		}
+		
+		bind_shader(kLampShader);
+		set_shader_model(translate(identity_mat4(), {0, 0, -3}));
+		set_shader_view(view);
+		draw_element_buffer(GL_TRIANGLES, 0, 36);
 
-		set_shader_light_color(0, { 1, 1, 1 });
-		draw_element_buffer(GL_TRIANGLES, 36, elements.indices.count);
-		set_shader_light_color(0, {kWhite.r, kWhite.g, kWhite.b});
+		bind_shader(kLightingShader);
+		set_shader_model(translate(identity_mat4(), {0, 0, 0}));
+		set_shader_view(view);
 		draw_element_buffer(GL_TRIANGLES, 0, 36);
 
 		++fps;
@@ -286,19 +293,25 @@ gp::Vec3 process_cursor_movement(const gp::Vec2& newpos, gp::Vec2* const oldpos,
 
 bool initialize_systems()
 {
-	constexpr const char* const vertexfiles[1] { "../shaders/vertex.glsl" };
-	constexpr const char* const fragmentfiles[1] { "../shaders/fragment.glsl" };
-	constexpr const char* const texturefiles[1] { "../container.jpg" };
+	constexpr const char* const vertexfiles[2] { 
+		"../shaders/lighting.vs",
+		"../shaders/lamp.vs"
+	};
+
+	constexpr const char* const fragmentfiles[2] {
+		"../shaders/lighting.fs",
+		"../shaders/lamp.fs"
+	};
 	
 	const gp::ShadersProgramsFiles shaders {
 		vertexfiles,
 		fragmentfiles,
-		1
+		2
 	};
 
 	const gp::TexturesFiles textures {
-		texturefiles,
-		1
+		nullptr,
+		0
 	};
 
 	if (!gp::initialize_display("Hello GProj", kWinWidth, kWinHeight))
