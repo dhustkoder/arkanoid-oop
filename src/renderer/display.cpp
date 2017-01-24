@@ -8,6 +8,7 @@ namespace gp {
 GLFWwindow* window = nullptr;
 bool keystate[1024] { false };
 
+bool create_display(const char* title, int w, int h);
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
 

@@ -22,14 +22,8 @@
     <Filter Include="Header Files\math">
       <UniqueIdentifier>{53716fcd-398e-4c75-9bcc-99f13daaca3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\display">
-      <UniqueIdentifier>{3b955062-5557-42cf-acca-b2454b63c65b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\utils">
       <UniqueIdentifier>{3c034eed-bc29-4e7d-ad6a-ebe6846f86e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\display">
-      <UniqueIdentifier>{f7838f59-e2a4-4018-9e2b-35539e075abf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\memory">
       <UniqueIdentifier>{dd4b3f82-9d84-4d22-aabb-6028f47facef}</UniqueIdentifier>
@@ -57,9 +51,6 @@
     <ClInclude Include="..\src\math\vector4.hpp">
       <Filter>Header Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\display\display.hpp">
-      <Filter>Header Files\display</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\utils\finally.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
@@ -75,6 +66,9 @@
     <ClInclude Include="..\src\renderer\shaders.hpp">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\renderer\display.hpp">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -83,13 +77,13 @@
     <ClCompile Include="..\src\renderer\renderer.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\display\display.cpp">
-      <Filter>Source Files\display</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\renderer\shaders.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\src\renderer\textures.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\display.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>

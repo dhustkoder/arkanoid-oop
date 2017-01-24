@@ -128,7 +128,7 @@ int main(int /*argc*/, char** /*argv*/)
 	const Mat4 projection = perspective(45.0f * (kPI/180), (float)kWinWidth / (float)kWinHeight, 0.1f, 100.0f);
 	Mat4 view = look_at(camera_pos, camera_pos + camera_front, {0, 1, 0});
 
-	bind_shader(kLampShader);	
+	bind_shader(kLampShader);
 	set_shader_projection(projection);
 	set_shader_view(view);
 	set_shader_model(scale(translate(identity_mat4(), light_pos), {0.2f, 0.2f, 0.2f}));
