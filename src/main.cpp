@@ -39,7 +39,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 	const Vec3 kCoral { 1, 0.5f, 0.31f };
 	const Vec3 kObjectPos { 0, 0, 0 };
-	Vec3 light_pos { 0, 2, -3 };
+	Vec3 light_pos { 1.2f, 1.0f, 2.0f };
 
 	constexpr const Vertex data [] {
 		// front
@@ -131,7 +131,7 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_shader(kLampShader);	
 	set_shader_projection(projection);
 	set_shader_view(view);
-	set_shader_model(translate(identity_mat4(), light_pos));
+	set_shader_model(scale(translate(identity_mat4(), light_pos), {0.2f, 0.2f, 0.2f}));
 
 	bind_shader(kLightingShader);
 	set_shader_projection(projection);
@@ -219,7 +219,9 @@ int main(int /*argc*/, char** /*argv*/)
 			set_shader_light_pos(light_pos);
 
 			bind_shader(kLampShader);
-			set_shader_model(translate(identity_mat4(), light_pos));
+			Mat4 lightmodel = translate(identity_mat4(), light_pos);
+			lightmodel = scale(lightmodel, {0.2f, 0.2f, 0.2f});
+			set_shader_model(lightmodel);
 		}
 
 		bind_shader(kLampShader);

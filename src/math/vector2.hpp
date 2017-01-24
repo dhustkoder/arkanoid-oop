@@ -61,6 +61,24 @@ inline bool operator!=(const Vec2& a, const Vec2& b)
 }
 
 
+inline float dot(const Vec2& a, const Vec2& b)
+{
+	return (a.x * b.x) + (a.y * b.y);
+}
+
+
+inline float length(const Vec2& v)
+{
+	return sqrtf(dot(v, v));
+}
+
+
+inline Vec2 normalize(const Vec2& v)
+{
+	const float len = length(v);
+	return { v.x / len, v.y / len };
+}
+
 
 } // namespace gp
 #endif

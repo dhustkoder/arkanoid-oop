@@ -56,6 +56,46 @@ inline Vec4& operator*=(Vec4& a, const float scalar)
 }
 
 
+inline bool operator==(const Vec4& a, const Vec4& b)
+{
+	if (fabs(a.x - b.x) > 0.00001)
+		return false;
+	else if (fabs(a.y - b.y) > 0.00001)
+		return false;
+	else if (fabs(a.z - b.z) > 0.00001)
+		return false;
+	else if (fabs(a.w - b.w) > 0.00001)
+		return false;
+
+	return true;
+}
+
+
+inline bool operator!=(const Vec4& a, const Vec4& b)
+{
+	return !(a == b);
+}
+
+
+inline float dot(const Vec4& a, const Vec4& b)
+{
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
+}
+
+
+inline float length(const Vec4& v)
+{
+	return sqrtf(dot(v, v));	
+}
+
+
+inline Vec4 normalize(const Vec4& v)
+{
+	const float len = length(v);
+	return { v.x / len, v.y / len, v.z / len, v.w / len };
+}
+
+
 
 } // namespace gp
 #endif
