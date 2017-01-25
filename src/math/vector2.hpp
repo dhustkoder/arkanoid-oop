@@ -1,5 +1,6 @@
 #ifndef GPROJ_VECTOR2_HPP_
 #define GPROJ_VECTOR2_HPP_
+#include <math.h>
 #include "math_types.hpp"
 
 namespace gp {

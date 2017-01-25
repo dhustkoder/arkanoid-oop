@@ -21,11 +21,7 @@ void reset_camera(const int win_width, const int win_height,
                   const float speed, const float sensitivity,
 		  const Vec3& pos, const Vec3& world_up)
 {
-	last_cursor = Vec2 {
-		static_cast<float>(win_width)/2,
-		static_cast<float>(win_height)/2
-	};
-
+	last_cursor = get_cursor_pos();
 
 	camera.yaw = -90;
 	camera.pitch = 0;
@@ -79,6 +75,7 @@ void update_camera(const float delta)
 	const bool d = is_key_pressed(GLFW_KEY_D);
 	const bool a = is_key_pressed(GLFW_KEY_A);
 
+
 	if (w || s || d || a) {
 		const float speed = camera.speed * delta;
 
@@ -123,5 +120,5 @@ void update_vectors()
 }
 
 
-}
+} // namespace gp
 

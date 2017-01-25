@@ -28,6 +28,12 @@
     <Filter Include="Header Files\memory">
       <UniqueIdentifier>{dd4b3f82-9d84-4d22-aabb-6028f47facef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\platform">
+      <UniqueIdentifier>{0ef49e03-73a9-4db9-a9e3-dd81c3b4d4cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\platform">
+      <UniqueIdentifier>{827d77d0-453a-46b3-8377-bff999cc84a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\renderer\renderer.hpp">
@@ -66,7 +72,13 @@
     <ClInclude Include="..\src\renderer\shaders.hpp">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\renderer\display.hpp">
+    <ClInclude Include="..\src\platform\display.hpp">
+      <Filter>Header Files\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\kbd_mouse_input.hpp">
+      <Filter>Header Files\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\renderer\camera.hpp">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,7 +95,13 @@
     <ClCompile Include="..\src\renderer\textures.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\renderer\display.cpp">
+    <ClCompile Include="..\src\platform\display.cpp">
+      <Filter>Source Files\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\kbd_mouse_input.cpp">
+      <Filter>Source Files\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\camera.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>

@@ -26,7 +26,9 @@
     <ClInclude Include="..\src\math\vector4.hpp" />
     <ClInclude Include="..\src\memory\array.hpp" />
     <ClInclude Include="..\src\memory\array_type.hpp" />
-    <ClInclude Include="..\src\renderer\display.hpp" />
+    <ClInclude Include="..\src\platform\display.hpp" />
+    <ClInclude Include="..\src\platform\kbd_mouse_input.hpp" />
+    <ClInclude Include="..\src\renderer\camera.hpp" />
     <ClInclude Include="..\src\renderer\renderer.hpp" />
     <ClInclude Include="..\src\renderer\renderer_types.hpp" />
     <ClInclude Include="..\src\renderer\shaders.hpp" />
@@ -35,7 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\renderer\display.cpp" />
+    <ClCompile Include="..\src\platform\display.cpp" />
+    <ClCompile Include="..\src\platform\kbd_mouse_input.cpp" />
+    <ClCompile Include="..\src\renderer\camera.cpp" />
     <ClCompile Include="..\src\renderer\renderer.cpp" />
     <ClCompile Include="..\src\renderer\shaders.cpp" />
     <ClCompile Include="..\src\renderer\textures.cpp" />

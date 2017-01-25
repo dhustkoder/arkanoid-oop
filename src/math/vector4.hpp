@@ -1,5 +1,6 @@
 #ifndef GPROJ_VECTOR4_HPP_
 #define GPROJ_VECTOR4_HPP_
+#include <math.h>
 #include "math_types.hpp"
 
 

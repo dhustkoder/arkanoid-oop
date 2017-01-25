@@ -11,6 +11,7 @@ constexpr const int kErrorMsgBufferSize = 1024;
 
 struct Vertex {
 	Vec3 pos;
+	Vec2 tex_coords;
 };
 
 

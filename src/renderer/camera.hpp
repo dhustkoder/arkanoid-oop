@@ -11,6 +11,6 @@ extern void reset_camera(int win_width, int win_height,
 extern void update_camera(float delta);
 
 
-}
+} // namespace gp
 #endif
 

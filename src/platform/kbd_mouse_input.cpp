@@ -8,7 +8,6 @@ bool keystate[1024] { false };
 
 
 void kbd_callback(GLFWwindow* const win, int key, int scancode, int action, int mods);
-void cursor_callback(GLFWwindow* win, double x, double y);
 
 
 void kbd_callback(GLFWwindow* const win,

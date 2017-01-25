@@ -4,6 +4,7 @@
 #include "platform/display.hpp"
 #include "platform/kbd_mouse_input.hpp"
 #include "renderer/renderer.hpp"
+#include "renderer/textures.hpp"
 #include "renderer/shaders.hpp"
 #include "renderer/camera.hpp"
 #include "utils/finally.hpp"
@@ -11,7 +12,7 @@
 #include "math/vector2.hpp"
 
 
-constexpr const char* kWinTitle = "GProj";
+constexpr const char* const kWinTitle = "GProj";
 constexpr const int kWinWidth = 480;
 constexpr const int kWinHeight = 360;
 
@@ -34,20 +35,21 @@ int main(int /*argc*/, char** /*argv*/)
 	set_vsync(false);
 	
 	bind_shader(0);
+	bind_texture(0);
 	
 	set_shader_model(translate(identity_mat4(), {0, 0, 0}));
 	reset_camera(kWinWidth, kWinHeight, 3.0f, 0.25f, { 0, 0, 4 }, { 0, 1, 0 });
 
 	constexpr const Vertex data[] {
-		{ { 0.5f, 0.5f, 0.0f } },
-		{ { 0.5f,-0.5f, 0.0f } },
-		{ {-0.5f,-0.5f, 0.0f } },
-		{ {-0.5f, 0.5f, 0.0f } },
+		{ { 0.5f, 0.5f, 0.0f }, { 1, 0 } },
+		{ { 0.5f,-0.5f, 0.0f }, { 1, 1 } },
+		{ {-0.5f,-0.5f, 0.0f }, { 0, 1 } },
+		{ {-0.5f, 0.5f, 0.0f }, { 0, 0 } },
 
-		{ { 0.5f, 0.5f,-1.0f } },
-		{ { 0.5f,-0.5f,-1.0f } },
-		{ {-0.5f,-0.5f,-1.0f } },
-		{ {-0.5f, 0.5f,-1.0f } }
+		{ { 0.5f, 0.5f,-1.0f }, { 1, 0 } },
+		{ { 0.5f,-0.5f,-1.0f }, { 1, 1 } },
+		{ {-0.5f,-0.5f,-1.0f }, { 0, 1 } },
+		{ {-0.5f, 0.5f,-1.0f }, { 0, 0 } }
 	};
 
 	const unsigned int indices[] {
@@ -56,8 +58,6 @@ int main(int /*argc*/, char** /*argv*/)
 		
 		4, 7, 3,
 		0, 4, 3
-
-
 	};
 
 	const Elements elements {
@@ -76,7 +76,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 	while (update_display()) {
 		clear_screen({ 0, 0, 0, 1 });
-		const float frametime = glfwGetTime();
+		const float frametime = static_cast<float>(glfwGetTime());
 		delta = frametime - lastframe;
 		lastframe = frametime;
 
@@ -100,11 +100,15 @@ int main(int /*argc*/, char** /*argv*/)
 bool initialize_systems()
 {
 	constexpr const char* const vertexfiles[1] { 
-		"../shaders/simple.vs"
+		"../shaders/simple_tex.vs"
 	};
 
 	constexpr const char* const fragmentfiles[1] {
-		"../shaders/simple.fs"
+		"../shaders/simple_tex.fs"
+	};
+
+	constexpr const char* const texturefiles[1] {
+		"../container.jpg"
 	};
 	
 	const gp::ShadersProgramsFiles shaders {
@@ -114,8 +118,8 @@ bool initialize_systems()
 	};
 
 	const gp::TexturesFiles textures {
-		nullptr,
-		0
+		texturefiles,
+		1
 	};
 
 	if (!gp::initialize_renderer(kWinTitle, kWinWidth, kWinHeight, textures, shaders))
