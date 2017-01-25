@@ -86,16 +86,10 @@ void fill_vbo(const Vertex* vertices, const int count)
 	constexpr auto vertsize = sizeof(*vertices);
 	const auto buffsize = vertsize * count;
 	const auto pos_offset = (GLvoid*) offsetof(Vertex, pos);
-	const auto normal_offset = (GLvoid*) offsetof(Vertex, normal);
-	//const auto col_offset = (GLvoid*) offsetof(Vertex, color);
 
 	glBufferData(GL_ARRAY_BUFFER, buffsize, vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, sizeof(Vertex::pos)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, pos_offset);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, sizeof(Vertex::normal)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, normal_offset);
-	glEnableVertexAttribArray(1);
-//	glVertexAttribPointer(2, sizeof(Vertex::color)/sizeof(GLfloat), GL_FLOAT, GL_FALSE, vertsize, col_offset);
-//	glEnableVertexAttribArray(2);
 }
 
 

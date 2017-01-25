@@ -21,5 +21,5 @@ inline void unbind_textures()
 }
 
 
-}
+} // namespace gp
 #endif

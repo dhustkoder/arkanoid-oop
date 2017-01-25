@@ -16,9 +16,17 @@ extern bool initialize_renderer(const char* title,
 extern void terminate_renderer();
 
 
+
 inline void set_wireframe_mode(const bool on)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, on ? GL_LINE : GL_FILL);
+}
+
+
+inline void clear_screen(const Vec4& color)
+{
+	glClearColor(color.r, color.g, color.b, color.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 

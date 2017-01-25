@@ -54,4 +54,4 @@ void free_textures()
 }
 
 
-}
+} // namespace gp

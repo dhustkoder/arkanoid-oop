@@ -6,11 +6,14 @@
 namespace gp {
 
 GLFWwindow* window = nullptr;
-bool keystate[1024] { false };
+
+
+extern void kbd_callback(GLFWwindow* const win, int key, int scancode, int action, int mods);
+
 
 bool create_display(const char* title, int w, int h);
 static void error_callback(int error, const char* description);
-static void key_callback(GLFWwindow* win, int key, int scancode, int action, int mods);
+
 
 bool create_display(const char* const title, const int w, const int h)
 {
@@ -27,7 +30,7 @@ bool create_display(const char* const title, const int w, const int h)
 	if (window == nullptr)
 		return false;
 
-	glfwSetKeyCallback(window, &key_callback);
+	glfwSetKeyCallback(window, &kbd_callback);
 	glfwMakeContextCurrent(window);
 
 	if ((errcode = glewInit()) != GLEW_OK) {
@@ -52,24 +55,6 @@ void free_display()
 void error_callback(const int error, const char* const description)
 {
 	fprintf(stderr, "Error %d: %s\n", error, description);
-}
-
-
-void key_callback(GLFWwindow* const win,
-                       const int key,
-                       const int /*scancode*/,
-                       const int action,
-                       const int /*mods*/)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(win, GLFW_TRUE);
-	} else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-		static bool wireframe_on = false;
-		wireframe_on = !wireframe_on;
-		set_wireframe_mode(wireframe_on);
-	} else {
-		keystate[key] = action != GLFW_RELEASE;
-	}
 }
 
 

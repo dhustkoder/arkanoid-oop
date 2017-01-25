@@ -11,7 +11,6 @@ constexpr const int kErrorMsgBufferSize = 1024;
 
 struct Vertex {
 	Vec3 pos;
-	Vec3 normal;
 };
 
 
@@ -62,6 +61,20 @@ struct ShaderIds {
 };
 
 
+struct Camera {
+	float yaw;
+	float pitch;
+	float speed;
+	float sensitivity;
+	Vec3 pos;
+	Vec3 dir;
+	Vec3 right;
+	Vec3 up;
+	Vec3 world_up;
+};
+
+
 } // namespace gp
 #endif
+
 

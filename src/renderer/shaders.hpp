@@ -79,5 +79,5 @@ inline void set_shader_object_color(const Vec3& v)
 }
 
 
-}
+} // namespace gp
 #endif

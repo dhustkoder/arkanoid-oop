@@ -193,4 +193,4 @@ bool read_sources(const char* const vertexfilepath,
 	return true;
 }
 
-}
+} // namespace gp
