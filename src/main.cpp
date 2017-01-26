@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include "platform/display.hpp"
 #include "platform/kbd_mouse_input.hpp"
 #include "renderer/renderer.hpp"
@@ -62,9 +61,9 @@ int main(int /*argc*/, char** /*argv*/)
 	const int veo = register_element_buffer(elements);
 	bind_element_buffer(veo);
 
-	time_t clk = time(nullptr);
-	long fps = 0;
-	float lastframe = 0;
+	int fps = 0;
+	float last_frametime = 0;
+	float last_fpstime = 0;
 	float delta;
 
 
@@ -73,14 +72,20 @@ int main(int /*argc*/, char** /*argv*/)
 	bool throwing = false;
 
 	constexpr const Vec3 star_init_pos { 0.2f, 0.0f, 4.1f };
-	constexpr const Vec3 star_vel { 0.0f, 0.0f, -2.5f };
+	constexpr const Vec3 star_vel { 0.0f, 0.0f, -8.0f };
 	Vec3 star_pos = star_init_pos;
+
+	constexpr const Vec3 target_init_pos { 0.0f, 0.0f, 0.1f };
+	Vec3 target_vel { 0.5f, 0.0f, 0.0f };
+	Vec3 target_pos = target_init_pos;
+	float star_rotation = 0.0f;
 
 	while (update_display()) {
 		clear_screen({ 0, 0, 0, 1 });
+
 		const float frametime = static_cast<float>(glfwGetTime());
-		delta = frametime - lastframe;
-		lastframe = frametime;
+		delta = frametime - last_frametime;
+		last_frametime = frametime;
 
 		bind_texture(0);
 		set_shader_model(bkg_model);
@@ -88,36 +93,43 @@ int main(int /*argc*/, char** /*argv*/)
 		
 
 		bind_texture(1);
-		set_shader_model(translate(target_model, { sinf(frametime) * 2.5f, 0.0f, 0.0f }));
+		target_pos += target_vel * delta;
+
+		if (target_pos.x > 4.0f)
+			target_vel.x = -target_vel.x;
+		else if (target_pos.x < -4.0f)
+			target_vel.x = -target_vel.x;
+
+		set_shader_model(translate(target_model, target_pos));
 		draw_element_buffer(GL_TRIANGLES);
 
 		if (throwing) {
-
 			bind_texture(2);
 			star_pos += star_vel * delta;
 			Mat4 star_model = translate(identity_mat4(), star_pos);
 			star_model = rotate(star_model, radians(90), { 1, 1, 0 });
-			star_model = rotate(star_model, -(frametime * 10), { 0, 0, 1 });
-			star_model = scale(star_model, { 0.25f, 0.25f, 1 });
+			star_model = rotate(star_model, star_rotation, { 0, 0, 1 });
+			star_rotation += radians(-360) * delta;
+			star_model = scale(star_model, { 0.25f, 0.25f, 0.25f });
 			set_shader_model(star_model);
 			draw_element_buffer(GL_TRIANGLES);
 
 			if (star_pos.z <= 0) {
 				throwing = false;
-				star_pos = star_init_pos;
 			}
 
 		} else if (is_key_pressed(GLFW_KEY_W)) {
 			throwing = true;
+			star_pos = star_init_pos;
+			star_rotation = 0.0f;
 		}
 
-
 		++fps;
-		time_t clk_end = time(nullptr);
-		if ((clk_end - clk) >= 1) {
-			printf("FPS: %ld\n", fps);
+
+		if ((frametime - last_fpstime) > 1.0f) {
+			printf("FPS: %i\n", fps);
 			fps = 0;
-			clk = clk_end;
+			last_fpstime = frametime;
 		}
 	}
 
