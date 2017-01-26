@@ -94,10 +94,10 @@ inline void draw_vertex_buffer(const GLenum mode)
 }
 
 
-inline void draw_element_buffer(const GLenum mode, const intptr_t from_offset, const intptr_t to_offset)
+inline void draw_element_buffer(const GLenum mode)
 {
-	glDrawElements(mode, to_offset - from_offset,
-	              GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(sizeof(GLuint) * from_offset));
+	extern Elements* bound_element_buffer;
+	glDrawElements(mode, bound_element_buffer->indices.count, GL_UNSIGNED_INT, 0);
 }
 
 

@@ -51,10 +51,10 @@ void update_camera(const float delta)
 
 		camera.pitch = clamp(camera.pitch, -89.0f, 89.0f);
 
-//		if (camera.yaw > 270)
-//			camera.yaw = -90;
-//		else if (camera.yaw < -450)
-//			camera.yaw = -90;
+		if (camera.yaw > 270)
+			camera.yaw = -90;
+		else if (camera.yaw < -450)
+			camera.yaw = -90;
 
 		update_vectors();
 		need_view_update = true;

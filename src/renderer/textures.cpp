@@ -30,14 +30,14 @@ bool create_textures(const TexturesFiles& textures_files)
 		int width, height;
 		unsigned char* const image = SOIL_load_image(tex_file,
                                                              &width, &height,
-		                                             nullptr, SOIL_LOAD_RGB);
+		                                             nullptr, SOIL_LOAD_RGBA);
 
 		if (image == nullptr) {
 			fprintf(stderr, "Couldn't load texture \'%s\' %s\n", tex_file, SOIL_last_result());
 			return false;
 		}
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		SOIL_free_image_data(image);
 	}
