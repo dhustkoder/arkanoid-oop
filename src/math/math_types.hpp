@@ -3,9 +3,9 @@
 
 namespace gp {
 
-	
+
 constexpr const float kPI = 3.14159265359f;
-inline float radians(const float x) { return x * (kPI / 180); }
+
 
 struct Vec2 {
 	union { float x, r, s; };

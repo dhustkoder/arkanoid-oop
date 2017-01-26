@@ -4,10 +4,7 @@
 
 namespace gp {
 
-extern void reset_camera(int win_width, int win_height,
-                         float speed, float sensitivity,
-                         const Vec3& pos, const Vec3& world_up);
-
+extern void reset_camera(float speed, float sensitivity, const Vec3& pos, const Vec3& world_up);
 extern void update_camera(float delta);
 
 

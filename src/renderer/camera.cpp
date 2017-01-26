@@ -1,4 +1,5 @@
 #include "platform/kbd_mouse_input.hpp"
+#include "math/math_utils.hpp"
 #include "math/matrix4.hpp"
 #include "math/vector3.hpp"
 #include "math/vector2.hpp"
@@ -17,9 +18,7 @@ static void update_view();
 static void update_vectors();
 
 
-void reset_camera(const int win_width, const int win_height,
-                  const float speed, const float sensitivity,
-		  const Vec3& pos, const Vec3& world_up)
+void reset_camera(const float speed, const float sensitivity, const Vec3& pos, const Vec3& world_up)
 {
 	last_cursor = get_cursor_pos();
 
@@ -32,11 +31,7 @@ void reset_camera(const int win_width, const int win_height,
 	camera.pos = pos;
 	camera.world_up = world_up;
 
-	set_shader_projection(
-	  perspective(radians(45),
-	    static_cast<float>(win_width) / static_cast<float>(win_height),
-	    0.1f, 100.0f));
-
+	set_shader_projection(perspective(radians(45), 4.0f / 3.0f, 0.1f, 100.0f));
 
 	update_vectors();
 	update_view();
@@ -52,20 +47,16 @@ void update_camera(const float delta)
 		const float sensitivity = camera.sensitivity;
 		camera.yaw += (cursor.x - last_cursor.x) * sensitivity;
 		camera.pitch += (last_cursor.y - cursor.y) * sensitivity;
-
-		if (camera.pitch > 89)
-			camera.pitch = 89;
-		else if (camera.pitch < -89)
-			camera.pitch = -89;
-
-		if (camera.yaw > 270)
-			camera.yaw = -90;
-		else if (camera.yaw < -450)
-			camera.yaw = -90;
-
 		last_cursor = cursor;
-		update_vectors();
 
+		camera.pitch = clamp(camera.pitch, -89.0f, 89.0f);
+
+//		if (camera.yaw > 270)
+//			camera.yaw = -90;
+//		else if (camera.yaw < -450)
+//			camera.yaw = -90;
+
+		update_vectors();
 		need_view_update = true;
 	}
 

@@ -145,12 +145,26 @@ inline Mat4 perspective(const float fov, const float aspect, const float near, c
 
 	res[0][0] = 1.0f / (tanfov * aspect);
 	res[1][1] = 1.0f / tanfov;
-	res[2][2] = - (far + near) / (far - near);
+	res[2][2] = -(far + near) / (far - near);
 	res[2][3] = -1.0f;
 	res[3][2] = - (2.0f * far * near) / (far - near);
 	return res;
 }
 
+
+inline Mat4 ortho(const float left, const float right, const float bottom,
+                  const float top, const float near, const float far)
+{
+	Mat4 res = identity_mat4();
+	res[0][0] = 2.0f / (right - left);
+	res[1][1] = 2.0f / (top - bottom);
+	res[2][2] = -2.0f / (far - near);
+	res[3][0] = -(right + left) / (right - left);
+	res[3][1] = -(top + bottom) / (top - bottom);
+	res[3][2] = -(far + near) / (far - near);
+
+	return res;
+}
 
 inline Mat4 look_at(const Vec3& eye, const Vec3& center, const Vec3& up)
 {

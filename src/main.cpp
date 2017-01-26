@@ -38,7 +38,7 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_texture(0);
 	
 	set_shader_model(translate(identity_mat4(), {0, 0, 0}));
-	reset_camera(kWinWidth, kWinHeight, 3.0f, 0.25f, { 0, 0, 4 }, { 0, 1, 0 });
+	reset_camera(3.0f, 0.25f, { 0, 0, 4 }, { 0, 1, 0 });
 
 	constexpr const Vertex data[] {
 		{ { 0.5f, 0.5f, 0.0f }, { 1, 0 } },
