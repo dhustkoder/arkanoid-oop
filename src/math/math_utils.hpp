@@ -4,6 +4,10 @@
 
 namespace gp {
 
+	
+constexpr const float kPI = 3.14159265359f;
+
+
 constexpr float radians(const float x)
 {
 	return x * (kPI / 180);

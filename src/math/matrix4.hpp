@@ -89,10 +89,10 @@ inline Mat4& operator*=(Mat4& a, const Mat4& b)
 inline Mat4 identity_mat4(const float x = 1, const float y = 1, const float z = 1, const float w = 1)
 {
 	return {{
-	         { x, 0, 0, 0 },
-	         { 0, y, 0, 0 },
-		 { 0, 0, z, 0 },
-		 { 0, 0, 0, w } 
+		{ x, 0, 0, 0 },
+		{ 0, y, 0, 0 },
+		{ 0, 0, z, 0 },
+		{ 0, 0, 0, w } 
 	}};
 }
 
@@ -105,6 +105,12 @@ inline Mat4 translation_mat4(const float x = 1, const float y = 1, const float z
 		{ 0, 0, 1, 0 },
 		{ x, y, z, 1 }
 	}};
+}
+
+
+inline Mat4 zero_mat4()
+{
+	return identity_mat4(0, 0, 0, 0);
 }
 
 
@@ -141,7 +147,7 @@ inline Mat4 rotate(const Mat4& m, const float radians, const Vec3& v)
 inline Mat4 perspective(const float fov, const float aspect, const float near, const float far)
 {
 	const float tanfov = tanf(fov * 0.5f);
-	Mat4 res {};
+	Mat4 res = zero_mat4();
 
 	res[0][0] = 1.0f / (tanfov * aspect);
 	res[1][1] = 1.0f / tanfov;

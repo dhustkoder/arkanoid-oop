@@ -18,12 +18,14 @@ static void update_view();
 static void update_vectors();
 
 
-void reset_camera(const float speed, const float sensitivity, const Vec3& pos, const Vec3& world_up)
+void reset_camera(const float yaw, const float pitch,
+                  const float speed, const float sensitivity,
+                  const Vec3& pos, const Vec3& world_up)
 {
 	last_cursor = get_cursor_pos();
 
-	camera.yaw = -90;
-	camera.pitch = 0;
+	camera.yaw = yaw;
+	camera.pitch = pitch;
 
 	camera.speed = speed;
 	camera.sensitivity = sensitivity;

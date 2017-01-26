@@ -39,7 +39,7 @@ int main(int /*argc*/, char** /*argv*/)
 	bind_shader(0);
 	
 	set_shader_model(translate(identity_mat4(), {0, 0, 0}));
-	reset_camera(3.0f, 0.25f, { 0, 0, 4 }, { 0, 1, 0 });
+	reset_camera(-90, 0, 3.0f, 0.25f, { 0, 0, 4 }, { 0, 1, 0 });
 
 	constexpr const Vertex data[] {
 		{ { 1.0f, 1.0f, 0.0f }, { 1, 0 } },

@@ -3,10 +3,7 @@
 
 namespace gp {
 
-
-constexpr const float kPI = 3.14159265359f;
-
-
+	
 struct Vec2 {
 	union { float x, r, s; };
 	union { float y, g, t; };	
