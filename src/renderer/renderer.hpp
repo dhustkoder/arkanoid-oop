@@ -96,7 +96,7 @@ inline void draw_vertex_buffer(const GLenum mode)
 
 inline void draw_element_buffer(const GLenum mode)
 {
-	extern Elements* bound_element_buffer;
+	extern const Elements* bound_element_buffer;
 	glDrawElements(mode, bound_element_buffer->indices.count, GL_UNSIGNED_INT, 0);
 }
 
