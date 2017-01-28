@@ -4,8 +4,8 @@
 namespace gp {
 
 	
-IndexBuffer::IndexBuffer(GLushort* const data, const GLsizei count, const GLuint componentCount) noexcept
-	: m_componentCount(componentCount)
+IndexBuffer::IndexBuffer(GLushort* const data, const GLsizei count) noexcept
+	: m_count(count)
 {
 	glGenBuffers(1, &m_bufferId);
 	enable();
@@ -16,10 +16,10 @@ IndexBuffer::IndexBuffer(GLushort* const data, const GLsizei count, const GLuint
 
 IndexBuffer::IndexBuffer(IndexBuffer&& other) noexcept
 	: m_bufferId(other.m_bufferId),
-	m_componentCount(other.m_componentCount)
+	m_count(other.m_count)
 {
 	other.m_bufferId = 0;
-	other.m_componentCount = 0;
+	other.m_count = 0;
 }
 
 
@@ -33,11 +33,11 @@ IndexBuffer& IndexBuffer::operator=(IndexBuffer&& other) noexcept
 {
 	if (this != &other) {
 		const GLuint aux_id = m_bufferId;
-		const GLuint aux_count = m_componentCount;
+		const GLuint aux_count = m_count;
 		m_bufferId = other.m_bufferId;
-		m_componentCount = other.m_componentCount;
+		m_count = other.m_count;
 		other.m_bufferId = aux_id;
-		other.m_componentCount = aux_count;
+		other.m_count = aux_count;
 	}
 
 	return *this;

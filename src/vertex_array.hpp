@@ -7,10 +7,20 @@ namespace gp {
 
 class VertexArray {
 public:
-	VertexArray();
+	VertexArray(const VertexArray&) = delete;
+	VertexArray(VertexArray&&) = delete;
+
+	VertexArray() noexcept;
 	~VertexArray();
+
+	void enable() const;
+	void disable() const;
+
+	void addBuffer(VertexBuffer&& buffer, GLuint index);
+
 private:
-	std::vector<VertexBuffer> m_vertexBuffers;
+	std::vector<VertexBuffer> m_buffers;
+	GLuint m_arrayId;
 };
 
 

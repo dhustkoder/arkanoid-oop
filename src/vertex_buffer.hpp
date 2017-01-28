@@ -18,6 +18,8 @@ public:
 	void enable() const { glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); }
 	void disable() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
+	GLuint getComponenetCount() const { return m_componentCount; }
+
 	VertexBuffer& operator=(VertexBuffer&& other) noexcept;
 private:
 	GLuint m_bufferId;
