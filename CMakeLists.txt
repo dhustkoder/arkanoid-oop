@@ -66,7 +66,7 @@ set(GPROJ_TEST_DIR "./tests")
 
 # specific platform configurations
 if (${TARGET_OS} STREQUAL "Linux")
-	set(GPROJ_LINK_LIBRARIES "-lc -lm")
+	set(GPROJ_LINK_LIBRARIES "-lc -lm -lstdc++")
 else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()
@@ -81,6 +81,7 @@ include_directories("${GPROJ_SRC_DIR}")
 include_directories("./externals/glew/include")
 include_directories("./externals/glfw/include")
 include_directories("./externals/soil/include")
+include_directories("./externals/glm")
 
 # build
 file(GLOB_RECURSE GPROJ_SRC_FILES "${GPROJ_SRC_DIR}/*.cpp")
