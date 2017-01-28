@@ -10,8 +10,8 @@ class Shader {
 public:
 	Shader(const char* vs_file, const char* fs_file);
 	~Shader();
-	void enable() { glUseProgram(m_programId); };
-	void disable() { glUseProgram(0); };
+	void enable() const { glUseProgram(m_programId); };
+	void disable() const { glUseProgram(0); };
 private:
 	GLuint m_programId;
 	GLuint m_vsId;

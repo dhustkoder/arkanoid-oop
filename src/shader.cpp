@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <fstream>
 #include "exception.hpp"
 #include "shader.hpp"
@@ -14,15 +15,13 @@ static const char* get_linker_error_msg(GLuint program_id);
 
 Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 {
-	using namespace std::string_literals;
-
 	std::ifstream vs_file(vs_file_path, std::ios::binary | std::ios::ate);
 	std::ifstream fs_file(fs_file_path, std::ios::binary | std::ios::ate);
 
 	if (!vs_file.good())
-		throw Exception("Can't open: "s + vs_file_path);
+		throw Exception(std::string("Can't open: ") + vs_file_path);
 	else if (!fs_file.good())
-		throw Exception("Can't open: "s + fs_file_path);
+		throw Exception(std::string("Can't open: ") + fs_file_path);
 	
 	std::string vs_source;
 	std::string fs_source;
@@ -64,16 +63,16 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 	const char* err_msg;
 
 	if ((err_msg = get_compilation_error_msg(m_vsId)))
-		throw Exception("failed to compile "s + vs_file_path + ": " + err_msg);
-	else if (err_msg = get_compilation_error_msg(m_fsId))
-		throw Exception("failed to compile "s + fs_file_path + ": " + err_msg);
+		throw Exception(std::string("failed to compile ") + vs_file_path + ": " + err_msg);
+	else if ((err_msg = get_compilation_error_msg(m_fsId)))
+		throw Exception(std::string("failed to compile ") + fs_file_path + ": " + err_msg);
 
 	glAttachShader(m_programId, m_vsId);
 	glAttachShader(m_programId, m_fsId);
 	glLinkProgram(m_programId);
 
 	if ((err_msg = get_linker_error_msg(m_programId))) {
-		throw Exception("failed to link shader program "s + 
+		throw Exception(std::string("failed to link shader program ") + 
 		                 vs_file_path + " / " + fs_file_path +
 		                 ": " + err_msg);
 	}

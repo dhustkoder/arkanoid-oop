@@ -13,8 +13,7 @@ option(ENABLE_LTO OFF)
 option(ASM_OUTPUT OFF)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors \
-	-Wall -Wextra -Wshadow -Wstrict-aliasing \
-	-fno-exceptions -fno-rtti -Wno-missing-braces")
+	-Wall -Wextra -Wstrict-aliasing -fno-rtti -Wno-missing-braces")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O3 -Werror -fstrict-aliasing \
 	-march=${TARGET_CPU} -fomit-frame-pointer -ffunction-sections \

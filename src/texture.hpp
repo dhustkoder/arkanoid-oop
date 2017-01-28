@@ -8,8 +8,8 @@ class Texture {
 public:
 	Texture(const char* texturefile);
 	~Texture();
-	void enable() { glBindTexture(GL_TEXTURE_2D, m_textureId); }
-	void disable() { glBindTexture(GL_TEXTURE_2D, 0); }
+	void enable() const { glBindTexture(GL_TEXTURE_2D, m_textureId); }
+	void disable() const { glBindTexture(GL_TEXTURE_2D, 0); }
 private:
 	GLuint m_textureId;
 	int m_width, m_height;
