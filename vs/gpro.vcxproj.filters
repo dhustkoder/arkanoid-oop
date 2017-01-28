@@ -13,96 +13,51 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\renderer">
-      <UniqueIdentifier>{6e4f4397-7505-457b-bd3a-df5a2ba381ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\renderer">
-      <UniqueIdentifier>{48993d74-8b39-4e41-9c31-94d100d35fb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\math">
-      <UniqueIdentifier>{53716fcd-398e-4c75-9bcc-99f13daaca3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\utils">
-      <UniqueIdentifier>{3c034eed-bc29-4e7d-ad6a-ebe6846f86e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\memory">
-      <UniqueIdentifier>{dd4b3f82-9d84-4d22-aabb-6028f47facef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\platform">
-      <UniqueIdentifier>{0ef49e03-73a9-4db9-a9e3-dd81c3b4d4cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\platform">
-      <UniqueIdentifier>{827d77d0-453a-46b3-8377-bff999cc84a0}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\renderer\renderer.hpp">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\renderer_types.hpp">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\math\math_types.hpp">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\math\matrix4.hpp">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\math\vector2.hpp">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\math\vector3.hpp">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\math\vector4.hpp">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utils\finally.hpp">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\memory\array.hpp">
-      <Filter>Header Files\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\memory\array_type.hpp">
-      <Filter>Header Files\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\textures.hpp">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\shaders.hpp">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\platform\display.hpp">
-      <Filter>Header Files\platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\platform\kbd_mouse_input.hpp">
-      <Filter>Header Files\platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\camera.hpp">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\renderer\renderer.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\src\display.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\renderer\shaders.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\src\keyboard.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\renderer\textures.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\src\shader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\platform\display.cpp">
-      <Filter>Source Files\platform</Filter>
+    <ClCompile Include="..\src\texture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\platform\kbd_mouse_input.cpp">
-      <Filter>Source Files\platform</Filter>
+    <ClCompile Include="..\src\rectangle.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\renderer\camera.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\src\shape.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\keyboard.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\display.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\exception.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rectangle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shape.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

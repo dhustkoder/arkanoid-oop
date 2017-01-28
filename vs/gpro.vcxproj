@@ -19,30 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\math\math_types.hpp" />
-    <ClInclude Include="..\src\math\matrix4.hpp" />
-    <ClInclude Include="..\src\math\vector2.hpp" />
-    <ClInclude Include="..\src\math\vector3.hpp" />
-    <ClInclude Include="..\src\math\vector4.hpp" />
-    <ClInclude Include="..\src\memory\array.hpp" />
-    <ClInclude Include="..\src\memory\array_type.hpp" />
-    <ClInclude Include="..\src\platform\display.hpp" />
-    <ClInclude Include="..\src\platform\kbd_mouse_input.hpp" />
-    <ClInclude Include="..\src\renderer\camera.hpp" />
-    <ClInclude Include="..\src\renderer\renderer.hpp" />
-    <ClInclude Include="..\src\renderer\renderer_types.hpp" />
-    <ClInclude Include="..\src\renderer\shaders.hpp" />
-    <ClInclude Include="..\src\renderer\textures.hpp" />
-    <ClInclude Include="..\src\utils\finally.hpp" />
+    <ClCompile Include="..\src\display.cpp" />
+    <ClCompile Include="..\src\keyboard.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\rectangle.cpp" />
+    <ClCompile Include="..\src\shader.cpp" />
+    <ClCompile Include="..\src\shape.cpp" />
+    <ClCompile Include="..\src\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\platform\display.cpp" />
-    <ClCompile Include="..\src\platform\kbd_mouse_input.cpp" />
-    <ClCompile Include="..\src\renderer\camera.cpp" />
-    <ClCompile Include="..\src\renderer\renderer.cpp" />
-    <ClCompile Include="..\src\renderer\shaders.cpp" />
-    <ClCompile Include="..\src\renderer\textures.cpp" />
+    <ClInclude Include="..\src\display.hpp" />
+    <ClInclude Include="..\src\exception.hpp" />
+    <ClInclude Include="..\src\keyboard.hpp" />
+    <ClInclude Include="..\src\rectangle.hpp" />
+    <ClInclude Include="..\src\shader.hpp" />
+    <ClInclude Include="..\src\shape.hpp" />
+    <ClInclude Include="..\src\texture.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C27FFEE3-91A7-4CB2-8AE0-730CFFC43648}</ProjectGuid>
@@ -96,7 +88,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include\;$(SolutionDir)..\src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\externals\glm;$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include\;$(SolutionDir)..\src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\..\..\externals\soil\include\;$(SolutionDir)\..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\x86\include\;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
