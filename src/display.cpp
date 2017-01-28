@@ -1,7 +1,6 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include "exception.hpp"
 #include "keyboard.hpp"
 #include "display.hpp"

@@ -1,6 +1,8 @@
 #ifndef GPROJ_EXCEPTION_HPP_
 #define GPROJ_EXCEPTION_HPP_
 #include <string>
+
+
 namespace gp {
 
 class Exception {

@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
 #include "exception.hpp"
+#include "finally.hpp"
 #include "shader.hpp"
+
 
 namespace gp {
 
@@ -26,8 +29,8 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 	std::string vs_source;
 	std::string fs_source;
 
-	vs_source.resize(static_cast<size_t>(vs_file.tellg()) + 1);
-	fs_source.resize(static_cast<size_t>(fs_file.tellg()) + 1);
+	vs_source.resize(static_cast<size_t>(vs_file.tellg()));
+	fs_source.resize(static_cast<size_t>(fs_file.tellg()));
 
 	vs_file.seekg(vs_file.beg);
 	fs_file.seekg(fs_file.beg);
@@ -45,14 +48,19 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 	m_vsId = glCreateShader(GL_VERTEX_SHADER);
 	m_fsId = glCreateShader(GL_FRAGMENT_SHADER);
 
+	auto failure_guard = finally([this] {
+		this->freeShader();
+	});
+
+
 	if (!m_programId || !m_vsId || !m_fsId) {
 		const GLenum err = glGetError();
 		throw Exception(std::string((char*)glewGetErrorString(err)));
 	}
 
 	const char* const sources[] {
-		&vs_source[0],
-		&fs_source[0]
+		vs_source.c_str(),
+		fs_source.c_str()
 	};
 	
 	glShaderSource(m_vsId, 1, &sources[0], nullptr);
@@ -62,10 +70,11 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 
 	const char* err_msg;
 
-	if ((err_msg = get_compilation_error_msg(m_vsId)))
+	if ((err_msg = get_compilation_error_msg(m_vsId))) {
 		throw Exception(std::string("failed to compile ") + vs_file_path + ": " + err_msg);
-	else if ((err_msg = get_compilation_error_msg(m_fsId)))
+	} else if ((err_msg = get_compilation_error_msg(m_fsId))) {
 		throw Exception(std::string("failed to compile ") + fs_file_path + ": " + err_msg);
+	}
 
 	glAttachShader(m_programId, m_vsId);
 	glAttachShader(m_programId, m_fsId);
@@ -76,10 +85,18 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 		                 vs_file_path + " / " + fs_file_path +
 		                 ": " + err_msg);
 	}
+
+	failure_guard.abort();
 }
 
 
 Shader::~Shader()
+{
+	freeShader();
+}
+
+
+void Shader::freeShader() noexcept
 {
 	glDetachShader(m_programId, m_vsId);
 	glDetachShader(m_programId, m_fsId);
@@ -90,6 +107,11 @@ Shader::~Shader()
 
 
 
+void Shader::setUniformMat4(const GLchar* const name, const glm::mat4& mat)
+{
+	const GLint loc = glGetUniformLocation(m_programId, name);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
 
 
 const char* get_compilation_error_msg(const GLuint shader_id)

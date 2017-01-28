@@ -4,6 +4,7 @@
 
 struct GLFWwindow;
 
+
 namespace gp {
 
 class Display {

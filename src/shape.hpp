@@ -1,6 +1,6 @@
 #ifndef GPROJ_SHAPE_HPP_
 #define GPROJ_SHAPE_HPP_
-#include <glm/matrix.hpp>
+#include <glm/vec2.hpp>
 
 namespace gp {
 

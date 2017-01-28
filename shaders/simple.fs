@@ -3,6 +3,6 @@ out vec4 pixel;
 
 void main()
 {
-    pixel = vec4(1, 1, 1, 1);
+	pixel = vec4(1, 1, 1, 1);
 }
 
