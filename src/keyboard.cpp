@@ -9,13 +9,17 @@ namespace gp {
 bool Keyboard::s_keys[1024] { false };
 
 
-bool Keyboard::isKeyPressed(int key)
+bool Keyboard::isKeyPressed(const int key)
 {
 	return s_keys[key];
 }
 
 
-void Keyboard::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
+void Keyboard::keyCallback(GLFWwindow* const window,
+                           const int key,
+                           const int /*scancode*/,
+                           const int action,
+                           int /*mods*/)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, 1);

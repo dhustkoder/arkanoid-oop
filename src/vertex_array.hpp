@@ -26,6 +26,27 @@ private:
 };
 
 
+inline void VertexArray::enable() const
+{
+	glBindVertexArray(m_arrayId);
+}
+
+
+inline void VertexArray::disable() const
+{
+	glBindVertexArray(0);
+}
+
+
+inline void VertexArray::addBuffer(GLfloat* const data,
+                            const GLsizei count,
+                            const GLuint componentCount,
+                            const GLuint index)
+{
+	addBuffer(VertexBuffer(data, count, componentCount), index);
+}
+
+
 } // namespace gp
 #endif
 

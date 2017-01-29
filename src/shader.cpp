@@ -16,6 +16,9 @@ static const char* get_compilation_error_msg(GLuint shader_id);
 static const char* get_linker_error_msg(GLuint program_id);
 
 
+const Shader* Shader::s_currentlyBound = nullptr;
+
+
 Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 {
 	std::ifstream vs_file(vs_file_path, std::ios::binary | std::ios::ate);
@@ -109,8 +112,18 @@ void Shader::freeShader() noexcept
 
 void Shader::setUniformMat4(const GLchar* const name, const glm::mat4& mat)
 {
+	const Shader*  lastly_bound = nullptr;
+	if (s_currentlyBound != this) {
+		lastly_bound = s_currentlyBound;
+		enable();
+	}
+
 	const GLint loc = glGetUniformLocation(m_programId, name);
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+
+	if (lastly_bound != nullptr) {
+		lastly_bound->enable();
+	}
 }
 
 

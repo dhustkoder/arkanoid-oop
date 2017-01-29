@@ -15,16 +15,33 @@ public:
 	VertexBuffer(VertexBuffer&& other) noexcept;
 	~VertexBuffer();
 
-	void enable() const { glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); }
-	void disable() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
-
-	GLuint getComponenetCount() const { return m_componentCount; }
+	void enable() const;
+	void disable() const;
+	GLuint getComponenetCount() const;
 
 	VertexBuffer& operator=(VertexBuffer&& other) noexcept;
 private:
 	GLuint m_bufferId;
 	GLuint m_componentCount;
 };
+
+
+inline void VertexBuffer::enable() const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
+}
+
+
+inline void VertexBuffer::disable() const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+
+inline GLuint VertexBuffer::getComponenetCount() const
+{
+	return m_componentCount;
+}
 
 
 } // namespace gp

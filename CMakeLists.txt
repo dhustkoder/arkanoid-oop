@@ -34,7 +34,8 @@ endif()
 
 # "Release" full optimization , no debug info.
 if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-	set(LINK_FLAGS "-nodefaultlibs -s -Wl,--gc-sections")
+	# set(LINK_FLAGS "-nodefaultlibs -s -Wl,--gc-sections")
+	set(LINK_FLAGS "-s -Wl,--gc-sections")
 	if(ENABLE_LTO)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
 		set(LINK_FLAGS "${LINK_FLAGS} -flto") 
@@ -65,7 +66,7 @@ set(GPROJ_TEST_DIR "./tests")
 
 # specific platform configurations
 if (${TARGET_OS} STREQUAL "Linux")
-	set(GPROJ_LINK_LIBRARIES "-lc -lm -lstdc++")
+
 else()
 	message(FATAL_ERROR "Add your platform build configuration")
 endif()

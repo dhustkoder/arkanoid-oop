@@ -16,18 +16,6 @@ VertexArray::~VertexArray()
 }
 
 
-void VertexArray::enable() const
-{
-	glBindVertexArray(m_arrayId);
-}
-
-
-void VertexArray::disable() const
-{
-	glBindVertexArray(0);
-}
-
-
 void VertexArray::addBuffer(VertexBuffer&& buffer, const GLuint index)
 {
 	enable();
@@ -40,15 +28,6 @@ void VertexArray::addBuffer(VertexBuffer&& buffer, const GLuint index)
 	disable();
 
 	m_buffers.emplace_back(std::move(buffer));
-}
-
-
-void VertexArray::addBuffer(GLfloat* const data,
-                            const GLsizei count,
-                            const GLuint componentCount,
-                            const GLuint index)
-{
-	addBuffer(VertexBuffer(data, count, componentCount), index);
 }
 
 

@@ -11,21 +11,38 @@ public:
 	IndexBuffer(const IndexBuffer& other) = delete;
 	IndexBuffer& operator=(const IndexBuffer& other) = delete;
 
+	IndexBuffer() = default;
 	IndexBuffer(GLushort* data, GLsizei count) noexcept;
 	IndexBuffer(IndexBuffer&& other) noexcept;
 	~IndexBuffer();
 
-	void enable() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferId); }
-	void disable() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
-
-	GLuint getCount() const { return m_count; }
+	void enable() const;
+	void disable() const;
+	GLuint getCount() const;
 
 	IndexBuffer& operator=(IndexBuffer&& other) noexcept;
-	
 private:
-	GLuint m_bufferId;
-	GLuint m_count;
+	GLuint m_bufferId = 0;
+	GLuint m_count = 0;
 };
+
+
+inline void IndexBuffer::enable() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferId);
+}
+
+
+inline void IndexBuffer::disable() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+
+inline GLuint IndexBuffer::getCount() const
+{
+	return m_count;
+}
 
 
 } // namespace gp

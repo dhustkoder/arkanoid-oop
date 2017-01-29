@@ -72,7 +72,7 @@ void Display::clear(float r, float g, float b, float a)
 }
 
 
-void Display::resizeCallback(GLFWwindow* const window, const int width, const int height)
+void Display::resizeCallback(GLFWwindow* const /*window*/, const int width, const int height)
 {
 	glViewport(0, 0, width, height);
 }

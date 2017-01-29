@@ -1,56 +1,48 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
+#include "exception.hpp"
 #include "display.hpp"
 #include "keyboard.hpp"
 #include "shader.hpp"
-#include "index_buffer.hpp"
-#include "vertex_array.hpp"
-#include "exception.hpp"
-
+#include "renderable2D.hpp"
+#include "simple_renderer2D.hpp"
+#include <GLFW/glfw3.h>
 
 void game_main()
 {
 	using namespace gp;
 
-	constexpr const int kWinWidth = 800;
-	constexpr const int kWinHeight = 600;
+	constexpr const int kWinWidth = 960;
+	constexpr const int kWinHeight = 540;
 	
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	Shader shader("../shaders/simple.vs", "../shaders/simple.fs");
-	shader.enable();
 
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
-	const glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(4, 3, 0));
-	
 	shader.setUniformMat4("projection", projection);
-	shader.setUniformMat4("model", model);
 
-	GLfloat vertices[] {
-		0, 0, 0,
-		0, 3, 0,
-		8, 3, 0,
-		8, 0, 0
-	};
+	const Renderable2D quad({5, 5}, {4, 4}, {1, 0, 1, 1}, shader);
+	const Renderable2D quad2({7, 1}, {2, 3}, {0.2f, 0, 1, 1}, shader);
+	SimpleRenderer2D renderer;
 
-	GLushort indices[] {
-		0, 1, 2,
-		2, 3, 0
-	};
-
-	VertexArray vao;
-	IndexBuffer ibo(indices, 6);
-	vao.addBuffer(vertices, 4 * 3, 3, 0); 
+	double frametime;
+	double lastsecond = glfwGetTime();
+	int fps = 0;
 
 	while (!display.shouldClose()) {
+		frametime = static_cast<float>(glfwGetTime());
 		display.clear(0.4f, 0, 0, 1);
-		
-		vao.enable();
-		ibo.enable();
-		glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_SHORT, 0);
-		ibo.disable();
-		vao.disable();
-
+		renderer.submit(&quad);
+		renderer.submit(&quad2);
+		renderer.flush();
 		display.update();
+
+		++fps;
+		if ((frametime - lastsecond) >= 1.0f) {
+			std::cout << "FPS: " << fps << '\n';
+			fps = 0;
+			lastsecond = frametime;
+		}
 	}
 }
 
