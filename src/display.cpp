@@ -8,7 +8,7 @@
 
 namespace gp {
 
-	
+
 Display::Display(const char* name, int width, int height)
 {
 	if (!glfwInit())
@@ -21,6 +21,7 @@ Display::Display(const char* name, int width, int height)
 
 	glfwMakeContextCurrent(m_window);
 	glfwSetKeyCallback(m_window, Keyboard::keyCallback);
+	glfwSetWindowSizeCallback(m_window, Display::resizeCallback);
 
 	const int glew_err = glewInit();
 	if (glew_err != GLEW_OK)
@@ -68,6 +69,12 @@ void Display::clear(float r, float g, float b, float a)
 {
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+
+void Display::resizeCallback(GLFWwindow* const window, const int width, const int height)
+{
+	glViewport(0, 0, width, height);
 }
 
 

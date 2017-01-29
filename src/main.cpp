@@ -8,7 +8,7 @@
 #include "exception.hpp"
 
 
-int game_main()
+void game_main()
 {
 	using namespace gp;
 
@@ -39,7 +39,7 @@ int game_main()
 
 	VertexArray vao;
 	IndexBuffer ibo(indices, 6);
-	vao.addBuffer(VertexBuffer(vertices, 4 * 3, 3), 0); 
+	vao.addBuffer(vertices, 4 * 3, 3, 0); 
 
 	while (!display.shouldClose()) {
 		display.clear(0.4f, 0, 0, 1);
@@ -52,16 +52,14 @@ int game_main()
 
 		display.update();
 	}
-
-	return EXIT_SUCCESS;
 }
 
 
 int main()
 {
 	try  {
-		int exitcode = game_main();
-		return exitcode;
+		game_main();
+		return EXIT_SUCCESS;
 	} catch (gp::Exception& exception) {
 		std::cerr << exception.what() << '\n';
 	} catch (...) {

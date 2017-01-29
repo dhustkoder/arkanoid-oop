@@ -5,6 +5,7 @@
 
 namespace gp {
 
+
 class VertexArray {
 public:
 	VertexArray(const VertexArray&) = delete;
@@ -17,6 +18,7 @@ public:
 	void disable() const;
 
 	void addBuffer(VertexBuffer&& buffer, GLuint index);
+	void addBuffer(GLfloat* data, GLsizei count, GLuint componentCount, GLuint index);
 
 private:
 	std::vector<VertexBuffer> m_buffers;
@@ -25,6 +27,5 @@ private:
 
 
 } // namespace gp
-
 #endif
 

@@ -15,48 +15,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp">
+    <ClCompile Include="..\src\display.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\display.cpp">
+    <ClCompile Include="..\src\index_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\texture.cpp">
+    <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\rectangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\shape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vertex_array.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vertex_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\keyboard.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\display.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\shader.hpp">
+    <ClInclude Include="..\src\finally.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\exception.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\texture.hpp">
+    <ClInclude Include="..\src\index_buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\keyboard.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\rectangle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\shape.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\vertex_array.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\vertex_buffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

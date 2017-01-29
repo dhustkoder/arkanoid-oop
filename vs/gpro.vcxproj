@@ -20,21 +20,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\display.cpp" />
+    <ClCompile Include="..\src\index_buffer.cpp" />
     <ClCompile Include="..\src\keyboard.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\rectangle.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
     <ClCompile Include="..\src\shape.cpp" />
     <ClCompile Include="..\src\texture.cpp" />
+    <ClCompile Include="..\src\vertex_array.cpp" />
+    <ClCompile Include="..\src\vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\display.hpp" />
     <ClInclude Include="..\src\exception.hpp" />
+    <ClInclude Include="..\src\finally.hpp" />
+    <ClInclude Include="..\src\index_buffer.hpp" />
     <ClInclude Include="..\src\keyboard.hpp" />
     <ClInclude Include="..\src\rectangle.hpp" />
     <ClInclude Include="..\src\shader.hpp" />
     <ClInclude Include="..\src\shape.hpp" />
     <ClInclude Include="..\src\texture.hpp" />
+    <ClInclude Include="..\src\vertex_array.hpp" />
+    <ClInclude Include="..\src\vertex_buffer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C27FFEE3-91A7-4CB2-8AE0-730CFFC43648}</ProjectGuid>

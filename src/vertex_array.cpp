@@ -43,5 +43,14 @@ void VertexArray::addBuffer(VertexBuffer&& buffer, const GLuint index)
 }
 
 
+void VertexArray::addBuffer(GLfloat* const data,
+                            const GLsizei count,
+                            const GLuint componentCount,
+                            const GLuint index)
+{
+	addBuffer(VertexBuffer(data, count, componentCount), index);
+}
+
+
 } // namespace gp
 

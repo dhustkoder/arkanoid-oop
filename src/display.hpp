@@ -14,6 +14,8 @@ public:
 	bool shouldClose() const;
 	void update();
 	void clear(float r, float g, float b, float a);
+
+	static void resizeCallback(GLFWwindow* window, int width, int height);
 private:
 	GLFWwindow* m_window;
 };
