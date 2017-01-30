@@ -4,7 +4,7 @@
 namespace gp {
 
 	
-IndexBuffer::IndexBuffer(GLushort* const data, const GLsizei count) noexcept
+IndexBuffer::IndexBuffer(const GLushort* const data, const GLsizei count) noexcept
 	: m_count(count)
 {
 	glGenBuffers(1, &m_bufferId);

@@ -12,7 +12,7 @@ public:
 	IndexBuffer& operator=(const IndexBuffer& other) = delete;
 
 	IndexBuffer() = default;
-	IndexBuffer(GLushort* data, GLsizei count) noexcept;
+	IndexBuffer(const GLushort* data, GLsizei count) noexcept;
 	IndexBuffer(IndexBuffer&& other) noexcept;
 	~IndexBuffer();
 

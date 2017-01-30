@@ -3,30 +3,48 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 #include "index_buffer.hpp"
-#include "vertex_buffer.hpp"
-#include "vertex_array.hpp"
 #include "shader.hpp"
 
 namespace gp {
 
+
 class Renderable2D {
 public:
-	Renderable2D(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color, Shader& shader);
-	const glm::vec2& getPosition() const { return m_position; }
-	const VertexArray& getVAO() const { return m_vertexArray; }
-	const IndexBuffer& getIBO() const { return m_indexBuffer; }
-	const Shader& getShader() const { return m_shader; }
-	Shader& getShader() { return m_shader; }
+	Renderable2D(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color);
+	const glm::vec2& getPosition() const;
+	const glm::vec2& getSize() const;
+	const glm::vec4& getColor() const;
+	const Shader& getShader() const;
 	void prepareShader() const;
 private:
-	VertexArray m_vertexArray;
-	IndexBuffer m_indexBuffer;
-	Shader& m_shader;
 	glm::vec2 m_position;
 	glm::vec2 m_size;
 	glm::vec4 m_color;
 
 };
+
+
+inline const glm::vec2& Renderable2D::getPosition() const
+{
+	return m_position;
+}
+
+
+inline const glm::vec2& Renderable2D::getSize() const
+{
+	return m_size;
+}
+
+
+inline const glm::vec4& Renderable2D::getColor() const
+{
+	return m_color;
+}
+
+
+
+
+
 
 } // namespace gp
 #endif

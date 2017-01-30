@@ -1,12 +1,14 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "exception.hpp"
 #include "display.hpp"
 #include "keyboard.hpp"
 #include "shader.hpp"
 #include "renderable2D.hpp"
-#include "simple_renderer2D.hpp"
-#include <GLFW/glfw3.h>
+#include "batch_renderer2D.hpp"
 
 void game_main()
 {
@@ -21,9 +23,9 @@ void game_main()
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	shader.setUniformMat4("projection", projection);
 
-	const Renderable2D quad({5, 5}, {4, 4}, {1, 0, 1, 1}, shader);
-	const Renderable2D quad2({7, 1}, {2, 3}, {0.2f, 0, 1, 1}, shader);
-	SimpleRenderer2D renderer;
+	const Renderable2D quad({5, 5}, {1.0f, 1.0f}, {1, 0, 1, 1});
+	const Renderable2D quad2({7, 1}, {2, 3}, {0.2f, 0, 1, 1});
+	BatchRenderer2D renderer;
 
 	double frametime;
 	double lastsecond = glfwGetTime();
@@ -32,11 +34,14 @@ void game_main()
 	while (!display.shouldClose()) {
 		frametime = static_cast<float>(glfwGetTime());
 		display.clear(0.4f, 0, 0, 1);
+
+		renderer.begin();
 		renderer.submit(&quad);
 		renderer.submit(&quad2);
+		renderer.end();
 		renderer.flush();
-		display.update();
 
+		display.update();
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
 			std::cout << "FPS: " << fps << '\n';
