@@ -9,12 +9,6 @@ namespace gp {
 bool Keyboard::s_keys[1024] { false };
 
 
-bool Keyboard::isKeyPressed(const int key)
-{
-	return s_keys[key];
-}
-
-
 void Keyboard::keyCallback(GLFWwindow* const window,
                            const int key,
                            const int /*scancode*/,

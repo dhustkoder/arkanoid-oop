@@ -1,8 +1,8 @@
 #ifndef GPROJ_DISPLAY_HPP_
 #define GPROJ_DISPLAY_HPP_
 #include <stdexcept>
-
-struct GLFWwindow;
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 
 namespace gp {
@@ -14,11 +14,32 @@ public:
 	bool shouldClose() const;
 	void update();
 	void clear(float r, float g, float b, float a);
-
-	static void resizeCallback(GLFWwindow* window, int width, int height);
 private:
+	static void resizeCallback(GLFWwindow* window, int width, int height);
+
 	GLFWwindow* m_window;
 };
+
+
+
+inline bool Display::shouldClose() const
+{
+	return glfwWindowShouldClose(m_window) == 1;
+}
+
+
+inline void Display::update()
+{
+	glfwSwapBuffers(m_window);
+	glfwPollEvents();
+}
+
+
+inline void Display::clear(const float r, const float g, const float b, const float a)
+{
+	glClearColor(r, g, b, a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
 
 } // namespace gp

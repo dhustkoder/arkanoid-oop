@@ -24,8 +24,8 @@ void game_main()
 	shader.setUniformMat4("projection", projection);
 
 	Renderable2D quads[] {
-		{ { 5, 5 }, { 1, 1 }, { 1, 0, 1, 1 } },
-		{ { 7, 1 }, { 2, 3 }, {0.2f, 0, 1, 1} }
+		{ { 5, 5 }, { 1.0f, 1.0f }, { 0.25f, 0.95f, 0.25f, 1 } },
+		{ { 8, 3.5f }, { 2, 3 }, {0.2f, 0, 1, 1} }
 	};
 
 	BatchRenderer2D renderer;
@@ -40,19 +40,26 @@ void game_main()
 		frametime = glfwGetTime();
 		delta = static_cast<float>(frametime - lastframetime);
 		lastframetime = frametime;
-		display.clear(0.4f, 0, 0, 1);
+		display.clear(0.25f, 0.25f, 0.95f, 1);
 
 
 		if (Keyboard::isKeyPressed(GLFW_KEY_W)) {
-			quads[0].setPosition(quads[0].getPosition() + glm::vec2(0, 1.0f * delta));
+			quads[0].setPosition(quads[0].getPosition() + glm::vec2(0, 5.0f * delta));
 		} else if (Keyboard::isKeyPressed(GLFW_KEY_S)) {
-			quads[0].setPosition(quads[0].getPosition() - glm::vec2(0, 1.0f * delta));
+			quads[0].setPosition(quads[0].getPosition() - glm::vec2(0, 5.0f * delta));
 		}
 
 		if (Keyboard::isKeyPressed(GLFW_KEY_D)) {
-			quads[0].setPosition(quads[0].getPosition() + glm::vec2(1.0f * delta, 0));
+			quads[0].setPosition(quads[0].getPosition() + glm::vec2(5.0f * delta, 0));
 		} else if (Keyboard::isKeyPressed(GLFW_KEY_A)) {
-			quads[0].setPosition(quads[0].getPosition() - glm::vec2(1.0f * delta, 0));
+			quads[0].setPosition(quads[0].getPosition() - glm::vec2(5.0f * delta, 0));
+		}
+
+		if (quads[0].getTop() >= quads[1].getBottom() &&
+		    quads[0].getBottom() <= quads[1].getTop() &&
+		    quads[0].getRight() >= quads[1].getLeft() &&
+		    quads[0].getLeft() <= quads[1].getRight()) {
+			quads[1].setColor({sinf(frametime), cosf(frametime), delta, cosf(frametime) + 1.0f});
 		}
 
 		renderer.submit(&quads[0], sizeof(quads) / sizeof(quads[0]));
@@ -62,6 +69,10 @@ void game_main()
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
 			std::cout << "FPS: " << fps << '\n';
+			std::cout << "QUAD POS:\n" 
+	 		          << "X: " << quads[0].getPosition().x << '\n' <<
+			             "Y: " << quads[0].getPosition().y << '\n';
+			
 			fps = 0;
 			lastsecond = frametime;
 		}
@@ -74,10 +85,10 @@ int main()
 	try  {
 		game_main();
 		return EXIT_SUCCESS;
-	} catch (gp::Exception& exception) {
-		std::cerr << exception.what() << '\n';
+	} catch (std::exception& exception) {
+		std::cerr << "FATAL EXCEPTION: " << exception.what() << '\n';
 	} catch (...) {
-		std::cerr << "Unknown exception...\n";
+		std::cerr << "FATAL UNKNOWN EXCEPTION...\n"; 
 	}
 
 	return EXIT_FAILURE;

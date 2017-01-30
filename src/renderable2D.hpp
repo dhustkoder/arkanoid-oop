@@ -14,6 +14,11 @@ public:
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
 	const glm::vec4& getColor() const;
+	float getTop() const;
+	float getRight() const;
+	float getBottom() const;
+	float getLeft() const;
+	
 	void setPosition(const glm::vec2& newpos);
 	void setSize(const glm::vec2& newsize);
 	void setColor(const glm::vec4& newcolor);
@@ -61,7 +66,28 @@ inline void Renderable2D::setColor(const glm::vec4& newcolor)
 }
 
 
+inline float Renderable2D::getTop() const
+{
+	return m_position.y + m_size.y;
+}
 
+
+inline float Renderable2D::getRight() const
+{
+	return m_position.x + m_size.x;
+}
+
+
+inline float Renderable2D::getBottom() const
+{
+	return m_position.y - m_size.y;
+}
+
+
+inline float Renderable2D::getLeft() const
+{
+	return m_position.x - m_size.x;
+}
 
 
 } // namespace gp

@@ -15,5 +15,11 @@ private:
 
 
 
+inline bool Keyboard::isKeyPressed(const int key)
+{
+	return s_keys[key];
+}
+
+
 } // namespace gp
 #endif

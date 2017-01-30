@@ -1,6 +1,4 @@
 #include <iostream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include "exception.hpp"
 #include "keyboard.hpp"
 #include "display.hpp"
@@ -27,7 +25,8 @@ Display::Display(const char* const name, const int width, const int height)
 	if (glew_err != GLEW_OK)
 		throw Exception((char*)glewGetErrorString(glew_err));
 
-
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	constexpr const int info_size = 4;
 	constexpr GLenum info_enums[info_size] {
@@ -49,26 +48,6 @@ Display::~Display()
 {
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
-}
-
-
-bool Display::shouldClose() const
-{
-	return glfwWindowShouldClose(m_window) == 1;
-}
-
-
-void Display::update()
-{
-	glfwSwapBuffers(m_window);
-	glfwPollEvents();
-}
-
-
-void Display::clear(const float r, const float g, const float b, const float a)
-{
-	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 
