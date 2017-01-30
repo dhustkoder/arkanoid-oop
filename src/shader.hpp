@@ -18,7 +18,6 @@ public:
 
 private:
 	void freeShader() noexcept;
-	static const Shader* s_currentlyBound;
 private:
 	GLuint m_programId;
 	GLuint m_vsId;
@@ -28,14 +27,12 @@ private:
 
 inline void Shader::enable() const
 {
-	s_currentlyBound = this;
 	glUseProgram(m_programId);
 }
 
 
 inline void Shader::disable() const
 {
-	s_currentlyBound = nullptr;
 	glUseProgram(0);
 }
 

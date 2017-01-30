@@ -19,7 +19,7 @@ void game_main()
 	
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	Shader shader("../shaders/simple.vs", "../shaders/simple.fs");
-
+	shader.enable();
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	shader.setUniformMat4("projection", projection);
 

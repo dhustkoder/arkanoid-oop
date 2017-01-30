@@ -22,14 +22,14 @@ public:
 
 	IndexBuffer& operator=(IndexBuffer&& other) noexcept;
 private:
-	GLuint m_bufferId = 0;
+	GLuint m_ibo = 0;
 	GLuint m_count = 0;
 };
 
 
 inline void IndexBuffer::enable() const
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 }
 
 

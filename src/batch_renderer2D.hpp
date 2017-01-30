@@ -11,19 +11,19 @@
 namespace gp {
 
 
-constexpr const auto kVertexDataSize = sizeof(VertexData);
-constexpr const auto kSpriteSize = kVertexDataSize * 4;
-constexpr const auto kBufferSize = kSpriteSize * 100;
-constexpr const auto kIndicesSize = 100 * 6;
-
-
 class BatchRenderer2D final : public Renderer2D {
+	static constexpr const auto kVertexDataSize = sizeof(VertexData);
+	static constexpr const auto kSpriteSize = kVertexDataSize * 4;
+	static constexpr const auto kBufferSize = kSpriteSize * 100;
+	static constexpr const auto kIndicesSize = 100 * 6;
 public:
+
 	BatchRenderer2D();
 	void begin() noexcept;
 	void end() noexcept;
 	void submit(const Renderable2D* renderable) override;
 	void flush() override;
+
 private:
 	VertexBuffer m_vertexBuffer;
 	IndexBuffer m_indexBuffer;
