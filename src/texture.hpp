@@ -30,3 +30,4 @@ inline void Texture::disable() const
 
 } // namespace gp
 #endif
+

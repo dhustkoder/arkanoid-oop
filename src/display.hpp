@@ -1,6 +1,5 @@
 #ifndef GPROJ_DISPLAY_HPP_
 #define GPROJ_DISPLAY_HPP_
-#include <stdexcept>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -12,6 +11,7 @@ public:
 	Display(const char* name, int width, int height);
 	~Display();
 	bool shouldClose() const;
+	void setVsync(bool value);
 	void update();
 	void clear(float r, float g, float b, float a);
 private:
@@ -21,10 +21,15 @@ private:
 };
 
 
-
 inline bool Display::shouldClose() const
 {
 	return glfwWindowShouldClose(m_window) == 1;
+}
+
+
+inline void Display::setVsync(const bool value)
+{
+	glfwSwapInterval(static_cast<int>(value));
 }
 
 
@@ -44,3 +49,4 @@ inline void Display::clear(const float r, const float g, const float b, const fl
 
 } // namespace gp
 #endif
+

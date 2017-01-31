@@ -5,27 +5,32 @@
 
 #include "exception.hpp"
 #include "display.hpp"
+#include "texture.hpp"
 #include "keyboard.hpp"
 #include "shader.hpp"
 #include "renderable2D.hpp"
 #include "batch_renderer2D.hpp"
 
+
 void game_main()
 {
 	using namespace gp;
 
-	constexpr const int kWinWidth = 960;
-	constexpr const int kWinHeight = 540;
+	constexpr const int kWinWidth = 1280;
+	constexpr const int kWinHeight = 720;
 	
 	Display display("Hello GProj", kWinWidth, kWinHeight);
-	Shader shader("../shaders/simple.vs", "../shaders/simple.fs");
+	Shader shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs");
 	shader.enable();
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	shader.setUniformMat4("projection", projection);
 
+	Texture texture("../container.jpg");
+	texture.enable();
+
 	Renderable2D quads[] {
-		{ { 5, 5 }, { 1.0f, 1.0f }, { 0.25f, 0.95f, 0.25f, 1 } },
-		{ { 8, 3.5f }, { 2, 3 }, {0.2f, 0, 1, 1} }
+		{ { 5, 5 }, { 1, 1 }, { 0.25f, 0.95f, 0.25f, 1 } },
+		{ { 16.0f / 2.0f, 9.0f / 2.0f }, { 1, 1 }, {0.2f, 0, 1, 1} }
 	};
 
 	BatchRenderer2D renderer;
@@ -68,10 +73,10 @@ void game_main()
 		display.update();
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
-			std::cout << "FPS: " << fps << '\n';
-			std::cout << "QUAD POS:\n" 
-	 		          << "X: " << quads[0].getPosition().x << '\n' <<
-			             "Y: " << quads[0].getPosition().y << '\n';
+			std::cout << "FPS: " << fps << '\n' << 
+				  "QUAD POS:\n" << 
+				  "X: " << quads[0].getPosition().x << '\n' <<
+			          "Y: " << quads[0].getPosition().y << '\n';
 			
 			fps = 0;
 			lastsecond = frametime;

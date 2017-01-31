@@ -9,7 +9,7 @@ namespace gp {
 Texture::Texture(const char* const texture_file_path)
 {
 	glGenTextures(1, &m_textureId);
-	enable();
+	glBindTexture(GL_TEXTURE_2D, m_textureId);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -26,7 +26,7 @@ Texture::Texture(const char* const texture_file_path)
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(img);
 
-	disable();
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 

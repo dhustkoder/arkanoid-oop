@@ -11,6 +11,7 @@ BatchRenderer2D::BatchRenderer2D() :
 	m_vertexBuffer.enable();
 	m_vertexBuffer.registerAttribArray(kVertexPositionIndex, kVertexPositionComponents, kVertexDataSize, kVertexPositionOffset);
 	m_vertexBuffer.registerAttribArray(kVertexColorIndex, kVertexColorComponents, kVertexDataSize, kVertexColorOffset);
+	m_vertexBuffer.registerAttribArray(kVertexTexCoordsIndex, kVertexTexCoordsComponents, kVertexDataSize, kVertexTexCoordsOffset);
 	m_vertexBuffer.disable();
 
 	GLushort* const indices = new GLushort[kIndicesSize];
@@ -51,21 +52,25 @@ void BatchRenderer2D::submit(const Renderable2D* const renderables, const int co
 
 		buffer_data->pos = glm::vec3(left, top, 0);
 		buffer_data->color = color;
+		buffer_data->tex_coords = glm::vec2(0, 0);
 		++buffer_data;
 
 
 		buffer_data->pos = glm::vec3(right, top, 0);
 		buffer_data->color = color;
+		buffer_data->tex_coords = glm::vec2(1, 0);
 		++buffer_data;
 
 
 		buffer_data->pos = glm::vec3(right, bottom, 0);
 		buffer_data->color = color;
+		buffer_data->tex_coords = glm::vec2(1, 1);
 		++buffer_data;
 
 
 		buffer_data->pos = glm::vec3(left, bottom, 0);
 		buffer_data->color = color;
+		buffer_data->tex_coords =glm::vec2(0, 1);
 		++buffer_data;
 
 		m_indexCount += 6;
