@@ -25,15 +25,17 @@ VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
 
 VertexBuffer::~VertexBuffer()
 {
-	glDeleteBuffers(1, &m_vbo);
-	glDeleteVertexArrays(1, &m_vao);
+	if (m_vao != 0) {
+		glDeleteBuffers(1, &m_vbo);
+		glDeleteVertexArrays(1, &m_vao);
+	}
 }
 
 
 void VertexBuffer::registerAttribArray(const GLuint index,
                                        const GLint components,
                                        const GLsizei stride,
-                                       const std::uintptr_t offset) noexcept
+                                       const std::uintptr_t offset)
 {
 	glEnableVertexAttribArray(index);
 	glVertexAttribPointer(index, components, GL_FLOAT, GL_FALSE, stride, (GLvoid*)offset);

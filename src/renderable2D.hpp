@@ -14,8 +14,9 @@ public:
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
 	const glm::vec4& getColor() const;
-	const Shader& getShader() const;
-	void prepareShader() const;
+	void setPosition(const glm::vec2& newpos);
+	void setSize(const glm::vec2& newsize);
+	void setColor(const glm::vec4& newcolor);
 private:
 	glm::vec2 m_position;
 	glm::vec2 m_size;
@@ -42,10 +43,28 @@ inline const glm::vec4& Renderable2D::getColor() const
 }
 
 
+inline void Renderable2D::setPosition(const glm::vec2& newpos)
+{
+	m_position = newpos;
+}
+
+
+inline void Renderable2D::setSize(const glm::vec2& newsize)
+{
+	m_size = newsize;
+}
+
+
+inline void Renderable2D::setColor(const glm::vec4& newcolor)
+{
+	m_color = newcolor;
+}
+
 
 
 
 
 } // namespace gp
+
 #endif
 

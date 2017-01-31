@@ -12,22 +12,20 @@ namespace gp {
 
 
 class BatchRenderer2D final : public Renderer2D {
-	static constexpr const auto kVertexDataSize = sizeof(VertexData);
-	static constexpr const auto kSpriteSize = kVertexDataSize * 4;
-	static constexpr const auto kBufferSize = kSpriteSize * 100;
-	static constexpr const auto kIndicesSize = 100 * 6;
+	static constexpr const int kMaxSprites = 10000;
+	static constexpr const int kVertexDataSize = sizeof(VertexData);
+	static constexpr const int kSpriteSize = kVertexDataSize * 4;
+	static constexpr const int kBufferSize = kSpriteSize * kMaxSprites;
+	static constexpr const int kIndicesSize = kMaxSprites * 6;
 public:
 
 	BatchRenderer2D();
-	void begin() noexcept;
-	void end() noexcept;
-	void submit(const Renderable2D* renderable) override;
+	void submit(const Renderable2D* renderables, const int count) override;
 	void flush() override;
 
 private:
 	VertexBuffer m_vertexBuffer;
 	IndexBuffer m_indexBuffer;
-	VertexData* m_bufferData;
 	int m_indexCount = 0;
 };
 

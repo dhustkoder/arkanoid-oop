@@ -13,12 +13,14 @@ struct VertexData {
 	glm::vec4 color;
 };
 
+
 constexpr const int kVertexPositionIndex = 0;
 constexpr const int kVertexColorIndex = 1;
 constexpr const int kVertexPositionComponents = sizeof(VertexData::pos) / sizeof(GLfloat);
 constexpr const int kVertexColorComponents = sizeof(VertexData::color) / sizeof(GLfloat);
-constexpr const auto kVertexPositionOffset = static_cast<std::uintptr_t>(offsetof(VertexData, pos));
-constexpr const auto kVertexColorOffset = static_cast<std::uintptr_t>(offsetof(VertexData, color));
+constexpr const std::uintptr_t kVertexPositionOffset = offsetof(VertexData, pos);
+constexpr const std::uintptr_t kVertexColorOffset = offsetof(VertexData, color);
+
 
 } // namespace gp
 #endif

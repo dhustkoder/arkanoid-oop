@@ -9,7 +9,7 @@
 namespace gp {
 
 
-Display::Display(const char* name, int width, int height)
+Display::Display(const char* const name, const int width, const int height)
 {
 	if (!glfwInit())
 		throw Exception("failed to initialize GLFW");
@@ -65,7 +65,7 @@ void Display::update()
 }
 
 
-void Display::clear(float r, float g, float b, float a)
+void Display::clear(const float r, const float g, const float b, const float a)
 {
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

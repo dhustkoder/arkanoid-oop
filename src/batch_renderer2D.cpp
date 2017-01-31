@@ -32,43 +32,40 @@ BatchRenderer2D::BatchRenderer2D() :
 }
 
 
-void BatchRenderer2D::begin() noexcept
+void BatchRenderer2D::submit(const Renderable2D* const renderables, const int count)
 {
-	m_bufferData = m_vertexBuffer.mapWriteOnlyBuffer();
-}
+	VertexData* buffer_data = m_vertexBuffer.mapWriteOnlyBuffer();
+	buffer_data += 4 * (m_indexCount / 6);
+
+	for (int i = 0; i < count; ++i) {
+		const auto& renderable = renderables[i];
+		const auto pos = glm::vec3(renderable.getPosition(), 0.0f);
+		const auto& size = renderable.getSize();
+		const auto& color = renderable.getColor();
+
+		buffer_data->pos = pos;
+		buffer_data->color = color;
+		++buffer_data;
 
 
-void BatchRenderer2D::end() noexcept
-{
+		buffer_data->pos = glm::vec3(pos.x, pos.y + size.y, pos.z);
+		buffer_data->color =  color;
+		++buffer_data;
+
+
+		buffer_data->pos = glm::vec3(pos.x + size.x, pos.y + size.y, pos.z);
+		buffer_data->color = color;
+		++buffer_data;
+
+
+		buffer_data->pos = glm::vec3(pos.x + size.x, pos.y, pos.z);
+		buffer_data->color = color;
+		++buffer_data;
+
+		m_indexCount += 6;
+	}
+
 	m_vertexBuffer.unmapWriteOnlyBuffer();
-}
-
-void BatchRenderer2D::submit(const Renderable2D* renderable)
-{
-	const auto pos = glm::vec3(renderable->getPosition(), 0.0f);
-	const auto& size = renderable->getSize();
-	const auto& color = renderable->getColor();
-
-	m_bufferData->pos = pos;
-	m_bufferData->color = color;
-	++m_bufferData;
-
-
-	m_bufferData->pos = glm::vec3(pos.x, pos.y + size.y, pos.z);
-	m_bufferData->color =  color;
-	++m_bufferData;
-
-
-	m_bufferData->pos = glm::vec3(pos.x + size.x, pos.y + size.y, pos.z);
-	m_bufferData->color = color;
-	++m_bufferData;
-
-
-	m_bufferData->pos = glm::vec3(pos.x + size.x, pos.y, pos.z);
-	m_bufferData->color = color;
-	++m_bufferData;
-
-	m_indexCount += 6;
 }
 
 

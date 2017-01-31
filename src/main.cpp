@@ -23,22 +23,39 @@ void game_main()
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	shader.setUniformMat4("projection", projection);
 
-	const Renderable2D quad({5, 5}, {1.0f, 1.0f}, {1, 0, 1, 1});
-	const Renderable2D quad2({7, 1}, {2, 3}, {0.2f, 0, 1, 1});
+	Renderable2D quads[] {
+		{ { 5, 5 }, { 1, 1 }, { 1, 0, 1, 1 } },
+		{ { 7, 1 }, { 2, 3 }, {0.2f, 0, 1, 1} }
+	};
+
 	BatchRenderer2D renderer;
 
-	double frametime;
-	double lastsecond = glfwGetTime();
+	double frametime = glfwGetTime();
+	double lastsecond = frametime;
+	double lastframetime = frametime;
+	float delta;
 	int fps = 0;
 
 	while (!display.shouldClose()) {
-		frametime = static_cast<float>(glfwGetTime());
+		frametime = glfwGetTime();
+		delta = static_cast<float>(frametime - lastframetime);
+		lastframetime = frametime;
 		display.clear(0.4f, 0, 0, 1);
 
-		renderer.begin();
-		renderer.submit(&quad);
-		renderer.submit(&quad2);
-		renderer.end();
+
+		if (Keyboard::isKeyPressed(GLFW_KEY_W)) {
+			quads[0].setPosition(quads[0].getPosition() + glm::vec2(0, 1.0f * delta));
+		} else if (Keyboard::isKeyPressed(GLFW_KEY_S)) {
+			quads[0].setPosition(quads[0].getPosition() - glm::vec2(0, 1.0f * delta));
+		}
+
+		if (Keyboard::isKeyPressed(GLFW_KEY_D)) {
+			quads[0].setPosition(quads[0].getPosition() + glm::vec2(1.0f * delta, 0));
+		} else if (Keyboard::isKeyPressed(GLFW_KEY_A)) {
+			quads[0].setPosition(quads[0].getPosition() - glm::vec2(1.0f * delta, 0));
+		}
+
+		renderer.submit(&quads[0], sizeof(quads) / sizeof(quads[0]));
 		renderer.flush();
 
 		display.update();

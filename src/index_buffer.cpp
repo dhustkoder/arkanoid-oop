@@ -8,9 +8,9 @@ IndexBuffer::IndexBuffer(const GLushort* const data, const GLsizei count) noexce
 	: m_count(count)
 {
 	glGenBuffers(1, &m_ibo);
-	enable();
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLushort), data, GL_STATIC_DRAW);
-	disable();
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 

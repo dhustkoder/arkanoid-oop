@@ -13,13 +13,11 @@ public:
 
 	}
 
-
 	const std::string& what() const
 	{
 		return m_msg;
 	}
 
-	
 private:
 	std::string m_msg;
 };
