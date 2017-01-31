@@ -7,6 +7,7 @@ namespace gp {
 class Texture {
 public:
 	Texture(const char* texturefile);
+	Texture(Texture&& other) noexcept;
 	~Texture();
 	void enable() const;
 	void disable() const;
@@ -15,6 +16,13 @@ private:
 	int m_width, m_height;
 };
 
+
+inline Texture::Texture(Texture&& other) noexcept
+	: m_textureId(other.m_textureId),
+	m_width(other.m_width), m_height(other.m_height)
+{
+	other.m_textureId = 0;
+}
 
 inline void Texture::enable() const
 {

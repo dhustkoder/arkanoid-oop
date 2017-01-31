@@ -32,7 +32,8 @@ Texture::Texture(const char* const texture_file_path)
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &m_textureId);
+	if (m_textureId != 0)
+		glDeleteTextures(1, &m_textureId);
 }
 
 

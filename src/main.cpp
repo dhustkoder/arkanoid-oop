@@ -9,7 +9,7 @@
 #include "texture.hpp"
 #include "keyboard.hpp"
 #include "shader.hpp"
-#include "renderable2D.hpp"
+#include "sprite.hpp"
 #include "batch_renderer2D.hpp"
 
 
@@ -28,10 +28,10 @@ void game_main()
 
 	Texture texture("../shenlong.jpg");
 	texture.enable();
-
+		
 	Renderable2D quads[] {
-		{ { 5.0f, 5.0f }, { 1, 1 }, { 0.25f, 0.95f, 0.25f, 1 } },
-		{ { 8.0f, 4.5f }, { 1, 1 }, { 0.2f, 0, 1, 1 } }
+		{ { 5.0f, 5.0f }, { 1, 1 }, { 1, 1, 1, 1 } },
+		{ { 8.0f, 4.5f }, { 1, 1 }, { 1, 1, 1, 1 } }
 	};
 
 	BatchRenderer2D renderer;
