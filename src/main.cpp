@@ -16,8 +16,8 @@ void game_main()
 {
 	using namespace gp;
 
-	constexpr const int kWinWidth = 1280;
-	constexpr const int kWinHeight = 720;
+	constexpr const int kWinWidth = 768;
+	constexpr const int kWinHeight = 432;
 	
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	Shader shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs");
@@ -25,12 +25,12 @@ void game_main()
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	shader.setUniformMat4("projection", projection);
 
-	Texture texture("../container.jpg");
+	Texture texture("../shenlong.jpg");
 	texture.enable();
 
 	Renderable2D quads[] {
-		{ { 5, 5 }, { 1, 1 }, { 0.25f, 0.95f, 0.25f, 1 } },
-		{ { 16.0f / 2.0f, 9.0f / 2.0f }, { 1, 1 }, {0.2f, 0, 1, 1} }
+		{ { 5.0f, 5.0f }, { 1, 1 }, { 0.25f, 0.95f, 0.25f, 1 } },
+		{ { 8.0f, 4.5f }, { 1, 1 }, {0.2f, 0, 1, 1} }
 	};
 
 	BatchRenderer2D renderer;
@@ -64,7 +64,7 @@ void game_main()
 		    quads[0].getBottom() <= quads[1].getTop() &&
 		    quads[0].getRight() >= quads[1].getLeft() &&
 		    quads[0].getLeft() <= quads[1].getRight()) {
-			quads[1].setColor({sinf(frametime), cosf(frametime), delta, cosf(frametime) + 1.0f});
+			quads[1].setColor({sinf(frametime), cosf(frametime), sinf(lastframetime), cosf(frametime) + 1.0f});
 		}
 
 		renderer.submit(&quads[0], sizeof(quads) / sizeof(quads[0]));
