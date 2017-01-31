@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+
 #include "exception.hpp"
 #include "display.hpp"
 #include "texture.hpp"
@@ -30,7 +31,7 @@ void game_main()
 
 	Renderable2D quads[] {
 		{ { 5.0f, 5.0f }, { 1, 1 }, { 0.25f, 0.95f, 0.25f, 1 } },
-		{ { 8.0f, 4.5f }, { 1, 1 }, {0.2f, 0, 1, 1} }
+		{ { 8.0f, 4.5f }, { 1, 1 }, { 0.2f, 0, 1, 1 } }
 	};
 
 	BatchRenderer2D renderer;

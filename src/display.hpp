@@ -6,6 +6,7 @@
 
 namespace gp {
 
+
 class Display {
 public:
 	Display(const char* name, int width, int height);
@@ -14,9 +15,9 @@ public:
 	void setVsync(bool value);
 	void update();
 	void clear(float r, float g, float b, float a);
+
 private:
 	static void resizeCallback(GLFWwindow* window, int width, int height);
-
 	GLFWwindow* m_window;
 };
 
