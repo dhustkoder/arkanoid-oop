@@ -11,28 +11,35 @@ public:
 	~Texture();
 	void enable() const;
 	void disable() const;
+	GLuint getId() const;
 private:
-	GLuint m_textureId;
+	GLuint m_id;
 	int m_width, m_height;
 };
 
 
 inline Texture::Texture(Texture&& other) noexcept
-	: m_textureId(other.m_textureId),
+	: m_id(other.m_id),
 	m_width(other.m_width), m_height(other.m_height)
 {
-	other.m_textureId = 0;
+	other.m_id = 0;
 }
 
 inline void Texture::enable() const
 {
-	glBindTexture(GL_TEXTURE_2D, m_textureId);
+	glBindTexture(GL_TEXTURE_2D, m_id);
 }
 
 
 inline void Texture::disable() const
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+inline GLuint Texture::getId() const
+{
+	return m_id;
 }
 
 

@@ -8,8 +8,8 @@ namespace gp {
 	
 Texture::Texture(const char* const texture_file_path)
 {
-	glGenTextures(1, &m_textureId);
-	glBindTexture(GL_TEXTURE_2D, m_textureId);
+	glGenTextures(1, &m_id);
+	glBindTexture(GL_TEXTURE_2D, m_id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -32,8 +32,8 @@ Texture::Texture(const char* const texture_file_path)
 
 Texture::~Texture()
 {
-	if (m_textureId != 0)
-		glDeleteTextures(1, &m_textureId);
+	if (m_id != 0)
+		glDeleteTextures(1, &m_id);
 }
 
 

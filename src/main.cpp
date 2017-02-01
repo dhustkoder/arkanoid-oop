@@ -10,7 +10,7 @@
 #include "keyboard.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
-#include "batch_renderer2D.hpp"
+#include "sprite_renderer.hpp"
 
 
 void game_main()
@@ -20,21 +20,30 @@ void game_main()
 	constexpr const int kWinWidth = 768;
 	constexpr const int kWinHeight = 432;
 	
+
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	Shader shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs");
 	shader.enable();
 	const glm::mat4 projection = glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	shader.setUniformMat4("projection", projection);
-
+	GLint tex_ids[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	shader.setUniformIv("textures", tex_ids, 10);
 	Texture texture("../shenlong.jpg");
+
+	Texture texture2("../circle.png");
+
+	glActiveTexture(GL_TEXTURE0);
 	texture.enable();
-		
-	Renderable2D quads[] {
-		{ { 5.0f, 5.0f }, { 1, 1 }, { 1, 1, 1, 1 } },
-		{ { 8.0f, 4.5f }, { 1, 1 }, { 1, 1, 1, 1 } }
+	glActiveTexture(GL_TEXTURE1);
+	texture2.enable();
+
+
+	Sprite quads[] {
+		{ {"../shenlong.jpg"}, { 5.0f, 5.0f }, { 1, 1 }, { 1, 1, 1, 1 } },
+		{ {"../shenlong.jpg"}, { 8.0f, 4.5f }, { 1, 1 }, { 1, 1, 1, 1 } }
 	};
 
-	BatchRenderer2D renderer;
+	SpriteRenderer renderer;
 
 	double frametime = glfwGetTime();
 	double lastsecond = frametime;

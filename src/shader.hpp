@@ -15,7 +15,7 @@ public:
 	void disable() const;
 
 	void setUniformMat4(const GLchar* name, const glm::mat4& mat);
-
+	void setUniformIv(const GLchar* name, const int* values, int count);
 private:
 	void freeShader() noexcept;
 private:
