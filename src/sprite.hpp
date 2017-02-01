@@ -10,11 +10,11 @@ namespace gp {
 
 class Sprite {
 public:
-	Sprite(Texture&& texture, const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color) noexcept;
-	const Texture& getTexture() const;
+	Sprite(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color, int tex_id) noexcept;
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
 	const glm::vec4& getColor() const;
+	int getTextureId() const;
 	GLfloat getTop() const;
 	GLfloat getRight() const;
 	GLfloat getBottom() const;
@@ -24,16 +24,21 @@ public:
 	void setSize(const glm::vec2& newsize);
 	void setColor(const glm::vec4& newcolor);
 private:
-	Texture m_texture;
 	glm::vec2 m_pos;
 	glm::vec2 m_size;
 	glm::vec4 m_color;
+	int m_texId;
 };
 
 
-inline const Texture& Sprite::getTexture() const
+inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
+                      const glm::vec4& color, int tex_id) noexcept
+	: m_pos(pos),
+	m_size(size),
+	m_color(color),
+	m_texId(tex_id)
 {
-	return m_texture;
+
 }
 
 
@@ -52,6 +57,12 @@ inline const glm::vec2& Sprite::getSize() const
 inline const glm::vec4& Sprite::getColor() const
 {
 	return m_color;
+}
+
+
+inline int Sprite::getTextureId() const
+{
+	return m_texId;
 }
 
 

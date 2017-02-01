@@ -1,11 +1,12 @@
 #ifndef GPROJ_SPRITE_RENDERER_HPP_
 #define GPROJ_SPRITE_RENDERER_HPP_
-
-
+#include <vector>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
-#include "vertex_buffer.hpp"
+
 #include "sprite.hpp"
+#include "shader.hpp"
+#include "vertex_data.hpp"
 
 
 namespace gp {
@@ -17,13 +18,19 @@ class SpriteRenderer {
 	static constexpr const int kSpriteSize = kVertexDataSize * 4;
 	static constexpr const int kBufferSize = kSpriteSize * kMaxSprites;
 public:
+	SpriteRenderer(const SpriteRenderer&) = delete;
+	SpriteRenderer& operator=(const SpriteRenderer&) = delete;
 
-	SpriteRenderer();
+	SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures);
+	~SpriteRenderer();
 	void submit(const Sprite* sprites, const int count);
 	void flush();
 
 private:
-	VertexBuffer m_vertexBuffer;
+	std::vector<Texture> m_textures;
+	Shader m_shader;
+	GLuint m_vao;
+	GLuint m_vbo;
 	int m_spriteCount;
 };
 

@@ -36,6 +36,10 @@ inline void Display::setVsync(const bool value)
 
 inline void Display::update()
 {
+	const GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		throw Exception((char*)glewGetErrorString(err));
+
 	glfwSwapBuffers(m_window);
 	glfwPollEvents();
 }

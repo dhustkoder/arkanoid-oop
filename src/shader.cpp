@@ -92,7 +92,8 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 
 Shader::~Shader()
 {
-	freeShader();
+	if (m_programId != 0)
+		freeShader();
 }
 
 
@@ -114,7 +115,7 @@ void Shader::setUniformMat4(const GLchar* const name, const glm::mat4& mat)
 }
 
 
-void Shader::setUniformIv(const GLchar* const name, const int* const values, const int count)
+void Shader::setUniformIv(const GLchar* const name, const GLint* const values, const int count)
 {
 	const GLint loc = glGetUniformLocation(m_programId, name);
 	glUniform1iv(loc, count, values);

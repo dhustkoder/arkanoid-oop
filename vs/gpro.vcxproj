@@ -19,28 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\batch_renderer2D.cpp" />
     <ClCompile Include="..\src\display.cpp" />
-    <ClCompile Include="..\src\index_buffer.cpp" />
     <ClCompile Include="..\src\keyboard.cpp" />
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\renderable2D.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
+    <ClCompile Include="..\src\sprite_renderer.cpp" />
     <ClCompile Include="..\src\texture.cpp" />
-    <ClCompile Include="..\src\vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\batch_renderer2D.hpp" />
     <ClInclude Include="..\src\display.hpp" />
     <ClInclude Include="..\src\exception.hpp" />
     <ClInclude Include="..\src\finally.hpp" />
-    <ClInclude Include="..\src\index_buffer.hpp" />
     <ClInclude Include="..\src\keyboard.hpp" />
-    <ClInclude Include="..\src\renderable2D.hpp" />
-    <ClInclude Include="..\src\renderer2D.hpp" />
     <ClInclude Include="..\src\shader.hpp" />
+    <ClInclude Include="..\src\sprite.hpp" />
+    <ClInclude Include="..\src\sprite_renderer.hpp" />
     <ClInclude Include="..\src\texture.hpp" />
-    <ClInclude Include="..\src\vertex_buffer.hpp" />
     <ClInclude Include="..\src\vertex_data.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -98,7 +92,7 @@
     <IncludePath>$(SolutionDir)..\externals\glm;$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include\;$(SolutionDir)..\src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)\..\..\externals\soil\include\;$(SolutionDir)\..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\x86\include\;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\externals\glm;$(SolutionDir)..\externals\soil\include\;$(SolutionDir)..\externals\glew\include\;$(SolutionDir)..\externals\glfw\include;$(SolutionDir)..\src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)..\..\externals\freeglut\include\;$(SolutionDir)..\..\externals\glew\include\;$(SolutionDir)\..\..\externals\glfw\include;$(SolutionDir)\..\..\src;$(IncludePath)</IncludePath>
@@ -129,18 +123,22 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/wd 4200 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\externals\glew\lib\Release\Win32\;$(SolutionDir)\..\..\externals\glfw\x86\lib-vc2015\;C:\Users\Rafael\Documents\Projects\gproj\vs\gpro\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
