@@ -9,6 +9,6 @@ uniform sampler2D textures[32];
 
 void main()
 {
-	pixel = texture(textures[int(fs_tex_id + 0.5f)], fs_tex_coords) * fs_color;
+	pixel = texture(textures[int(fs_tex_id)], fs_tex_coords) * fs_color;
 }
 

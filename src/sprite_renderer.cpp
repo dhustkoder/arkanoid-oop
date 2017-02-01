@@ -5,6 +5,20 @@
 
 namespace gp {
 
+	
+inline void SpriteRenderer::bindVertexObjects()
+{
+	glBindVertexArray(m_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vao);
+}
+
+
+inline void SpriteRenderer::unbindVertexObjects()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
 
 SpriteRenderer::SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures)
 	: m_textures(std::move(textures)),
@@ -14,15 +28,13 @@ SpriteRenderer::SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures)
 	glGenVertexArrays(1, &m_vao);
 	glGenBuffers(1, &m_vbo);
 
-	glBindVertexArray(m_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vao);
+	bindVertexObjects();
 
 	m_shader.enable();
 
 	const auto unbind_guard = finally([this] {
 		m_shader.disable();
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		unbindVertexObjects();
 	});
 
 
@@ -34,7 +46,7 @@ SpriteRenderer::SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures)
 	};
 
 	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f));
-	m_shader.setUniformIv("textures", tex_ids, 32);
+	m_shader.setUniformIv("textures", &tex_ids[0], 32);
 
 	for (decltype(m_textures)::size_type i = 0; i < m_textures.size(); ++i) {
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -83,14 +95,12 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 {
-	glBindVertexArray(m_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	bindVertexObjects();
 	auto vertex = reinterpret_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 
-	const auto unmap_guard = finally([] {
+	const auto unmap_guard = finally([this] {
 		glUnmapBuffer(GL_ARRAY_BUFFER);
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		unbindVertexObjects();
 	});
 
 	vertex += m_spriteCount * 4;
@@ -110,7 +120,6 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 		vertex->color = color;
 		vertex->tex_id = tex_id;
 		++vertex;
-
 
 		vertex->pos = glm::vec2(right, top);
 		vertex->tex_coords = glm::vec2(1, 0);
@@ -135,14 +144,12 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 
 void SpriteRenderer::flush()
 {
-	glBindVertexArray(m_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	bindVertexObjects();
 	m_shader.enable();
 
 	const auto unbind_guard = finally([this] {
 		m_shader.disable();
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		unbindVertexObjects();
 	});
 
 	glDrawArrays(GL_QUADS, 0, m_spriteCount * 4);

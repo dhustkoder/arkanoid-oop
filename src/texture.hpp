@@ -46,6 +46,7 @@ inline Texture& Texture::operator=(Texture&& other) noexcept
 	return *this;
 }
 
+
 inline void Texture::enable() const
 {
 	glBindTexture(GL_TEXTURE_2D, m_id);

@@ -27,13 +27,14 @@ public:
 	void flush();
 
 private:
+	void bindVertexObjects();
+	void unbindVertexObjects();
 	std::vector<Texture> m_textures;
 	Shader m_shader;
 	GLuint m_vao;
 	GLuint m_vbo;
 	int m_spriteCount;
 };
-
 
 
 } // namespace gp

@@ -20,42 +20,47 @@ void game_main()
 	constexpr const int kWinHeight = 432;
 
 	Display display("Hello GProj", kWinWidth, kWinHeight);
+	display.setVsync(true);
 
 	Sprite quads[] {
 		{ { 5.0f, 5.0f }, { 1, 1 }, { 1, 1, 1, 1 }, 0 },
-		{ { 8.0f, 4.5f }, { 1, 1 }, { 1, 1, 1, 1 }, 1 }
+		{ { 8.0f, 4.5f }, { 2, 2 }, { 1, 1, 1, 1 }, 1 }
 	};
 
 	std::vector<Texture> textures;
-	textures.emplace_back("../dragon.png");
-	textures.emplace_back("../snowman.png");
+	textures.emplace_back("../pirate.png");
+	textures.emplace_back("../greenface.png");
 
 	SpriteRenderer renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs"), std::move(textures));
 
-	double frametime = glfwGetTime();
-	double lastsecond = frametime;
-	double lastframetime = frametime;
-	float delta;
+	double frametime = 0;
+	double lastsecond = 0;
+	double lastframetime = 0;
+	float delta = 0;
 	int fps = 0;
+
 
 	while (!display.shouldClose()) {
 		frametime = glfwGetTime();
 		delta = static_cast<float>(frametime - lastframetime);
 		lastframetime = frametime;
+
 		display.clear(0.25f, 0.25f, 0.95f, 1);
 
 
+		const float speed = 5.0f * delta;
 		if (Keyboard::isKeyPressed(GLFW_KEY_W)) {
-			quads[0].setPosition(quads[0].getPosition() + glm::vec2(0, 5.0f * delta));
+			quads[0].setPosition(quads[0].getPosition() + glm::vec2(0, speed));
 		} else if (Keyboard::isKeyPressed(GLFW_KEY_S)) {
-			quads[0].setPosition(quads[0].getPosition() - glm::vec2(0, 5.0f * delta));
+			quads[0].setPosition(quads[0].getPosition() - glm::vec2(0, speed));
 		}
 
 		if (Keyboard::isKeyPressed(GLFW_KEY_D)) {
-			quads[0].setPosition(quads[0].getPosition() + glm::vec2(5.0f * delta, 0));
+			quads[0].setPosition(quads[0].getPosition() + glm::vec2(speed, 0));
 		} else if (Keyboard::isKeyPressed(GLFW_KEY_A)) {
-			quads[0].setPosition(quads[0].getPosition() - glm::vec2(5.0f * delta, 0));
+			quads[0].setPosition(quads[0].getPosition() - glm::vec2(speed, 0));
 		}
+
 
 		if (quads[0].getTop() >= quads[1].getBottom() &&
 		    quads[0].getBottom() <= quads[1].getTop() &&
@@ -66,8 +71,9 @@ void game_main()
 
 		renderer.submit(&quads[0], sizeof(quads) / sizeof(quads[0]));
 		renderer.flush();
-
 		display.update();
+
+
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
 			std::cout << "FPS: " << fps << '\n' << 
