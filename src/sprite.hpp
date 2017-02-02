@@ -10,11 +10,16 @@ namespace gp {
 
 class Sprite {
 public:
-	Sprite(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color, int tex_id) noexcept;
+	Sprite(const Sprite&) = delete;
+	Sprite(Sprite&&) = delete;
+	Sprite& operator=(const Sprite&) = delete;
+	Sprite& operator=(Sprite&&) = delete;
+
+	Sprite(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color, Texture& texture) noexcept;
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
 	const glm::vec4& getColor() const;
-	int getTextureId() const;
+	const Texture& getTexture() const;
 	GLfloat getTop() const;
 	GLfloat getRight() const;
 	GLfloat getBottom() const;
@@ -27,16 +32,16 @@ private:
 	glm::vec2 m_pos;
 	glm::vec2 m_size;
 	glm::vec4 m_color;
-	int m_texId;
+	Texture& m_texture;
 };
 
 
 inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
-                      const glm::vec4& color, int tex_id) noexcept
+                      const glm::vec4& color, Texture& texture) noexcept
 	: m_pos(pos),
 	m_size(size),
 	m_color(color),
-	m_texId(tex_id)
+	m_texture(texture)
 {
 
 }
@@ -60,9 +65,9 @@ inline const glm::vec4& Sprite::getColor() const
 }
 
 
-inline int Sprite::getTextureId() const
+inline const Texture& Sprite::getTexture() const
 {
-	return m_texId;
+	return m_texture;
 }
 
 

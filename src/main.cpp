@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -22,16 +23,15 @@ void game_main()
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	display.setVsync(true);
 
+	Texture pirate_tex("../pirate.png");
+	Texture bunny_tex("../bunny.png");
+
 	Sprite quads[] {
-		{ { 5.0f, 5.0f }, { 1, 1 }, { 1, 1, 1, 1 }, 0 },
-		{ { 8.0f, 4.5f }, { 2, 2 }, { 1, 1, 1, 1 }, 1 }
+		{ { 5.0f, 5.0f }, { 2, 2 }, { 1, 1, 1, 1 }, pirate_tex },
+		{ { 8.0f, 4.5f }, { 2, 2 }, { 1, 1, 1, 1 }, bunny_tex }
 	};
 
-	std::vector<Texture> textures;
-	textures.emplace_back("../pirate.png");
-	textures.emplace_back("../greenface.png");
-
-	SpriteRenderer renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs"), std::move(textures));
+	SpriteRenderer renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs"));
 
 	double frametime = 0;
 	double lastsecond = 0;
@@ -45,7 +45,7 @@ void game_main()
 		delta = static_cast<float>(frametime - lastframetime);
 		lastframetime = frametime;
 
-		display.clear(0.25f, 0.25f, 0.95f, 1);
+		display.clear(1.0f, 0.0f, 1.0f, 1);
 
 
 		const float speed = 5.0f * delta;
@@ -61,14 +61,14 @@ void game_main()
 			quads[0].setPosition(quads[0].getPosition() - glm::vec2(speed, 0));
 		}
 
-
+/*
 		if (quads[0].getTop() >= quads[1].getBottom() &&
 		    quads[0].getBottom() <= quads[1].getTop() &&
 		    quads[0].getRight() >= quads[1].getLeft() &&
 		    quads[0].getLeft() <= quads[1].getRight()) {
 			quads[1].setColor({sinf(frametime), cosf(frametime), sinf(lastframetime), cosf(frametime) + 1.0f});
 		}
-
+*/
 		renderer.submit(&quads[0], sizeof(quads) / sizeof(quads[0]));
 		renderer.flush();
 		display.update();

@@ -14,9 +14,12 @@ public:
 	void enable() const;
 	void disable() const;
 	GLuint getId() const;
+	int getIndex() const;
 private:
 	GLuint m_id;
 	int m_width, m_height;
+	int m_index;
+	static int s_index;
 };
 
 
@@ -62,6 +65,12 @@ inline void Texture::disable() const
 inline GLuint Texture::getId() const
 {
 	return m_id;
+}
+
+
+inline int Texture::getIndex() const
+{
+	return m_index;
 }
 
 

@@ -13,7 +13,7 @@ struct VertexData {
 	glm::vec2 pos;
 	glm::vec2 tex_coords;
 	glm::vec4 color;
-	GLfloat tex_id;
+	GLfloat tex_index;
 };
 
 

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 #include "finally.hpp"
 #include "sprite_renderer.hpp"
@@ -20,9 +21,8 @@ inline void SpriteRenderer::unbindVertexObjects()
 }
 
 
-SpriteRenderer::SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures)
-	: m_textures(std::move(textures)),
-	m_shader(std::move(shader)),
+SpriteRenderer::SpriteRenderer(Shader&& shader)
+	: m_shader(std::move(shader)),
 	m_spriteCount(0)
 {
 	glGenVertexArrays(1, &m_vao);
@@ -38,7 +38,7 @@ SpriteRenderer::SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures)
 	});
 
 
-	constexpr GLint tex_ids[32] { 
+	constexpr GLint tex_indexes[32] { 
 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 		10, 11, 12, 13, 14, 15, 16, 17,
 		18, 19, 20, 21, 22, 23, 24, 25,
@@ -46,12 +46,7 @@ SpriteRenderer::SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures)
 	};
 
 	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f));
-	m_shader.setUniformIv("textures", &tex_ids[0], 32);
-
-	for (decltype(m_textures)::size_type i = 0; i < m_textures.size(); ++i) {
-		glActiveTexture(GL_TEXTURE0 + i);
-		m_textures[i].enable();
-	}
+	m_shader.setUniformIv("textures", &tex_indexes[0], 32);
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
 
@@ -96,6 +91,7 @@ SpriteRenderer::~SpriteRenderer()
 void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 {
 	bindVertexObjects();
+
 	auto vertex = reinterpret_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 
 	const auto unmap_guard = finally([this] {
@@ -113,30 +109,41 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 		const GLfloat bottom = sprite.getBottom();
 		const GLfloat left = sprite.getLeft();
 		const glm::vec4 color = sprite.getColor();
-		const GLfloat tex_id = (GLfloat) sprite.getTextureId();
+
+		const int tex_index = sprite.getTexture().getIndex();
+		if (std::find(m_texturesIndexes.cbegin(), m_texturesIndexes.cend(), tex_index) == m_texturesIndexes.cend()) {
+			if (m_texturesInexes.size() >= 32)
+				this->flush();
+
+			glActiveTexture(GL_TEXTURE0 + m_texturesIndexes.size());
+			sprite.getTexture().enable();
+			m_texturesIndexes.push_back(tex_index);
+		}
+
+		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index);
 
 		vertex->pos = glm::vec2(left, top);
 		vertex->tex_coords = glm::vec2(0, 0);
 		vertex->color = color;
-		vertex->tex_id = tex_id;
+		vertex->tex_index = tex_indexf;
 		++vertex;
 
 		vertex->pos = glm::vec2(right, top);
 		vertex->tex_coords = glm::vec2(1, 0);
 		vertex->color = color;
-		vertex->tex_id = tex_id;
+		vertex->tex_index = tex_indexf;
 		++vertex;
 
 		vertex->pos = glm::vec2(right, bottom);
 		vertex->tex_coords = glm::vec2(1, 1);
 		vertex->color = color;
-		vertex->tex_id = tex_id;
+		vertex->tex_index = tex_indexf;
 		++vertex;
 
 		vertex->pos = glm::vec2(left, bottom);
 		vertex->tex_coords = glm::vec2(0, 1);
 		vertex->color = color;
-		vertex->tex_id = tex_id;
+		vertex->tex_index = tex_indexf;
 		++vertex;
 	}
 }
@@ -154,6 +161,7 @@ void SpriteRenderer::flush()
 
 	glDrawArrays(GL_QUADS, 0, m_spriteCount * 4);
 	m_spriteCount = 0;
+	m_textureIndexes.clear();
 }
 
 

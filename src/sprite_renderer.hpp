@@ -21,7 +21,7 @@ public:
 	SpriteRenderer(const SpriteRenderer&) = delete;
 	SpriteRenderer& operator=(const SpriteRenderer&) = delete;
 
-	SpriteRenderer(Shader&& shader, std::vector<Texture>&& textures);
+	SpriteRenderer(Shader&& shader);
 	~SpriteRenderer();
 	void submit(const Sprite* sprites, const int count);
 	void flush();
@@ -29,7 +29,8 @@ public:
 private:
 	void bindVertexObjects();
 	void unbindVertexObjects();
-	std::vector<Texture> m_textures;
+
+	std::vector<int> m_texturesIndexes;
 	Shader m_shader;
 	GLuint m_vao;
 	GLuint m_vbo;
