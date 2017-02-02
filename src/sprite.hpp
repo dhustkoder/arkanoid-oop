@@ -10,9 +10,20 @@ namespace gp {
 
 class Sprite {
 public:
+
+	Sprite(Sprite&&) noexcept = default;
+	Sprite(const Sprite&) noexcept = default;
+
+
 	Sprite(const glm::vec2& pos, const glm::vec2& size,
 	       const glm::vec2& uv_pos, const glm::vec2& uv_size,
 	       const glm::vec4& color, Texture& texture) noexcept;
+
+	Sprite(const glm::vec2& pos, const glm::vec2& size,
+		int uv_x_start, int uv_x_end, int uv_y_start, int uv_y_end,
+		const glm::vec4& color, Texture& texture) noexcept;
+
+	
 
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
@@ -49,6 +60,21 @@ inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
 	m_texture(texture)
 {
 
+}
+
+
+inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
+		const int uv_x_start, const int uv_x_end,
+		const int uv_y_start, const int uv_y_end,
+		const glm::vec4& color, Texture& texture) noexcept
+	: m_pos(pos),
+	m_size(size),
+	m_uvPos((float)uv_x_start / (float)texture.getWidth(), (float)uv_y_start / (float)texture.getHeight()),
+	m_uvSize(((float)(uv_x_end + 1) - uv_x_start) / (float)texture.getWidth(), (((float)uv_y_end + 1) - uv_y_start) / (float)texture.getHeight()),
+	m_color(color),
+	m_texture(texture)
+{
+	
 }
 
 

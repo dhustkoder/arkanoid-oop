@@ -20,9 +20,12 @@ public:
 
 	void enable() const;
 	void disable() const;
+
+
 	GLuint getId() const;
 	int getIndex() const;
-
+	int getWidth() const { return m_width; }
+	int getHeight() const { return m_height; }
 
 private:
 	GLuint m_id;
