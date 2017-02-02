@@ -17,8 +17,8 @@ void game_main()
 {
 	using namespace gp;
 
-	constexpr const int kWinWidth = 768;
-	constexpr const int kWinHeight = 432;
+	constexpr const int kWinWidth = 1366;
+	constexpr const int kWinHeight = 766;
 
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	display.setVsync(false);
@@ -32,7 +32,7 @@ void game_main()
 	
 	float posx = 2.0f;
 	float posy = 7.0f;
-	for (int i = 0; i < 65000; ++i) {
+	for (int i = 0; i < 10000; ++i) {
 		Sprite sprite = (rand() % 2) == 0 ? pirate : bunny;
 
 		if (posx >= 15.0f) {
