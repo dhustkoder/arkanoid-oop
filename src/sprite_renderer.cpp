@@ -11,13 +11,11 @@ inline void SpriteRenderer::bindVertexObjects()
 {
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 }
 
 
 inline void SpriteRenderer::unbindVertexObjects()
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -29,7 +27,6 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 {
 	glGenVertexArrays(1, &m_vao);
 	glGenBuffers(1, &m_vbo);
-	glGenBuffers(1, &m_ibo);
 
 	bindVertexObjects();
 	m_shader.enable();
@@ -50,21 +47,6 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f));
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
-
-	constexpr int num_indices = kMaxSprites * 6;
-	GLushort* const indices = new GLushort[kMaxSprites * 6];
-	const auto indices_free = finally([indices] { delete[] indices; });
-
-	for (int i = 0, offset = 0; i < num_indices; i += 6, offset += 4) {
-		indices[i] = offset;
-		indices[i + 1] = offset + 1;
-		indices[i + 2] = offset + 2;
-		indices[i + 3] = offset + 2;
-		indices[i + 4] = offset + 3;
-		indices[i + 5] = offset;
-	}
-
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(GLushort), indices, GL_STATIC_DRAW);
 
 	constexpr int attribs = 4;
 
@@ -99,7 +81,6 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 
 SpriteRenderer::~SpriteRenderer()
 {
-	glDeleteBuffers(1, &m_ibo);
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
 }
@@ -122,10 +103,13 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 
 	for (int i = 0; i < count; ++i) {
 		const Sprite& sprite = sprites[i];
+
 		const GLfloat top = sprite.getTop();
 		const GLfloat right = sprite.getRight();
 		const GLfloat bottom = sprite.getBottom();
 		const GLfloat left = sprite.getLeft();
+		const glm::vec2 uv_pos = sprite.getUVPos();
+		const glm::vec2 uv_size = sprite.getUVSize();
 		const glm::vec4 color = sprite.getColor();
 
 		const int tex_index = sprite.getTexture().getIndex();
@@ -142,25 +126,25 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index % 32);
 
 		vertex->pos = glm::vec2(left, top);
-		vertex->tex_coords = glm::vec2(0, 0);
+		vertex->tex_coords = uv_pos;
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
 		vertex->pos = glm::vec2(right, top);
-		vertex->tex_coords = glm::vec2(1, 0);
+		vertex->tex_coords = glm::vec2(uv_pos.x + uv_size.x, uv_pos.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
 		vertex->pos = glm::vec2(right, bottom);
-		vertex->tex_coords = glm::vec2(1, 1);
+		vertex->tex_coords = glm::vec2(uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
 		vertex->pos = glm::vec2(left, bottom);
-		vertex->tex_coords = glm::vec2(0, 1);
+		vertex->tex_coords = glm::vec2(uv_pos.x, uv_pos.y + uv_size.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
@@ -183,7 +167,7 @@ void SpriteRenderer::flush()
 		texture->enable();
 	}
 
-	glDrawElements(GL_TRIANGLES, m_spriteCount * 6, GL_UNSIGNED_SHORT, nullptr);
+	glDrawArrays(GL_QUADS, 0, m_spriteCount * 4);
 	m_spriteCount = 0;
 	m_textures.clear();
 }

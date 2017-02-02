@@ -34,7 +34,6 @@ private:
 	Shader m_shader;
 	GLuint m_vao;
 	GLuint m_vbo;
-	GLuint m_ibo;
 	int m_spriteCount;
 };
 

@@ -10,9 +10,14 @@ namespace gp {
 
 class Sprite {
 public:
-	Sprite(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color, Texture& texture) noexcept;
+	Sprite(const glm::vec2& pos, const glm::vec2& size,
+	       const glm::vec2& uv_pos, const glm::vec2& uv_size,
+	       const glm::vec4& color, Texture& texture) noexcept;
+
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
+	const glm::vec2& getUVPos() const;
+	const glm::vec2& getUVSize() const;
 	const glm::vec4& getColor() const;
 	const Texture& getTexture() const;
 	GLfloat getTop() const;
@@ -26,15 +31,20 @@ public:
 private:
 	glm::vec2 m_pos;
 	glm::vec2 m_size;
+	glm::vec2 m_uvPos;
+	glm::vec2 m_uvSize;
 	glm::vec4 m_color;
 	Texture& m_texture;
 };
 
 
 inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
-                      const glm::vec4& color, Texture& texture) noexcept
+                      const glm::vec2& uv_pos, const glm::vec2& uv_size,
+		      const glm::vec4& color, Texture& texture) noexcept
 	: m_pos(pos),
 	m_size(size),
+	m_uvPos(uv_pos),
+	m_uvSize(uv_size),
 	m_color(color),
 	m_texture(texture)
 {
@@ -57,6 +67,18 @@ inline const glm::vec2& Sprite::getSize() const
 inline const glm::vec4& Sprite::getColor() const
 {
 	return m_color;
+}
+
+
+inline const glm::vec2& Sprite::getUVPos() const
+{
+	return m_uvPos;
+}
+
+
+inline const glm::vec2& Sprite::getUVSize() const
+{
+	return m_uvSize;
 }
 
 

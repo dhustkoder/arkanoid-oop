@@ -23,27 +23,31 @@ void game_main()
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	display.setVsync(false);
 
-	Texture pirate_tex("../bunny.png");
-	Texture bunny_tex("../pirate.png");
+	Texture sheet_tex("../sheet.png");
 
-//	Texture pirate_tex("../redface.png");
-//	Texture bunny_tex("../greenface.png");
-
+	Sprite pirate({8,4.5f}, {0.8f, 0.8f}, {0.0f, 0.0f}, {0.19f, 0.41f}, {1, 1, 1, 1}, sheet_tex);
+	Sprite bunny({8,4.5f}, {0.8f, 0.8f}, {0.21f, 0.0f}, {0.22f, 0.41f}, {1, 1, 1, 1},  sheet_tex);
 	std::vector<Sprite> quads;
+	quads.reserve(50);
+	
+	float posx = 2.0f;
+	float posy = 7.0f;
+	for (int i = 0; i < 65000; ++i) {
+		Sprite sprite = (rand() % 2) == 0 ? pirate : bunny;
 
-	GLfloat posx = 0.5f;
-	GLfloat posy = 8.5f;
-	for (int i = 0; i < 20; ++i) {
-		Texture& texture = (i % 2) == 0 ? pirate_tex : bunny_tex;
-		quads.emplace_back(Sprite({posx, posy}, {0.5f, 0.5f}, {1, 1, 1, 1}, texture));
-		posx += 2.0f;
-		if (posx > 15.5f) {
-			posx = 0.5f;
+		if (posx >= 15.0f) {
+			posx = 2.0f;
 			posy -= 2.0f;
-			if (posy < 0.4f)
-				posy = 8.5f;
+			if (posy <= 1.0f)
+				posy = 7.0f;
 		}
+
+		sprite.setPosition({posx, posy});
+		quads.emplace_back(sprite);
+
+		posx += 2.0f;
 	}
+
 
 	SpriteRenderer renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs"));
 
@@ -75,14 +79,14 @@ void game_main()
 			quads[0].setPosition(quads[0].getPosition() - glm::vec2(speed, 0));
 		}
 
-/*
+
 		if (quads[0].getTop() >= quads[1].getBottom() &&
 		    quads[0].getBottom() <= quads[1].getTop() &&
 		    quads[0].getRight() >= quads[1].getLeft() &&
 		    quads[0].getLeft() <= quads[1].getRight()) {
 			quads[1].setColor({sinf(frametime), cosf(frametime), sinf(lastframetime), cosf(frametime) + 1.0f});
 		}
-*/
+
 		renderer.submit(quads.data(), quads.size());
 		renderer.flush();
 		display.update();
