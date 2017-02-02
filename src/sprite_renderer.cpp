@@ -11,11 +11,13 @@ inline void SpriteRenderer::bindVertexObjects()
 {
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vao);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 }
 
 
 inline void SpriteRenderer::unbindVertexObjects()
 {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -27,16 +29,15 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 {
 	glGenVertexArrays(1, &m_vao);
 	glGenBuffers(1, &m_vbo);
+	glGenBuffers(1, &m_ibo);
 
 	bindVertexObjects();
-
 	m_shader.enable();
 
 	const auto unbind_guard = finally([this] {
-//		m_shader.disable();
+		m_shader.disable();
 		unbindVertexObjects();
 	});
-
 
 	constexpr GLint tex_indexes[32] { 
 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -45,10 +46,25 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 		26, 27, 28, 29, 30, 31
 	};
 
-	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f));
 	m_shader.setUniformIv("textures", &tex_indexes[0], 32);
+	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f));
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
+
+	constexpr int num_indices = kMaxSprites * 6;
+	GLushort* const indices = new GLushort[kMaxSprites * 6];
+	const auto indices_free = finally([indices] { delete[] indices; });
+
+	for (int i = 0, offset = 0; i < num_indices; i += 6, offset += 4) {
+		indices[i] = offset;
+		indices[i + 1] = offset + 1;
+		indices[i + 2] = offset + 2;
+		indices[i + 3] = offset + 2;
+		indices[i + 4] = offset + 3;
+		indices[i + 5] = offset;
+	}
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(GLushort), indices, GL_STATIC_DRAW);
 
 	constexpr int attribs = 4;
 
@@ -83,6 +99,7 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 
 SpriteRenderer::~SpriteRenderer()
 {
+	glDeleteBuffers(1, &m_ibo);
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
 }
@@ -90,13 +107,14 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 {
+	m_shader.enable();
 	bindVertexObjects();
-
 	auto vertex = reinterpret_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 
 	const auto unmap_guard = finally([this] {
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 		unbindVertexObjects();
+		m_shader.disable();
 	});
 
 	vertex += m_spriteCount * 4;
@@ -111,19 +129,17 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 		const glm::vec4 color = sprite.getColor();
 
 		const int tex_index = sprite.getTexture().getIndex();
-		const int tex_index_mod = tex_index % 32;
+		const auto found_same_index = [tex_index] (const Texture* const texture) {
+			return texture->getIndex() == tex_index;
+		};
 
-		if (std::find(m_texturesIndexes.cbegin(), m_texturesIndexes.cend(), tex_index) == m_texturesIndexes.cend()) {
-			if (m_texturesIndexes.size() >= 32)
+		if (std::find_if(m_textures.cbegin(), m_textures.cend(), found_same_index) == m_textures.cend()) {
+			if (m_textures.size() >= 32)
 				this->flush();
-
-			// OpenGL 3.3 only holds 32 different textures samples, so we mod it
-			glActiveTexture(GL_TEXTURE0 + tex_index_mod);
-			sprite.getTexture().enable();
-			m_texturesIndexes.push_back(tex_index);
+			m_textures.push_back(&sprite.getTexture());
 		}
 
-		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index_mod);
+		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index % 32);
 
 		vertex->pos = glm::vec2(left, top);
 		vertex->tex_coords = glm::vec2(0, 0);
@@ -154,17 +170,22 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 
 void SpriteRenderer::flush()
 {
+	m_shader.enable();
 	bindVertexObjects();
-	//m_shader.enable();
 
 	const auto unbind_guard = finally([this] {
-	//	m_shader.disable();
 		unbindVertexObjects();
+		m_shader.disable();
 	});
 
-	glDrawArrays(GL_QUADS, 0, m_spriteCount * 4);
+	for (const Texture* const texture : m_textures) {
+		glActiveTexture(GL_TEXTURE0 + (texture->getIndex() % 32));
+		texture->enable();
+	}
+
+	glDrawElements(GL_TRIANGLES, m_spriteCount * 6, GL_UNSIGNED_SHORT, nullptr);
 	m_spriteCount = 0;
-	m_texturesIndexes.clear();
+	m_textures.clear();
 }
 
 

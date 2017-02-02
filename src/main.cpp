@@ -21,17 +21,20 @@ void game_main()
 	constexpr const int kWinHeight = 432;
 
 	Display display("Hello GProj", kWinWidth, kWinHeight);
-	display.setVsync(true);
+	display.setVsync(false);
 
-	Texture pirate_tex("../greenface.png");
-	Texture bunny_tex("../redface.png");
+	Texture pirate_tex("../bunny.png");
+	Texture bunny_tex("../pirate.png");
+
+//	Texture pirate_tex("../redface.png");
+//	Texture bunny_tex("../greenface.png");
 
 	std::vector<Sprite> quads;
 
 	GLfloat posx = 0.5f;
 	GLfloat posy = 8.5f;
 	for (int i = 0; i < 20; ++i) {
-		Texture& texture = (rand() % 2) == 0 ? pirate_tex : bunny_tex;
+		Texture& texture = (i % 2) == 0 ? pirate_tex : bunny_tex;
 		quads.emplace_back(Sprite({posx, posy}, {0.5f, 0.5f}, {1, 1, 1, 1}, texture));
 		posx += 2.0f;
 		if (posx > 15.5f) {
@@ -103,14 +106,13 @@ int main()
 {
 	try  {
 		game_main();
-		system("pause");
 		return EXIT_SUCCESS;
 	} catch (std::exception& exception) {
 		std::cerr << "FATAL EXCEPTION: " << exception.what() << '\n';
 	} catch (...) {
 		std::cerr << "FATAL UNKNOWN EXCEPTION...\n"; 
 	}
-	system("pause");
+
 	return EXIT_FAILURE;
 }
 

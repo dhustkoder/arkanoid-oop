@@ -30,10 +30,11 @@ private:
 	void bindVertexObjects();
 	void unbindVertexObjects();
 
-	std::vector<int> m_texturesIndexes;
+	std::vector<const Texture*> m_textures;
 	Shader m_shader;
 	GLuint m_vao;
 	GLuint m_vbo;
+	GLuint m_ibo;
 	int m_spriteCount;
 };
 
