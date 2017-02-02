@@ -23,13 +23,24 @@ void game_main()
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	display.setVsync(true);
 
-	Texture pirate_tex("../pirate.png");
-	Texture bunny_tex("../bunny.png");
+	Texture pirate_tex("../greenface.png");
+	Texture bunny_tex("../redface.png");
 
-	Sprite quads[] {
-		{ { 5.0f, 5.0f }, { 2, 2 }, { 1, 1, 1, 1 }, pirate_tex },
-		{ { 8.0f, 4.5f }, { 2, 2 }, { 1, 1, 1, 1 }, bunny_tex }
-	};
+	std::vector<Sprite> quads;
+
+	GLfloat posx = 0.5f;
+	GLfloat posy = 8.5f;
+	for (int i = 0; i < 20; ++i) {
+		Texture& texture = (rand() % 2) == 0 ? pirate_tex : bunny_tex;
+		quads.emplace_back(Sprite({posx, posy}, {0.5f, 0.5f}, {1, 1, 1, 1}, texture));
+		posx += 2.0f;
+		if (posx > 15.5f) {
+			posx = 0.5f;
+			posy -= 2.0f;
+			if (posy < 0.4f)
+				posy = 8.5f;
+		}
+	}
 
 	SpriteRenderer renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs"));
 
@@ -69,7 +80,7 @@ void game_main()
 			quads[1].setColor({sinf(frametime), cosf(frametime), sinf(lastframetime), cosf(frametime) + 1.0f});
 		}
 */
-		renderer.submit(&quads[0], sizeof(quads) / sizeof(quads[0]));
+		renderer.submit(quads.data(), quads.size());
 		renderer.flush();
 		display.update();
 
@@ -92,13 +103,14 @@ int main()
 {
 	try  {
 		game_main();
+		system("pause");
 		return EXIT_SUCCESS;
 	} catch (std::exception& exception) {
 		std::cerr << "FATAL EXCEPTION: " << exception.what() << '\n';
 	} catch (...) {
 		std::cerr << "FATAL UNKNOWN EXCEPTION...\n"; 
 	}
-
+	system("pause");
 	return EXIT_FAILURE;
 }
 

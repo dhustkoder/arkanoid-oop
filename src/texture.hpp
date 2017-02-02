@@ -5,16 +5,25 @@
 
 namespace gp {
 
+
 class Texture {
 public:
+	Texture(const Texture&) = delete;
+	Texture& operator=(const Texture&) = delete;
+
+
 	Texture(const char* texturefile);
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 	~Texture();
+
+
 	void enable() const;
 	void disable() const;
 	GLuint getId() const;
 	int getIndex() const;
+
+
 private:
 	GLuint m_id;
 	int m_width, m_height;

@@ -26,8 +26,8 @@ Texture::Texture(const char* const texture_file_path)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(img);
 
+	SOIL_free_image_data(img);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

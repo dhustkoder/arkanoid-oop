@@ -33,7 +33,7 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 	m_shader.enable();
 
 	const auto unbind_guard = finally([this] {
-		m_shader.disable();
+//		m_shader.disable();
 		unbindVertexObjects();
 	});
 
@@ -56,21 +56,21 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 		kVertexPositionIndex,
 		kVertexTexCoordsIndex,
 		kVertexColorIndex,
-		kVertexTexIdIndex 
+		kVertexTexIndexIndex 
 	};
 
 	constexpr GLint components[attribs] {
 		kVertexPositionComponents,
 		kVertexTexCoordsComponents,
 		kVertexColorComponents,
-		kVertexTexIdComponents
+		kVertexTexIndexComponents
 	};
 
 	constexpr std::uintptr_t offsets[attribs] {
 		kVertexPositionOffset,
 		kVertexTexCoordsOffset,
 		kVertexColorOffset,
-		kVertexTexIdOffset
+		kVertexTexIndexOffset
 	};
 
 
@@ -111,16 +111,19 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 		const glm::vec4 color = sprite.getColor();
 
 		const int tex_index = sprite.getTexture().getIndex();
+		const int tex_index_mod = tex_index % 32;
+
 		if (std::find(m_texturesIndexes.cbegin(), m_texturesIndexes.cend(), tex_index) == m_texturesIndexes.cend()) {
-			if (m_texturesInexes.size() >= 32)
+			if (m_texturesIndexes.size() >= 32)
 				this->flush();
 
-			glActiveTexture(GL_TEXTURE0 + m_texturesIndexes.size());
+			// OpenGL 3.3 only holds 32 different textures samples, so we mod it
+			glActiveTexture(GL_TEXTURE0 + tex_index_mod);
 			sprite.getTexture().enable();
 			m_texturesIndexes.push_back(tex_index);
 		}
 
-		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index);
+		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index_mod);
 
 		vertex->pos = glm::vec2(left, top);
 		vertex->tex_coords = glm::vec2(0, 0);
@@ -152,16 +155,16 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 void SpriteRenderer::flush()
 {
 	bindVertexObjects();
-	m_shader.enable();
+	//m_shader.enable();
 
 	const auto unbind_guard = finally([this] {
-		m_shader.disable();
+	//	m_shader.disable();
 		unbindVertexObjects();
 	});
 
 	glDrawArrays(GL_QUADS, 0, m_spriteCount * 4);
 	m_spriteCount = 0;
-	m_textureIndexes.clear();
+	m_texturesIndexes.clear();
 }
 
 

@@ -10,11 +10,6 @@ namespace gp {
 
 class Sprite {
 public:
-	Sprite(const Sprite&) = delete;
-	Sprite(Sprite&&) = delete;
-	Sprite& operator=(const Sprite&) = delete;
-	Sprite& operator=(Sprite&&) = delete;
-
 	Sprite(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color, Texture& texture) noexcept;
 	const glm::vec2& getPosition() const;
 	const glm::vec2& getSize() const;
