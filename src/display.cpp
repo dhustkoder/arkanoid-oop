@@ -27,6 +27,8 @@ Display::Display(const char* const name, const int width, const int height)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable(GL_ALPHA_TEST);
+//	glAlphaFunc(GL_EQUAL, 1.0f);
 
 	constexpr const int info_size = 4;
 	constexpr GLenum info_enums[info_size] {

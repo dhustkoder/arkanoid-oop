@@ -44,29 +44,26 @@ SpriteRenderer::SpriteRenderer(Shader&& shader)
 	};
 
 	m_shader.setUniformIv("textures", &tex_indexes[0], 32);
-	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f));
+	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
 
-	constexpr int attribs = 4;
+	constexpr int attribs = 3;
 
 	constexpr GLuint indexes[attribs] {
-		kVertexPositionIndex,
-		kVertexTexCoordsIndex,
+		kVertexPosAndUVIndex,
 		kVertexColorIndex,
 		kVertexTexIndexIndex 
 	};
 
 	constexpr GLint components[attribs] {
-		kVertexPositionComponents,
-		kVertexTexCoordsComponents,
+		kVertexPosAndUVComponents,
 		kVertexColorComponents,
 		kVertexTexIndexComponents
 	};
 
 	constexpr std::uintptr_t offsets[attribs] {
-		kVertexPositionOffset,
-		kVertexTexCoordsOffset,
+		kVertexPosAndUVOffset,
 		kVertexColorOffset,
 		kVertexTexIndexOffset
 	};
@@ -108,9 +105,10 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 		const GLfloat right = sprite.getRight();
 		const GLfloat bottom = sprite.getBottom();
 		const GLfloat left = sprite.getLeft();
-		const glm::vec2 uv_pos = sprite.getUVPos();
-		const glm::vec2 uv_size = sprite.getUVSize();
-		const glm::vec4 color = sprite.getColor();
+
+		const Vec2f uv_pos = sprite.getUVPos();
+		const Vec2f uv_size = sprite.getUVSize();
+		const Vec4f color = sprite.getColor();
 
 		const int tex_index = sprite.getTexture().getIndex();
 		const auto found_same_index = [tex_index] (const Texture* const texture) {
@@ -125,26 +123,22 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 
 		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index % 32);
 
-		vertex->pos = glm::vec2(left, top);
-		vertex->tex_coords = uv_pos;
+		vertex->pos_and_uv = glm::vec4(left, top, uv_pos.x, uv_pos.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
-		vertex->pos = glm::vec2(right, top);
-		vertex->tex_coords = glm::vec2(uv_pos.x + uv_size.x, uv_pos.y);
+		vertex->pos_and_uv = glm::vec4(right, top, uv_pos.x + uv_size.x, uv_pos.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
-		vertex->pos = glm::vec2(right, bottom);
-		vertex->tex_coords = glm::vec2(uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
+		vertex->pos_and_uv = glm::vec4(right, bottom, uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
-		vertex->pos = glm::vec2(left, bottom);
-		vertex->tex_coords = glm::vec2(uv_pos.x, uv_pos.y + uv_size.y);
+		vertex->pos_and_uv = glm::vec4(left, bottom, uv_pos.x, uv_pos.y + uv_size.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;

@@ -1,7 +1,6 @@
 #ifndef GPROJ_SPRITE_HPP_
 #define GPROJ_SPRITE_HPP_
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
+#include "math_types.hpp"
 #include "texture.hpp"
 
 
@@ -15,96 +14,87 @@ public:
 	Sprite(const Sprite&) noexcept = default;
 
 
-	Sprite(const glm::vec2& pos, const glm::vec2& size,
-	       const glm::vec2& uv_pos, const glm::vec2& uv_size,
-	       const glm::vec4& color, Texture& texture) noexcept;
-
-	Sprite(const glm::vec2& pos, const glm::vec2& size,
-		int uv_x_start, int uv_x_end, int uv_y_start, int uv_y_end,
-		const glm::vec4& color, Texture& texture) noexcept;
-
+	Sprite(const Texture& texture, const Vec2f& pos, const Vec2f& size,
+	       const Vec2f& uv_pos, const Vec2f& uv_size,
+	       const Vec4f& color = Vec4f{1, 1, 1, 1}) noexcept;
 	
 
-	const glm::vec2& getPosition() const;
-	const glm::vec2& getSize() const;
-	const glm::vec2& getUVPos() const;
-	const glm::vec2& getUVSize() const;
-	const glm::vec4& getColor() const;
+	const Vec2f& getPosition() const;
+	const Vec2f& getSize() const;
+	const Vec2f& getUVPos() const;
+	const Vec2f& getUVSize() const;
+	const Vec4f& getColor() const;
 	const Texture& getTexture() const;
+
 	GLfloat getTop() const;
 	GLfloat getRight() const;
 	GLfloat getBottom() const;
 	GLfloat getLeft() const;
 	
-	void setPosition(const glm::vec2& newpos);
-	void setSize(const glm::vec2& newsize);
-	void setColor(const glm::vec4& newcolor);
+	void flipHorizontally();
+	void flipVertically();
+
+	void setPosition(const Vec2f& newpos);
+	void setSize(const Vec2f& newsize);
+	void setColor(const Vec4f& newcolor);
+
 private:
-	glm::vec2 m_pos;
-	glm::vec2 m_size;
-	glm::vec2 m_uvPos;
-	glm::vec2 m_uvSize;
-	glm::vec4 m_color;
-	Texture& m_texture;
+	Vec2f m_pos;
+	Vec2f m_size;
+	Vec2f m_uvPos;
+	Vec2f m_uvSize;
+	Vec4f m_color;
+	const Texture& m_texture;
 };
 
 
-inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
-                      const glm::vec2& uv_pos, const glm::vec2& uv_size,
-		      const glm::vec4& color, Texture& texture) noexcept
+inline Sprite::Sprite(const Texture& texture,
+                      const Vec2f& pos, const Vec2f& size,
+                      const Vec2f& uv_pos, const Vec2f& uv_size,
+		      const Vec4f& color) noexcept
 	: m_pos(pos),
 	m_size(size),
-	m_uvPos(uv_pos),
-	m_uvSize(uv_size),
 	m_color(color),
 	m_texture(texture)
 {
+	const GLfloat w = static_cast<GLfloat>(m_texture.getWidth());
+	const GLfloat h = static_cast<GLfloat>(m_texture.getHeight());
 
+	// normalize uv position and size
+	m_uvPos = { uv_pos.x / w, uv_pos.y / h };
+	m_uvSize = { uv_size.x / w, uv_size.y / h };
 }
 
 
-inline Sprite::Sprite(const glm::vec2& pos, const glm::vec2& size,
-		const int uv_x_start, const int uv_x_end,
-		const int uv_y_start, const int uv_y_end,
-		const glm::vec4& color, Texture& texture) noexcept
-	: m_pos(pos),
-	m_size(size),
-	m_uvPos((float)uv_x_start / (float)texture.getWidth(), (float)uv_y_start / (float)texture.getHeight()),
-	m_uvSize(((float)(uv_x_end + 1) - uv_x_start) / (float)texture.getWidth(), (((float)uv_y_end + 1) - uv_y_start) / (float)texture.getHeight()),
-	m_color(color),
-	m_texture(texture)
-{
-	
-}
 
-
-inline const glm::vec2& Sprite::getPosition() const
+inline const Vec2f& Sprite::getPosition() const
 {
 	return m_pos;
 }
 
 
-inline const glm::vec2& Sprite::getSize() const
+inline const Vec2f& Sprite::getSize() const
 {
 	return m_size;
 }
 
 
-inline const glm::vec4& Sprite::getColor() const
-{
-	return m_color;
-}
 
-
-inline const glm::vec2& Sprite::getUVPos() const
+inline const Vec2f& Sprite::getUVPos() const
 {
 	return m_uvPos;
 }
 
 
-inline const glm::vec2& Sprite::getUVSize() const
+inline const Vec2f& Sprite::getUVSize() const
 {
 	return m_uvSize;
+}
+
+
+inline const Vec4f& Sprite::getColor() const
+{
+	return m_color;
 }
 
 
@@ -116,7 +106,7 @@ inline const Texture& Sprite::getTexture() const
 
 inline GLfloat Sprite::getTop() const
 {
-	return m_pos.y + m_size.y;
+	return m_pos.y - m_size.y;
 }
 
 
@@ -128,7 +118,7 @@ inline GLfloat Sprite::getRight() const
 
 inline GLfloat Sprite::getBottom() const
 {
-	return m_pos.y - m_size.y;
+	return m_pos.y + m_size.y;
 }
 
 
@@ -138,19 +128,33 @@ inline GLfloat Sprite::getLeft() const
 }
 
 
-inline void Sprite::setPosition(const glm::vec2& newpos)
+inline void Sprite::flipHorizontally()
+{
+	m_uvPos.x += m_uvSize.x;
+	m_uvSize.x = -m_uvSize.x;
+}
+
+
+inline void Sprite::flipVertically()
+{
+	m_uvPos.y += m_uvSize.y;
+	m_uvSize.y = -m_uvSize.y;
+}
+
+
+inline void Sprite::setPosition(const Vec2f& newpos)
 {
 	m_pos = newpos;
 }
 
 
-inline void Sprite::setSize(const glm::vec2& newsize)
+inline void Sprite::setSize(const Vec2f& newsize)
 {
 	m_size = newsize;
 }
 
 
-inline void Sprite::setColor(const glm::vec4& newcolor)
+inline void Sprite::setColor(const Vec4f& newcolor)
 {
 	m_color = newcolor;
 }

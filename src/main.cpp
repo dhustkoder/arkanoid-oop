@@ -14,31 +14,57 @@
 #include "sprite_renderer.hpp"
 
 
+
+#define RUNNER
+
 void game_main()
 {
 	using namespace gp;
 
-	constexpr const int kWinWidth = 944;
-	constexpr const int kWinHeight = 531;
+	constexpr const int kWinWidth = 800;
+	constexpr const int kWinHeight = 600;
 
 	Display display("Hello GProj", kWinWidth, kWinHeight);
 	display.setVsync(false);
 
-	Texture sheet_tex("vegeta.png");
+#ifdef RUNNER
 
-	Sprite pirate({8,4.5f}, {1, 2}, 593, 654, 192, 288, {1, 1, 1, 1}, sheet_tex);
-	Sprite bunny({8,4.5f}, {1, 2}, 661, 722, 192, 288, {1, 1, 1, 1}, sheet_tex);
-	std::vector<Sprite> quads { pirate, bunny };
+	constexpr int sprite_width = 180 / 4;
+	constexpr int sprite_height = 180 / 4;
 
+
+	Texture spritesheet("spritesheet.png");
+	std::vector<Sprite> quads;
+	quads.reserve(13);
+
+	for (int i = 0; i < 13; ++i) {
+		const int posx = sprite_width * (i % 4);
+		const int posy = sprite_height * (i / 4);
+		quads.emplace_back(Sprite(spritesheet, {400, 300}, {sprite_width * 4, sprite_height * 4}, {posx, posy}, {sprite_width, sprite_height}));
+		quads.back().flipHorizontally();
+		quads.back().flipVertically();
+	}
+
+#elif defined(VEGETA)
+
+	Texture vegetasheet("vegeta.png");
+	std::vector<Sprite> quads;
+	quads.reserve(12);
+	quads.emplace_back(Sprite(vegetasheet, {400, 300}, {53, 70}, {20, 551}, {53, 70}));
+	quads.emplace_back(Sprite(vegetasheet, {400, 300}, {76, 94}, {93, 533}, {76, 94}));
+//	quads.emplace_back(Sprite(vegetasheet, {400, 300}, {76, 94}, {93, 533}, {76, 94}));
+
+#endif
 
 	SpriteRenderer renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs"));
 
 	double frametime = 0;
-	double lastframe = 0;
 	double lastsecond = 0;
 	double lastframetime = 0;
 	float delta = 0;
 	int fps = 0;
+
+	double lastframe = 0;
 	int frame = 0;
 
 	while (!display.shouldClose()) {
@@ -49,29 +75,43 @@ void game_main()
 		display.clear(0.25f, 0.25f, 0.85f, 1);
 
 
-		const float speed = 5.0f * delta;
+		const float speed = 15.0f * delta;
+
 		if (Keyboard::isKeyPressed(GLFW_KEY_W)) {
-			quads[0].setPosition(quads[0].getPosition() + glm::vec2(0, speed));
+			quads[0].setPosition(quads[0].getPosition() - Vec2f(0, speed));
 		} else if (Keyboard::isKeyPressed(GLFW_KEY_S)) {
-			quads[0].setPosition(quads[0].getPosition() - glm::vec2(0, speed));
+			quads[0].setPosition(quads[0].getPosition() + Vec2f(0, speed));
 		}
 
 		if (Keyboard::isKeyPressed(GLFW_KEY_D)) {
-			quads[0].setPosition(quads[0].getPosition() + glm::vec2(speed, 0));
+			quads[0].setPosition(quads[0].getPosition() + Vec2f(speed, 0));
 		} else if (Keyboard::isKeyPressed(GLFW_KEY_A)) {
-			quads[0].setPosition(quads[0].getPosition() - glm::vec2(speed, 0));
+			quads[0].setPosition(quads[0].getPosition() - Vec2f(speed, 0));
+		}
+	
+
+#ifdef RUNNER
+		if ((frametime - lastframe) > 0.05f) {
+			if (++frame > 12)
+				frame = 5;
+			lastframe = frametime;
 		}
 
-		renderer.submit(&quads[frame], 1);
+#elif defined(VEGETA)
 
-		if ((frametime - lastframe) >= 0.1f) {
-			lastframe = frametime;
+		if ((frametime - lastframe) > 0.1f) {
 			if (++frame > 1)
 				frame = 0;
+			lastframe = frametime;
 		}
 
+
+#endif
+
+		renderer.submit(&quads[frame], 1);
 		renderer.flush();
 		display.update();
+
 
 
 		++fps;

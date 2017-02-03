@@ -22,7 +22,7 @@ Texture::Texture(const char* const texture_file_path)
 	unsigned char* const img = SOIL_load_image(texture_file_path, &m_width, &m_height, nullptr, SOIL_LOAD_RGBA);
 
 	if (img == nullptr)
-		throw Exception(std::string("Couldn't load texture ") + texture_file_path + ":" + SOIL_last_result());
+		throw Exception(std::string("Couldn't load texture ") + texture_file_path + ": " + SOIL_last_result());
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
 	glGenerateMipmap(GL_TEXTURE_2D);

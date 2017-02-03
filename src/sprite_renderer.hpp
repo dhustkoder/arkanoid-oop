@@ -1,9 +1,6 @@
 #ifndef GPROJ_SPRITE_RENDERER_HPP_
 #define GPROJ_SPRITE_RENDERER_HPP_
 #include <vector>
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
-
 #include "sprite.hpp"
 #include "shader.hpp"
 #include "vertex_data.hpp"
