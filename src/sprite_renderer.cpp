@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 #include "finally.hpp"
 #include "sprite_renderer.hpp"
@@ -83,67 +82,7 @@ SpriteRenderer::~SpriteRenderer()
 }
 
 
-void SpriteRenderer::submit(const Sprite* const sprites, const int count)
-{
-	m_shader.enable();
-	bindVertexObjects();
-	auto vertex = reinterpret_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 
-	const auto unmap_guard = finally([this] {
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		unbindVertexObjects();
-		m_shader.disable();
-	});
-
-	vertex += m_spriteCount * 4;
-	m_spriteCount += count;
-
-	for (int i = 0; i < count; ++i) {
-		const Sprite& sprite = sprites[i];
-
-		const GLfloat top = sprite.getTop();
-		const GLfloat right = sprite.getRight();
-		const GLfloat bottom = sprite.getBottom();
-		const GLfloat left = sprite.getLeft();
-
-		const Vec2f uv_pos = sprite.getUVPos();
-		const Vec2f uv_size = sprite.getUVSize();
-		const Vec4f color = sprite.getColor();
-
-		const int tex_index = sprite.getTexture().getIndex();
-		const auto found_same_index = [tex_index] (const Texture* const texture) {
-			return texture->getIndex() == tex_index;
-		};
-
-		if (std::find_if(m_textures.cbegin(), m_textures.cend(), found_same_index) == m_textures.cend()) {
-			if (m_textures.size() >= 32)
-				this->flush();
-			m_textures.push_back(&sprite.getTexture());
-		}
-
-		const GLfloat tex_indexf = static_cast<GLfloat>(sprite.getTexture().getIndexMod());
-
-		vertex->pos_and_uv = Vec4f(left, top, uv_pos.x, uv_pos.y);
-		vertex->color = color;
-		vertex->tex_index = tex_indexf;
-		++vertex;
-
-		vertex->pos_and_uv = Vec4f(right, top, uv_pos.x + uv_size.x, uv_pos.y);
-		vertex->color = color;
-		vertex->tex_index = tex_indexf;
-		++vertex;
-
-		vertex->pos_and_uv = Vec4f(right, bottom, uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
-		vertex->color = color;
-		vertex->tex_index = tex_indexf;
-		++vertex;
-
-		vertex->pos_and_uv = Vec4f(left, bottom, uv_pos.x, uv_pos.y + uv_size.y);
-		vertex->color = color;
-		vertex->tex_index = tex_indexf;
-		++vertex;
-	}
-}
 
 
 void SpriteRenderer::flush()

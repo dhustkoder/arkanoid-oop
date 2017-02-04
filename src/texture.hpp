@@ -1,5 +1,6 @@
 #ifndef GPROJ_TEXTURE_HPP_
 #define GPROJ_TEXTURE_HPP_
+#include <string>
 #include <utility>
 #include <GL/glew.h>
 
@@ -12,7 +13,7 @@ public:
 	Texture& operator=(const Texture&) = delete;
 
 
-	Texture(const char* texturefile);
+	Texture(const std::string& texture_file_path);
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 	~Texture();

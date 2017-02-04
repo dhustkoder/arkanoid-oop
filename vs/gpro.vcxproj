@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ball.cpp" />
     <ClCompile Include="..\src\display.cpp" />
+    <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\keyboard.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
@@ -28,11 +30,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ball.hpp" />
+    <ClInclude Include="..\src\brick.hpp" />
     <ClInclude Include="..\src\display.hpp" />
     <ClInclude Include="..\src\exception.hpp" />
     <ClInclude Include="..\src\finally.hpp" />
+    <ClInclude Include="..\src\game.hpp" />
     <ClInclude Include="..\src\keyboard.hpp" />
     <ClInclude Include="..\src\math_types.hpp" />
+    <ClInclude Include="..\src\player.hpp" />
     <ClInclude Include="..\src\shader.hpp" />
     <ClInclude Include="..\src\sprite.hpp" />
     <ClInclude Include="..\src\sprite_renderer.hpp" />

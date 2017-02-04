@@ -9,17 +9,19 @@ namespace gp {
 
 class Sprite {
 public:
-
 	Sprite(Sprite&&) noexcept = default;
 	Sprite(const Sprite&) noexcept = default;
 
+	Sprite& operator=(Sprite&&) noexcept = default;
+	Sprite& operator=(const Sprite&) noexcept = default;
 
-	Sprite(const Texture& texture, const Vec2f& pos, const Vec2f& size,
+
+	Sprite(const Texture& texture, const Vec2f& origin, const Vec2f& size,
 	       const Vec2f& uv_pos, const Vec2f& uv_size,
 	       const Vec4f& color = Vec4f{1, 1, 1, 1}) noexcept;
-	
+	Sprite(const Texture& texture) noexcept;
 
-	const Vec2f& getPosition() const;
+	const Vec2f& getOrigin() const;
 	const Vec2f& getSize() const;
 	const Vec2f& getUVPos() const;
 	const Vec2f& getUVSize() const;
@@ -34,31 +36,34 @@ public:
 	void flipHorizontally();
 	void flipVertically();
 
-	void setPosition(const Vec2f& newpos);
+	void setOrigin(const Vec2f& neworigin);
 	void setSize(const Vec2f& newsize);
+	void setUVSize(const Vec2f& new_uv_size);
+	void setUVPos(const Vec2f& new_uv_pos);
 	void setColor(const Vec4f& newcolor);
 
 private:
-	Vec2f m_pos;
+	Vec2f m_origin;
 	Vec2f m_size;
 	Vec2f m_uvPos;
 	Vec2f m_uvSize;
 	Vec4f m_color;
-	const Texture& m_texture;
+	const Texture* m_texture;
 };
 
 
+
 inline Sprite::Sprite(const Texture& texture,
-                      const Vec2f& pos, const Vec2f& size,
+                      const Vec2f& origin, const Vec2f& size,
                       const Vec2f& uv_pos, const Vec2f& uv_size,
 		      const Vec4f& color) noexcept
-	: m_pos(pos),
+	: m_origin(origin),
 	m_size(size),
 	m_color(color),
-	m_texture(texture)
+	m_texture(&texture)
 {
-	const GLfloat w = static_cast<GLfloat>(m_texture.getWidth());
-	const GLfloat h = static_cast<GLfloat>(m_texture.getHeight());
+	const GLfloat w = static_cast<GLfloat>(m_texture->getWidth());
+	const GLfloat h = static_cast<GLfloat>(m_texture->getHeight());
 
 	// normalize uv position and size
 	m_uvPos = { uv_pos.x / w, uv_pos.y / h };
@@ -66,10 +71,17 @@ inline Sprite::Sprite(const Texture& texture,
 }
 
 
-
-inline const Vec2f& Sprite::getPosition() const
+inline Sprite::Sprite(const Texture& texture) noexcept
+	: m_texture(&texture),
+	m_color(1, 1, 1, 1)
 {
-	return m_pos;
+
+}
+
+
+inline const Vec2f& Sprite::getOrigin() const
+{
+	return m_origin;
 }
 
 
@@ -100,31 +112,31 @@ inline const Vec4f& Sprite::getColor() const
 
 inline const Texture& Sprite::getTexture() const
 {
-	return m_texture;
+	return *m_texture;
 }
 
 
 inline GLfloat Sprite::getTop() const
 {
-	return m_pos.y - m_size.y;
+	return m_origin.y - m_size.y;
 }
 
 
 inline GLfloat Sprite::getRight() const
 {
-	return m_pos.x + m_size.x;
+	return m_origin.x + m_size.x;
 }
 
 
 inline GLfloat Sprite::getBottom() const
 {
-	return m_pos.y + m_size.y;
+	return m_origin.y + m_size.y;
 }
 
 
 inline GLfloat Sprite::getLeft() const
 {
-	return m_pos.x - m_size.x;
+	return m_origin.x - m_size.x;
 }
 
 
@@ -142,15 +154,27 @@ inline void Sprite::flipVertically()
 }
 
 
-inline void Sprite::setPosition(const Vec2f& newpos)
+inline void Sprite::setOrigin(const Vec2f& neworigin)
 {
-	m_pos = newpos;
+	m_origin = neworigin;
 }
 
 
 inline void Sprite::setSize(const Vec2f& newsize)
 {
 	m_size = newsize;
+}
+
+
+inline void Sprite::setUVSize(const Vec2f& new_uv_size)
+{
+	m_uvSize = new_uv_size / Vec2f{ m_texture->getWidth(), m_texture->getHeight() };
+}
+
+
+inline void Sprite::setUVPos(const Vec2f& new_uv_pos)
+{
+	m_uvPos = new_uv_pos / Vec2f{ m_texture->getWidth(), m_texture->getHeight() };
 }
 
 
