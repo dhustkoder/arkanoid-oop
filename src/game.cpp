@@ -14,7 +14,7 @@ Game::Game()
 	m_ball(m_spritesheet),
 	m_player(m_spritesheet)
 {
-	m_display.setVsync(true);
+	m_display.setVsync(false);
 	m_display.clear(0, 0, 0, 0);
 	m_display.update();
 	resetGame();
@@ -60,7 +60,7 @@ void Game::resetPlayer()
 {
 	const Vec2f default_uv_pos { 184, 111 };
 	const Vec2f default_uv_size { 96, 25 };
-	const Vec2f default_player_size = default_uv_size / 2.0f;
+	const Vec2f default_player_size = (default_uv_size / 2.0f);
 	const Vec2f default_player_origin { 800 / 2, 600 - default_player_size.y};
 	const float default_velocity = 150.0f;
 
@@ -77,8 +77,8 @@ void Game::resetBall()
 	const Vec2f default_uv_pos { 0, 80 };
 	const Vec2f default_uv_size { 24, 24 };
 	const Vec2f default_origin { 800 / 2, 600 / 2};
-	const Vec2f default_velocity = { 125, 250 };
-	const float default_radius = 11.5f;
+	const Vec2f default_velocity = { 150, 150 };
+	const float default_radius = default_uv_size.x / 2.0f;
 
 	m_ball.setUVPos(default_uv_pos);
 	m_ball.setUVSize(default_uv_size);
@@ -115,6 +115,10 @@ void Game::run()
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
 			std::cout << "FPS: " << fps << '\n';
+			std::cout << "BALL ORIGIN: " << m_ball.getOrigin() << '\n';
+			std::cout << "PLAYER ORIGIN: " << m_player.getOrigin() << '\n';
+			std::cout << "BALL RADIUS: " << m_ball.getRadius() << '\n';
+			std::cout << "PLAYER SIZE: " << m_player.getSize() << '\n';
 			fps = 0;
 			lastsecond = frametime;
 		}
