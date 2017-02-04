@@ -21,6 +21,19 @@ void Ball::update(const float dt)
 		m_velocity.y = std::abs(m_velocity.y);
 
 	setOrigin(getOrigin() + Vec2f(m_velocity * dt));
+
+/*
+	if (Keyboard::isKeyPressed(GLFW_KEY_W))
+		setOrigin(getOrigin() - Vec2f(0, m_velocity.y * dt));
+	else if (Keyboard::isKeyPressed(GLFW_KEY_S))
+		setOrigin(getOrigin() + Vec2f(0, m_velocity.y * dt));
+
+	if (Keyboard::isKeyPressed(GLFW_KEY_D))
+		setOrigin(getOrigin() + Vec2f(m_velocity.x * dt, 0));
+	else if (Keyboard::isKeyPressed(GLFW_KEY_A))
+		setOrigin(getOrigin() - Vec2f(m_velocity.y * dt, 0));
+*/
+
 }
 
 

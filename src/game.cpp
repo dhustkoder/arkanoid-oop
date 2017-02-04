@@ -14,6 +14,7 @@ Game::Game()
 	m_ball(m_spritesheet),
 	m_player(m_spritesheet)
 {
+	m_display.setVsync(true);
 	m_display.clear(0, 0, 0, 0);
 	m_display.update();
 	resetGame();
@@ -28,9 +29,9 @@ Game::~Game()
 
 void Game::resetBricks()
 {
-	const Vec2i uv_size { 64, 32 };
+	const Vec2f uv_size { 64, 32 };
 
-	const Vec2i uv_positions[8] {
+	const Vec2f uv_positions[8] {
 		{ 0, 0 },
 		{ 72, 0},
 		{144, 0},
@@ -41,8 +42,8 @@ void Game::resetBricks()
 		{216, 40}
 	};
 
-	const Vec2i sprite_size = uv_size / 2;
-	Vec2i origin = { (sprite_size.x * 2) + 8, sprite_size.y + 8 };
+	const Vec2f sprite_size = uv_size / 2.0f;
+	Vec2f origin = { (sprite_size.x * 2) + 8, sprite_size.y + 8 };
 
 	for (int i = 0; i < 60; ++i) {
 		m_bricks.emplace_back(Sprite(m_spritesheet, origin, sprite_size, uv_positions[i % 8], uv_size));
@@ -57,10 +58,10 @@ void Game::resetBricks()
 
 void Game::resetPlayer()
 {
-	const Vec2i default_uv_pos { 184, 111 };
-	const Vec2i default_uv_size { 96, 25 };
-	const Vec2i default_player_size = default_uv_size / 2;
-	const Vec2i default_player_origin { 800 / 2, 600 - default_player_size.y};
+	const Vec2f default_uv_pos { 184, 111 };
+	const Vec2f default_uv_size { 96, 25 };
+	const Vec2f default_player_size = default_uv_size / 2.0f;
+	const Vec2f default_player_origin { 800 / 2, 600 - default_player_size.y};
 	const float default_velocity = 150.0f;
 
 	m_player.setUVPos(default_uv_pos);
@@ -73,12 +74,11 @@ void Game::resetPlayer()
 
 void Game::resetBall()
 {
-	const Vec2i default_uv_pos { 0, 80 };
-	const Vec2i default_uv_size { 24, 24 };
-	const Vec2i default_origin { 800 / 2, 600 / 2};
-	const Vec2f default_velocity = { 120, 150 };
-	const float default_radius = 11.5f;;
-
+	const Vec2f default_uv_pos { 0, 80 };
+	const Vec2f default_uv_size { 24, 24 };
+	const Vec2f default_origin { 800 / 2, 600 / 2};
+	const Vec2f default_velocity = { 125, 250 };
+	const float default_radius = 11.5f;
 
 	m_ball.setUVPos(default_uv_pos);
 	m_ball.setUVSize(default_uv_size);
@@ -143,16 +143,24 @@ inline void Game::checkCollisions()
 		m_ball.setVelocity({m_ball.getVelocity().x, -std::abs(m_ball.getVelocity().y)});
 	}
 
-
 	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
 		if (m_ball.intersects(*itr)) {
 
-			// TODO collision code
+			const auto& ball_origin = m_ball.getOrigin();
+			const auto& brick_origin = itr->getOrigin();
+
+			const Vec2f diff = ball_origin - brick_origin;
+			
+			m_ball.setVelocity({diff.x <= 0.0f ? -std::abs(m_ball.getVelocity().x) :
+			                    std::abs(m_ball.getVelocity().x),
+					    diff.y <= 0.0f ? -std::abs(m_ball.getVelocity().y) :
+					    std::abs(m_ball.getVelocity().y)});
 
 			m_bricks.erase(itr);
 			break;
 		}
 	}
+
 }
 
 
