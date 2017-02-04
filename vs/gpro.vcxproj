@@ -27,10 +27,12 @@
     <ClCompile Include="..\src\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\ball.hpp" />
     <ClInclude Include="..\src\display.hpp" />
     <ClInclude Include="..\src\exception.hpp" />
     <ClInclude Include="..\src\finally.hpp" />
     <ClInclude Include="..\src\keyboard.hpp" />
+    <ClInclude Include="..\src\math_types.hpp" />
     <ClInclude Include="..\src\shader.hpp" />
     <ClInclude Include="..\src\sprite.hpp" />
     <ClInclude Include="..\src\sprite_renderer.hpp" />
@@ -126,13 +128,15 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/wd 4200 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

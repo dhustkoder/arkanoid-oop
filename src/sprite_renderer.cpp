@@ -121,24 +121,24 @@ void SpriteRenderer::submit(const Sprite* const sprites, const int count)
 			m_textures.push_back(&sprite.getTexture());
 		}
 
-		const GLfloat tex_indexf = static_cast<GLfloat>(tex_index % 32);
+		const GLfloat tex_indexf = static_cast<GLfloat>(sprite.getTexture().getIndexMod());
 
-		vertex->pos_and_uv = glm::vec4(left, top, uv_pos.x, uv_pos.y);
+		vertex->pos_and_uv = Vec4f(left, top, uv_pos.x, uv_pos.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
-		vertex->pos_and_uv = glm::vec4(right, top, uv_pos.x + uv_size.x, uv_pos.y);
+		vertex->pos_and_uv = Vec4f(right, top, uv_pos.x + uv_size.x, uv_pos.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
-		vertex->pos_and_uv = glm::vec4(right, bottom, uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
+		vertex->pos_and_uv = Vec4f(right, bottom, uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
 
-		vertex->pos_and_uv = glm::vec4(left, bottom, uv_pos.x, uv_pos.y + uv_size.y);
+		vertex->pos_and_uv = Vec4f(left, bottom, uv_pos.x, uv_pos.y + uv_size.y);
 		vertex->color = color;
 		vertex->tex_index = tex_indexf;
 		++vertex;
@@ -157,7 +157,7 @@ void SpriteRenderer::flush()
 	});
 
 	for (const Texture* const texture : m_textures) {
-		glActiveTexture(GL_TEXTURE0 + (texture->getIndex() % 32));
+		glActiveTexture(GL_TEXTURE0 + texture->getIndexMod());
 		texture->enable();
 	}
 

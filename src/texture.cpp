@@ -8,7 +8,8 @@ namespace gp {
 int Texture::s_index = 0;
 	
 Texture::Texture(const char* const texture_file_path)
-	: m_index(s_index++)
+	: m_index(s_index++),
+	m_indexMod(m_index % 32)
 {
 	glGenTextures(1, &m_id);
 	glBindTexture(GL_TEXTURE_2D, m_id);
