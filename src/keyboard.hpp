@@ -1,5 +1,5 @@
-#ifndef GPROJ_KEYBOARD_HPP_
-#define GPROJ_KEYBOARD_HPP_
+#ifndef ARKANOID_OOP_KEYBOARD_HPP_
+#define ARKANOID_OOP_KEYBOARD_HPP_
 
 struct GLFWwindow;
 

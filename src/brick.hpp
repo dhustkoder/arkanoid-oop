@@ -1,5 +1,5 @@
-#ifndef GPROJ_BRICK_HPP_
-#define GPROJ_BRICK_HPP_
+#ifndef ARKANOID_OOP_BRICK_HPP_
+#define ARKANOID_OOP_BRICK_HPP_
 #include "sprite.hpp"
 
 

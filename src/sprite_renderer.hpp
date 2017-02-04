@@ -1,5 +1,5 @@
-#ifndef GPROJ_SPRITE_RENDERER_HPP_
-#define GPROJ_SPRITE_RENDERER_HPP_
+#ifndef ARKANOID_OOP_SPRITE_RENDERER_HPP_
+#define ARKANOID_OOP_SPRITE_RENDERER_HPP_
 #include <algorithm>
 #include <vector>
 #include "sprite.hpp"
@@ -52,6 +52,20 @@ inline void gp::SpriteRenderer::end()
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	unbindVertexObjects();
 	m_shader.disable();
+}
+
+
+inline void SpriteRenderer::bindVertexObjects()
+{
+	glBindVertexArray(m_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vao);
+}
+
+
+inline void SpriteRenderer::unbindVertexObjects()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 

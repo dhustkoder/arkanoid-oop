@@ -5,20 +5,6 @@
 
 namespace gp {
 
-	
-inline void SpriteRenderer::bindVertexObjects()
-{
-	glBindVertexArray(m_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vao);
-}
-
-
-inline void SpriteRenderer::unbindVertexObjects()
-{
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-}
-
 
 SpriteRenderer::SpriteRenderer(Shader&& shader)
 	: m_shader(std::move(shader)),

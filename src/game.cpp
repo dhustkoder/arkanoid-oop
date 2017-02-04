@@ -42,7 +42,7 @@ void Game::resetBricks()
 	};
 
 	const Vec2i sprite_size = uv_size / 2;
-	Vec2i origin = { (sprite_size.x * 2) + 8, sprite_size.y };
+	Vec2i origin = { (sprite_size.x * 2) + 8, sprite_size.y + 8 };
 
 	for (int i = 0; i < 60; ++i) {
 		m_bricks.emplace_back(Sprite(m_spritesheet, origin, sprite_size, uv_positions[i % 8], uv_size));

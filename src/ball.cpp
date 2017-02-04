@@ -10,10 +10,15 @@ namespace gp {
 
 void Ball::update(const float dt)
 {
-	if (getRight() >= 800.0f || getLeft() <= 0.0f)
-		m_velocity.x = -m_velocity.x;
-	if (getBottom() >= 600.0f || getTop() <= 0.0f)
-		m_velocity.y = -m_velocity.y;
+	if (getRight() >= 800.0f)
+		m_velocity.x = -std::abs(m_velocity.x);
+	else if (getLeft() <= 0.0f)
+		m_velocity.x = std::abs(m_velocity.x);
+
+	if (getBottom() >= 600.0f)
+		m_velocity.y = -std::abs(m_velocity.y);
+	else if (getTop() <= 0.0f)
+		m_velocity.y = std::abs(m_velocity.y);
 
 	setOrigin(getOrigin() + Vec2f(m_velocity * dt));
 }

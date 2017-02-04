@@ -1,5 +1,5 @@
-#ifndef GPROJ_PLAYER_HPP_
-#define GPROJ_PLAYER_HPP_
+#ifndef ARKANOID_OOP_PLAYER_HPP_
+#define ARKANOID_OOP_PLAYER_HPP_
 #include "keyboard.hpp"
 #include "sprite.hpp"
 
@@ -9,11 +9,10 @@ class Player : public Sprite {
 public:
 	Player(const Sprite& sprite);
 	Player(const Sprite& sprite, float velocity);
+
+	float getVelocity() const;
 	void update(float dt);
-
-	float getVelocity() const { return m_velocity; }
-	void setVelocity(float velocity) { m_velocity = velocity; }
-
+	void setVelocity(float velocity);
 private:
 	float m_velocity = 150.0f;
 };
@@ -32,6 +31,12 @@ inline Player::Player(const Sprite& sprite, float velocity)
 }
 
 
+inline float Player::getVelocity() const
+{
+	return m_velocity;
+}
+
+
 inline void Player::update(const float dt)
 {
 	if (Keyboard::isKeyPressed(GLFW_KEY_D)) {
@@ -39,8 +44,18 @@ inline void Player::update(const float dt)
 	} else if (Keyboard::isKeyPressed(GLFW_KEY_A)) {
 		setOrigin(getOrigin() - Vec2f(m_velocity * dt, 0));
 	}
+
+	if (getRight() > 800.0f)
+		setOrigin({getOrigin().x - (getRight() - 800.0f), getOrigin().y});
+	else if (getLeft() < 0.0f)
+		setOrigin({getOrigin().x - getLeft(), getOrigin().y});
 }
 
+
+inline void Player::setVelocity(const float velocity)
+{
+	m_velocity = velocity;
+}
 
 
 } // namespace gp

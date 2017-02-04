@@ -1,5 +1,5 @@
-#ifndef GPROJ_SPRITE_HPP_
-#define GPROJ_SPRITE_HPP_
+#ifndef ARKANOID_OOP_SPRITE_HPP_
+#define ARKANOID_OOP_SPRITE_HPP_
 #include "math_types.hpp"
 #include "texture.hpp"
 
@@ -72,8 +72,8 @@ inline Sprite::Sprite(const Texture& texture,
 
 
 inline Sprite::Sprite(const Texture& texture) noexcept
-	: m_texture(&texture),
-	m_color(1, 1, 1, 1)
+	: m_color(1, 1, 1, 1),
+	m_texture(&texture)
 {
 
 }

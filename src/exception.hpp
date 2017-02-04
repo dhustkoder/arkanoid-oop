@@ -1,5 +1,5 @@
-#ifndef GPROJ_EXCEPTION_HPP_
-#define GPROJ_EXCEPTION_HPP_
+#ifndef ARKANOID_OOP_EXCEPTION_HPP_
+#define ARKANOID_OOP_EXCEPTION_HPP_
 #include <string>
 #include <exception>
 

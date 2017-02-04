@@ -1,5 +1,5 @@
-#ifndef GPROJ_SHADER_HPP_
-#define GPROJ_SHADER_HPP_
+#ifndef ARKANOID_OOP_SHADER_HPP_
+#define ARKANOID_OOP_SHADER_HPP_
 #include <GL/glew.h>
 #include <glm/mat4x4.hpp>
 

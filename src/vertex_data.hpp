@@ -1,5 +1,5 @@
-#ifndef GPROJ_VERTEX_DATA_HPP_
-#define GPROJ_VERTEX_DATA_HPP_
+#ifndef ARKANOID_OOP_VERTEX_DATA_HPP_
+#define ARKANOID_OOP_VERTEX_DATA_HPP_
 #include <cstddef>
 #include <cstdint>
 #include <glm/vec2.hpp>

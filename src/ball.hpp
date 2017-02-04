@@ -1,5 +1,5 @@
-#ifndef GPROJ_BALL_HPP_
-#define GPROJ_BALL_HPP_
+#ifndef ARKANOID_OOP_BALL_HPP_
+#define ARKANOID_OOP_BALL_HPP_
 #include "keyboard.hpp"
 #include "sprite.hpp"
 #include "brick.hpp"
@@ -14,16 +14,11 @@ public:
 	void update(const float dt);
 	bool intersects(const Sprite& sprite);
 
-	float getRadius() const { return m_radius; }
+	float getRadius() const;
 	const Vec2f& getVelocity() const;
 
 	void setVelocity(const Vec2f& newvelocity);
-	
-	void setRadius(float radius)
-	{
-		Sprite::setSize({radius, radius});
-		m_radius = radius;
-	}
+	void setRadius(float radius);
 
 private:
 	using Sprite::setSize;
@@ -37,6 +32,13 @@ inline Ball::Ball(const Sprite& sprite)
 {
 }
 
+
+inline float Ball::getRadius() const
+{
+	return m_radius;
+}
+
+
 inline const Vec2f& gp::Ball::getVelocity() const
 {
 	return m_velocity;
@@ -47,6 +49,14 @@ inline void gp::Ball::setVelocity(const Vec2f& newvelocity)
 {
 	m_velocity = newvelocity;
 }
+
+
+inline void Ball::setRadius(const float radius)
+{
+	Sprite::setSize({radius, radius});
+	m_radius = radius;
+}
+
 
 
 } // namespace gp

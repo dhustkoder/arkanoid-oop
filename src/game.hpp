@@ -1,5 +1,5 @@
-#ifndef GPROJ_GAME_HPP_
-#define GPROJ_GAME_HPP_
+#ifndef ARKANOID_OOP_GAME_HPP_
+#define ARKANOID_OOP_GAME_HPP_
 #include <vector>
 #include "display.hpp"
 #include "sprite_renderer.hpp"

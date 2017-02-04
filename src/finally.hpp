@@ -1,5 +1,5 @@
-#ifndef GPROJ_FINALLY_HPP_
-#define GPROJ_FINALLY_HPP_
+#ifndef ARKANOID_OOP_FINALLY_HPP_
+#define ARKANOID_OOP_FINALLY_HPP_
 #include <utility>
 
 namespace gp {
