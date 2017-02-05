@@ -6,7 +6,7 @@
 namespace gp {
 
 
-SpriteRenderer::SpriteRenderer(Shader&& shader)
+SpriteRenderer::SpriteRenderer(Shader shader)
 	: m_shader(std::move(shader)),
 	m_spriteCount(0)
 {

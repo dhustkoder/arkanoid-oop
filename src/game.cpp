@@ -11,8 +11,8 @@ Game::Game()
 	: m_display("Arkanoid OOP", 800, 600),
 	m_renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs")),
 	m_spritesheet("../spritesheet.png"),
-	m_ball(m_spritesheet),
-	m_player(m_spritesheet)
+	m_ball(Sprite(m_spritesheet)),
+	m_player(Sprite(m_spritesheet))
 {
 	m_display.setVsync(false);
 	m_display.clear(0, 0, 0, 0);
@@ -30,27 +30,20 @@ Game::~Game()
 void Game::resetBricks()
 {
 	const Vec2f uv_size { 64, 32 };
-
 	const Vec2f uv_positions[8] {
-		{ 0, 0 },
-		{ 72, 0},
-		{144, 0},
-		{216, 0},
-		{ 0, 40},
-		{72, 40},
-		{144, 40},
-		{216, 40}
+		{ 0,    0 }, { 72,   0 }, { 144,  0 }, { 216,  0 },
+		{ 0,   40 }, { 72,  40 }, { 144, 40 }, { 216, 40 }
 	};
 
-	const Vec2f sprite_size = uv_size / 2.0f;
-	Vec2f origin = { (sprite_size.x * 2) + 8, sprite_size.y + 8 };
+	const Vec2f sprite_size = uv_size;
+	Vec2f origin = { sprite_size.x + 8, sprite_size.y + 8 };
 
 	for (int i = 0; i < 60; ++i) {
 		m_bricks.emplace_back(Sprite(m_spritesheet, origin, sprite_size, uv_positions[i % 8], uv_size));
-		origin.x += (sprite_size.x * 2) + 8;
-		if (origin.x >= (800 - 8 - (sprite_size.x * 2))) {
-			origin.x = (sprite_size.x * 2) + 8;
-			origin.y += (sprite_size.y * 2) + 8;
+		origin.x += sprite_size.x + 8;
+		if (origin.x >= (800 - 8 - sprite_size.x)) {
+			origin.x = sprite_size.x + 8;
+			origin.y += sprite_size.y + 8;
 		}
 	}
 }
@@ -60,9 +53,9 @@ void Game::resetPlayer()
 {
 	const Vec2f default_uv_pos { 184, 111 };
 	const Vec2f default_uv_size { 96, 25 };
-	const Vec2f default_player_size = (default_uv_size / 2.0f);
-	const Vec2f default_player_origin { 800 / 2, 600 - default_player_size.y};
-	const float default_velocity = 150.0f;
+	const Vec2f default_player_size = default_uv_size * 4.0f;
+	const Vec2f default_player_origin { 800 / 2, 600 - (default_player_size.y / 2.0f)};
+	const float default_velocity = 165.0f;
 
 	m_player.setUVPos(default_uv_pos);
 	m_player.setUVSize(default_uv_size);
@@ -77,8 +70,8 @@ void Game::resetBall()
 	const Vec2f default_uv_pos { 0, 80 };
 	const Vec2f default_uv_size { 24, 24 };
 	const Vec2f default_origin { 800 / 2, 600 / 2};
-	const Vec2f default_velocity = { 150, 150 };
-	const float default_radius = default_uv_size.x / 2.0f;
+	const Vec2f default_velocity = { 0, 100 };
+	const float default_radius = default_uv_size.x * 3.0f;
 
 	m_ball.setUVPos(default_uv_pos);
 	m_ball.setUVSize(default_uv_size);
@@ -90,7 +83,6 @@ void Game::resetBall()
 
 void Game::run()
 {
-
 	double frametime = 0;
 	double lastframetime = 0;
 	double lastsecond = 0;
@@ -98,8 +90,8 @@ void Game::run()
 	int fps = 0;
 
 	while (!m_display.shouldClose()) {
-		m_display.clear(0.2f, 0.2f, 0.9f, 1.0f);
-
+		m_display.clear(0.25f, 0.25f, 0.65f, 1.0f);
+		
 		frametime = glfwGetTime();
 		delta = static_cast<float>(frametime - lastframetime);
 		lastframetime = frametime;
@@ -143,25 +135,21 @@ void Game::updateGameObjects(const float delta)
 
 inline void Game::checkCollisions()
 {
-	if (m_ball.intersects(m_player)) {
-		m_ball.setVelocity({m_ball.getVelocity().x, -std::abs(m_ball.getVelocity().y)});
-	}
+	Vec2f difference;
+	if (m_ball.intersects(m_player, &difference)) {
+		//m_ball.setVelocity({m_ball.getVelocity().x,
+		 //                 -std::abs(m_ball.getVelocity().y)});
+		std::cout << "HITTING\n";
 
-	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
-		if (m_ball.intersects(*itr)) {
+	} else {
+		for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
+			if (m_ball.intersects(*itr, &difference)) {
+				// Collision resolution
+				std::cout << "COLLISION DIFFERENCE: " << difference << '\n';
 
-			const auto& ball_origin = m_ball.getOrigin();
-			const auto& brick_origin = itr->getOrigin();
-
-			const Vec2f diff = ball_origin - brick_origin;
-			
-			m_ball.setVelocity({diff.x <= 0.0f ? -std::abs(m_ball.getVelocity().x) :
-			                    std::abs(m_ball.getVelocity().x),
-					    diff.y <= 0.0f ? -std::abs(m_ball.getVelocity().y) :
-					    std::abs(m_ball.getVelocity().y)});
-
-			m_bricks.erase(itr);
-			break;
+				m_bricks.erase(itr);
+				break;
+			}
 		}
 	}
 

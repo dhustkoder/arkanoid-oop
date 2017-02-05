@@ -8,7 +8,7 @@ namespace gp {
 
 class Brick : public Sprite {
 public:
-	Brick(const Sprite& sprite);
+	explicit Brick(const Sprite& sprite);
 
 	void destroy();
 	bool isDestroyed() const;

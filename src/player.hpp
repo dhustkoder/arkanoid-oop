@@ -7,7 +7,7 @@ namespace gp {
 
 class Player : public Sprite {
 public:
-	Player(const Sprite& sprite);
+	explicit Player(const Sprite& sprite);
 	Player(const Sprite& sprite, float velocity);
 
 	float getVelocity() const;

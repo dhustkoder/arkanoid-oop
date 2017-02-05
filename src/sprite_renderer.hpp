@@ -19,7 +19,7 @@ public:
 	SpriteRenderer(const SpriteRenderer&) = delete;
 	SpriteRenderer& operator=(const SpriteRenderer&) = delete;
 
-	SpriteRenderer(Shader&& shader);
+	explicit SpriteRenderer(Shader shader);
 	~SpriteRenderer();
 	void begin();
 	void submit(const Sprite& sprite);
@@ -76,8 +76,8 @@ inline void SpriteRenderer::submit(const Sprite& sprite)
 	const GLfloat bottom = sprite.getBottom();
 	const GLfloat left = sprite.getLeft();
 
-	const Vec2f uv_pos = sprite.getUVPos();
-	const Vec2f uv_size = sprite.getUVSize();
+	const Vec2f uv_pos = sprite.getNormalizedUVPosition();
+	const Vec2f uv_size = sprite.getNormalizedUVSize();
 	const Vec4f color = sprite.getColor();
 
 	const int tex_index = sprite.getTexture().getIndex();

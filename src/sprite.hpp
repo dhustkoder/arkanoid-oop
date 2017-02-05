@@ -9,8 +9,8 @@ namespace gp {
 
 class Sprite {
 public:
-	Sprite(Sprite&&) noexcept = default;
-	Sprite(const Sprite&) noexcept = default;
+	explicit Sprite(Sprite&&) noexcept = default;
+	explicit Sprite(const Sprite&) noexcept = default;
 
 	Sprite& operator=(Sprite&&) noexcept = default;
 	Sprite& operator=(const Sprite&) noexcept = default;
@@ -19,12 +19,15 @@ public:
 	Sprite(const Texture& texture, const Vec2f& origin, const Vec2f& size,
 	       const Vec2f& uv_pos, const Vec2f& uv_size,
 	       const Vec4f& color = Vec4f{1, 1, 1, 1}) noexcept;
-	Sprite(const Texture& texture) noexcept;
 
+	explicit Sprite(const Texture& texture) noexcept;
+
+	
 	const Vec2f& getOrigin() const;
-	const Vec2f& getSize() const;
-	const Vec2f& getUVPos() const;
-	const Vec2f& getUVSize() const;
+	Vec2f getSize() const;
+	const Vec2f& getHalfSize() const;
+	const Vec2f& getNormalizedUVPosition() const;
+	const Vec2f& getNormalizedUVSize() const;
 	const Vec4f& getColor() const;
 	const Texture& getTexture() const;
 
@@ -58,7 +61,7 @@ inline Sprite::Sprite(const Texture& texture,
                       const Vec2f& uv_pos, const Vec2f& uv_size,
 		      const Vec4f& color) noexcept
 	: m_origin(origin),
-	m_size(size),
+	m_size(size * 0.5f),
 	m_color(color),
 	m_texture(&texture)
 {
@@ -85,20 +88,25 @@ inline const Vec2f& Sprite::getOrigin() const
 }
 
 
-inline const Vec2f& Sprite::getSize() const
+inline Vec2f Sprite::getSize() const
+{
+	return m_size * 2.0f;
+}
+
+
+inline const Vec2f& Sprite::getHalfSize() const
 {
 	return m_size;
 }
 
 
-
-inline const Vec2f& Sprite::getUVPos() const
+inline const Vec2f& Sprite::getNormalizedUVPosition() const
 {
 	return m_uvPos;
 }
 
 
-inline const Vec2f& Sprite::getUVSize() const
+inline const Vec2f& Sprite::getNormalizedUVSize() const
 {
 	return m_uvSize;
 }
@@ -162,7 +170,7 @@ inline void Sprite::setOrigin(const Vec2f& neworigin)
 
 inline void Sprite::setSize(const Vec2f& newsize)
 {
-	m_size = newsize;
+	m_size = newsize * 0.5f;
 }
 
 

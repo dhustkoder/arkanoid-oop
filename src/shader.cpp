@@ -90,13 +90,6 @@ Shader::Shader(const char* const vs_file_path, const char* const fs_file_path)
 }
 
 
-Shader::~Shader()
-{
-	if (m_programId != 0)
-		freeShader();
-}
-
-
 void Shader::freeShader() noexcept
 {
 	glDetachShader(m_programId, m_vsId);

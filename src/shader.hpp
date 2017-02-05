@@ -47,6 +47,13 @@ inline Shader& Shader::operator=(Shader&& other) noexcept
 }
 
 
+inline Shader::~Shader()
+{
+	if (m_programId != 0)
+		freeShader();
+}
+
+
 inline void Shader::enable() const
 {
 	glUseProgram(m_programId);
