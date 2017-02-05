@@ -13,7 +13,7 @@ public:
 	explicit Ball(const Sprite& sprite);
 
 	void update(const float dt);
-	bool intersects(const Sprite& sprite, Vec2f* difference);
+	bool isIntersecting(const Sprite& sprite);
 
 	float getRadius() const;
 	const Vec2f& getVelocity() const;
@@ -40,7 +40,7 @@ inline float Ball::getRadius() const
 }
 
 
-inline const Vec2f& gp::Ball::getVelocity() const
+inline const Vec2f& Ball::getVelocity() const
 {
 	return m_velocity;
 }
@@ -87,7 +87,7 @@ inline void Ball::update(const float dt)
 }
 
 
-inline bool Ball::intersects(const Sprite& sprite, Vec2f* const difference)
+inline bool Ball::isIntersecting(const Sprite& sprite)
 {
 	if (getRight() >= sprite.getLeft() &&
 	    getLeft() <= sprite.getRight() &&
@@ -100,16 +100,13 @@ inline bool Ball::intersects(const Sprite& sprite, Vec2f* const difference)
 		
 		const Vec2f aabb_origin_to_ball_origin_diff = ball_origin - aabb_origin;
 		const Vec2f closest =
-		aabb_origin + glm::clamp(aabb_origin_to_ball_origin_diff,
-		                         -aabb_half_size,
-			                  aabb_half_size);
+		  aabb_origin + glm::clamp(aabb_origin_to_ball_origin_diff,
+		                           -aabb_half_size,
+			                    aabb_half_size);
 
 		const Vec2f closest_to_ball_origin_diff = closest - ball_origin;
 
-		if (glm::length(closest_to_ball_origin_diff) < m_radius) {
-			*difference = aabb_origin_to_ball_origin_diff;
-			return true;
-		}
+		return glm::length(closest_to_ball_origin_diff) < m_radius;
 	}
 
 	return false;

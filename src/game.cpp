@@ -55,7 +55,7 @@ void Game::resetPlayer()
 	const Vec2f default_uv_size { 96, 25 };
 	const Vec2f default_player_size = default_uv_size;
 	const Vec2f default_player_origin { 800 / 2, 600 - (default_player_size.y / 2.0f)};
-	const float default_velocity = 165.0f;
+	const float default_velocity = 265.0f;
 
 	m_player.setUVPos(default_uv_pos);
 	m_player.setUVSize(default_uv_size);
@@ -70,7 +70,7 @@ void Game::resetBall()
 	const Vec2f default_uv_pos { 0, 80 };
 	const Vec2f default_uv_size { 24, 24 };
 	const Vec2f default_origin { 800 / 2, 600 / 2};
-	const Vec2f default_velocity = { 100, 100 };
+	const Vec2f default_velocity = { 260, 260 };
 	const float default_radius = default_uv_size.x / 2.0f;
 
 	m_ball.setUVPos(default_uv_pos);
@@ -135,16 +135,35 @@ void Game::updateGameObjects(const float delta)
 
 inline void Game::processCollisions()
 {
-	Vec2f difference;
-	if (m_ball.intersects(m_player, &difference)) {
+	const auto bounce_ball = [this] (const Sprite& aabb) {
+		if (m_ball.getOrigin().x >= aabb.getLeft() &&
+		    m_ball.getOrigin().x <= aabb.getRight()) {
+
+			const GLfloat abs_vel = std::abs(m_ball.getVelocity().y);
+			const GLfloat new_vel = m_ball.getOrigin().y < aabb.getOrigin().y
+				? -abs_vel
+				:  abs_vel;
+
+			m_ball.setVelocity({m_ball.getVelocity().x, new_vel});
+
+		} else {
+
+			const GLfloat abs_vel = std::abs(m_ball.getVelocity().x);
+			const GLfloat new_vel = m_ball.getOrigin().x < aabb.getOrigin().x
+				? -abs_vel
+				:  abs_vel;
+
+			m_ball.setVelocity({new_vel, m_ball.getVelocity().y});
+		}
+	};
 
 
+	if (m_ball.isIntersecting(m_player)) {
+		bounce_ball(m_player);
 	} else {
 		for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
-			if (m_ball.intersects(*itr, &difference)) {
-				// Collision resolution
-
-
+			if (m_ball.isIntersecting(*itr)) {
+				bounce_ball(*itr);
 				m_bricks.erase(itr);
 				break;
 			}
