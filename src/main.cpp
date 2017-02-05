@@ -14,7 +14,8 @@ int main()
 		std::cerr << "FATAL UNKNOWN EXCEPTION...\n"; 
 	}
 
-	system("pause");
+	std::cout << "PRESS ENTER TO EXIT\n";
+	std::cin.ignore(1);
 	return EXIT_FAILURE;
 }
 
