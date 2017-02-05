@@ -135,35 +135,37 @@ void Game::updateGameObjects(const float delta)
 
 inline void Game::processCollisions()
 {
-	const auto bounce_ball = [this] (const Sprite& aabb) {
-		if (m_ball.getOrigin().x >= aabb.getLeft() &&
-		    m_ball.getOrigin().x <= aabb.getRight()) {
-
-			const GLfloat abs_vel = std::abs(m_ball.getVelocity().y);
-			const GLfloat new_vel = m_ball.getOrigin().y < aabb.getOrigin().y
-				? -abs_vel
-				:  abs_vel;
-
-			m_ball.setVelocity({m_ball.getVelocity().x, new_vel});
-
-		} else {
-
-			const GLfloat abs_vel = std::abs(m_ball.getVelocity().x);
-			const GLfloat new_vel = m_ball.getOrigin().x < aabb.getOrigin().x
-				? -abs_vel
-				:  abs_vel;
-
-			m_ball.setVelocity({new_vel, m_ball.getVelocity().y});
-		}
-	};
-
-
 	if (m_ball.isIntersecting(m_player)) {
-		bounce_ball(m_player);
+
+		const GLfloat new_y_vel =  -std::abs(m_ball.getVelocity().y);
+		GLfloat new_x_vel;
+
+		if (m_ball.getOrigin().x < (m_player.getLeft() + 24))
+			new_x_vel = -std::abs(m_ball.getVelocity().x);
+		else if (m_ball.getOrigin().x > (m_player.getRight() - 24))
+			new_x_vel = std::abs(m_ball.getVelocity().x);
+		else
+			new_x_vel = m_ball.getVelocity().x;
+
+		m_ball.setVelocity({new_x_vel, new_y_vel});
+
 	} else {
 		for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
 			if (m_ball.isIntersecting(*itr)) {
-				bounce_ball(*itr);
+
+				if (m_ball.getOrigin().x >= itr->getLeft() &&
+				    m_ball.getOrigin().x <= itr->getRight()) {
+
+					const GLfloat abs_vel = std::abs(m_ball.getVelocity().y);
+					const GLfloat new_vel = m_ball.getOrigin().y < itr->getOrigin().y ? -abs_vel : abs_vel;
+					m_ball.setVelocity({m_ball.getVelocity().x, new_vel});
+
+				} else {
+					const GLfloat abs_vel = std::abs(m_ball.getVelocity().x);
+					const GLfloat new_vel = m_ball.getOrigin().x < itr->getOrigin().x ? -abs_vel : abs_vel;
+					m_ball.setVelocity({new_vel, m_ball.getVelocity().y});
+				}
+
 				m_bricks.erase(itr);
 				break;
 			}
