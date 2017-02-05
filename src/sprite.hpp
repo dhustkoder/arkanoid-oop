@@ -61,7 +61,7 @@ inline Sprite::Sprite(const Texture& texture,
                       const Vec2f& uv_pos, const Vec2f& uv_size,
 		      const Vec4f& color) noexcept
 	: m_origin(origin),
-	m_size(size * 0.5f),
+	m_size(size / 2.0f),
 	m_color(color),
 	m_texture(&texture)
 {
@@ -170,7 +170,7 @@ inline void Sprite::setOrigin(const Vec2f& neworigin)
 
 inline void Sprite::setSize(const Vec2f& newsize)
 {
-	m_size = newsize * 0.5f;
+	m_size = (newsize / 2.0f);
 }
 
 

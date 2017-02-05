@@ -53,7 +53,7 @@ void Game::resetPlayer()
 {
 	const Vec2f default_uv_pos { 184, 111 };
 	const Vec2f default_uv_size { 96, 25 };
-	const Vec2f default_player_size = default_uv_size * 4.0f;
+	const Vec2f default_player_size = default_uv_size;
 	const Vec2f default_player_origin { 800 / 2, 600 - (default_player_size.y / 2.0f)};
 	const float default_velocity = 165.0f;
 
@@ -70,8 +70,8 @@ void Game::resetBall()
 	const Vec2f default_uv_pos { 0, 80 };
 	const Vec2f default_uv_size { 24, 24 };
 	const Vec2f default_origin { 800 / 2, 600 / 2};
-	const Vec2f default_velocity = { 0, 100 };
-	const float default_radius = default_uv_size.x * 3.0f;
+	const Vec2f default_velocity = { 100, 100 };
+	const float default_radius = default_uv_size.x / 2.0f;
 
 	m_ball.setUVPos(default_uv_pos);
 	m_ball.setUVSize(default_uv_size);
@@ -97,7 +97,7 @@ void Game::run()
 		lastframetime = frametime;
 
 		updateGameObjects(delta);
-		checkCollisions();
+		processCollisions();
 		renderGameObjects();
 
 		m_display.update();
@@ -133,19 +133,17 @@ void Game::updateGameObjects(const float delta)
 }
 
 
-inline void Game::checkCollisions()
+inline void Game::processCollisions()
 {
 	Vec2f difference;
 	if (m_ball.intersects(m_player, &difference)) {
-		//m_ball.setVelocity({m_ball.getVelocity().x,
-		 //                 -std::abs(m_ball.getVelocity().y)});
-		std::cout << "HITTING\n";
+
 
 	} else {
 		for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
 			if (m_ball.intersects(*itr, &difference)) {
 				// Collision resolution
-				std::cout << "COLLISION DIFFERENCE: " << difference << '\n';
+
 
 				m_bricks.erase(itr);
 				break;

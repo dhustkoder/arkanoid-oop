@@ -61,7 +61,6 @@ inline void gp::Ball::setVelocity(const Vec2f& newvelocity)
 
 inline void Ball::update(const float dt)
 {
-	/*
 	if (getRight() >= 800.0f)
 		m_velocity.x = -std::abs(m_velocity.x);
 	else if (getLeft() <= 0.0f)
@@ -73,7 +72,7 @@ inline void Ball::update(const float dt)
 		m_velocity.y = std::abs(m_velocity.y);
 
 	setOrigin(getOrigin() + Vec2f(m_velocity * dt));
-	*/
+/*
 
 	if (Keyboard::isKeyPressed(GLFW_KEY_W))
 		setOrigin(getOrigin() - Vec2f(0, m_velocity.y * dt));
@@ -84,6 +83,7 @@ inline void Ball::update(const float dt)
 		setOrigin(getOrigin() + Vec2f(m_velocity.x * dt, 0));
 	else if (Keyboard::isKeyPressed(GLFW_KEY_A))
 		setOrigin(getOrigin() - Vec2f(m_velocity.y * dt, 0));
+*/
 }
 
 
@@ -95,16 +95,19 @@ inline bool Ball::intersects(const Sprite& sprite, Vec2f* const difference)
 	    getBottom() >= sprite.getTop())
 	{
 		const Vec2f& ball_origin = getOrigin();
-		const Vec2f& sprite_origin = sprite.getOrigin();
-		const Vec2f sprite_size = sprite.getSize();
+		const Vec2f& aabb_origin = sprite.getOrigin();
+		const Vec2f aabb_half_size = sprite.getHalfSize();
 		
-		Vec2f diff = ball_origin - sprite_origin;
-		const Vec2f clamped = glm::clamp(diff, -sprite_size, sprite_size);
-		const Vec2f closest = sprite_origin + clamped;
-		diff = closest - ball_origin;
+		const Vec2f aabb_origin_to_ball_origin_diff = ball_origin - aabb_origin;
+		const Vec2f closest =
+		aabb_origin + glm::clamp(aabb_origin_to_ball_origin_diff,
+		                         -aabb_half_size,
+			                  aabb_half_size);
 
-		if (glm::length(diff) <= m_radius) {
-			*difference = diff;
+		const Vec2f closest_to_ball_origin_diff = closest - ball_origin;
+
+		if (glm::length(closest_to_ball_origin_diff) < m_radius) {
+			*difference = aabb_origin_to_ball_origin_diff;
 			return true;
 		}
 	}

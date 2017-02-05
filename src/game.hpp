@@ -23,7 +23,7 @@ public:
 private:
 	void resetGame();
 	void updateGameObjects(float delta);
-	void checkCollisions();
+	void processCollisions();
 	void renderGameObjects();
 
 	void resetBricks();
