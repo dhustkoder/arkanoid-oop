@@ -25,7 +25,6 @@ public:
 
 	GLuint getId() const;
 	int getIndex() const;
-	int getIndexMod() const;
 	int getWidth() const;
 	int getHeight() const;
 
@@ -33,7 +32,6 @@ private:
 	GLuint m_id;
 	int m_width, m_height;
 	int m_index;
-	int m_indexMod;
 	static int s_index;
 };
 
@@ -86,12 +84,6 @@ inline GLuint Texture::getId() const
 inline int Texture::getIndex() const
 {
 	return m_index;
-}
-
-
-inline int Texture::getIndexMod() const
-{
-	return m_indexMod;
 }
 
 

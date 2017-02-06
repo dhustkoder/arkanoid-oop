@@ -92,26 +92,26 @@ inline void SpriteRenderer::submit(const Sprite& sprite)
 		m_textures.push_back(&sprite.getTexture());
 	}
 
-	const GLfloat tex_index_mod = static_cast<GLfloat>(sprite.getTexture().getIndexMod());
+	const GLfloat tex_indexf = static_cast<GLfloat>(tex_index);
 
 	m_bufferData->pos_and_uv = Vec4f(left, top, uv_pos.x, uv_pos.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_index_mod;
+	m_bufferData->tex_index = tex_indexf;
 	++m_bufferData;
 
 	m_bufferData->pos_and_uv = Vec4f(right, top, uv_pos.x + uv_size.x, uv_pos.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_index_mod;
+	m_bufferData->tex_index = tex_indexf;
 	++m_bufferData;
 
 	m_bufferData->pos_and_uv = Vec4f(right, bottom, uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_index_mod;
+	m_bufferData->tex_index = tex_indexf;
 	++m_bufferData;
 
 	m_bufferData->pos_and_uv = Vec4f(left, bottom, uv_pos.x, uv_pos.y + uv_size.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_index_mod;
+	m_bufferData->tex_index = tex_indexf;
 	++m_bufferData;
 
 	++m_spriteCount;

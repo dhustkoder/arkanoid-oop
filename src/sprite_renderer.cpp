@@ -83,7 +83,7 @@ void SpriteRenderer::flush()
 
 
 	for (const Texture* const texture : m_textures) {
-		glActiveTexture(GL_TEXTURE0 + texture->getIndexMod());
+		glActiveTexture(GL_TEXTURE0 + texture->getIndex());
 		texture->enable();
 	}
 
