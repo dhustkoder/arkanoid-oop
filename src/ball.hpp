@@ -12,7 +12,7 @@ class Ball : public Sprite {
 public:
 	explicit Ball(Sprite&& sprite);
 
-	void update(const float dt);
+	void update(const float dt, int maxleft, int maxbottom);
 	bool isIntersecting(const Sprite& sprite);
 
 	float getRadius() const;
@@ -60,14 +60,14 @@ inline void gp::Ball::setVelocity(const Vec2f& newvelocity)
 }
 
 
-inline void Ball::update(const float dt)
+inline void Ball::update(const float dt, const int maxleft, const int maxbottom)
 {
-	if (getRight() >= 800.0f)
+	if (getRight() >= maxleft)
 		m_velocity.x = -std::abs(m_velocity.x);
 	else if (getLeft() <= 0.0f)
 		m_velocity.x = std::abs(m_velocity.x);
 
-	if (getBottom() >= 600.0f)
+	if (getBottom() >= maxbottom)
 		m_velocity.y = -std::abs(m_velocity.y);
 	else if (getTop() <= 0.0f)
 		m_velocity.y = std::abs(m_velocity.y);

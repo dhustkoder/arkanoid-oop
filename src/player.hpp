@@ -10,7 +10,7 @@ public:
 	explicit Player(Sprite&& sprite);
 
 	float getVelocity() const;
-	void update(float dt);
+	void update(float dt, int maxleft);
 	void setVelocity(float velocity);
 private:
 	float m_velocity = 150.0f;
@@ -30,7 +30,7 @@ inline float Player::getVelocity() const
 }
 
 
-inline void Player::update(const float dt)
+inline void Player::update(const float dt, const int maxleft)
 {
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
 		setOrigin(getOrigin() + Vec2f(m_velocity * dt, 0));
@@ -38,8 +38,8 @@ inline void Player::update(const float dt)
 		setOrigin(getOrigin() - Vec2f(m_velocity * dt, 0));
 	}
 
-	if (getRight() > 800.0f)
-		setOrigin({getOrigin().x - (getRight() - 800.0f), getOrigin().y});
+	if (getRight() > maxleft)
+		setOrigin({getOrigin().x - (getRight() - maxleft), getOrigin().y});
 	else if (getLeft() < 0.0f)
 		setOrigin({getOrigin().x - getLeft(), getOrigin().y});
 }

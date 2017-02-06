@@ -39,11 +39,11 @@ private:
 	SpriteRenderer m_renderer;
 	Texture m_pieces;
 	Texture m_bkgImage;
-
 	Sprite m_background;
 	Ball m_ball;
 	Player m_player;
 	std::vector<Brick> m_bricks;
+	int m_destroyedBricks;
 };
 
 

@@ -31,6 +31,8 @@ Game::~Game()
 
 void Game::resetBricks()
 {
+	m_destroyedBricks = 0;
+
 	const Vec2f uv_size { 32, 16 };
 	const Vec2f uv_positions[8] {
 		{ 8,    8 }, { 48,   8 }, { 84,  8 }, { 120,  8 },
@@ -38,16 +40,18 @@ void Game::resetBricks()
 	};
 
 	const Vec2f sprite_size = uv_size;
-	Vec2f origin = { sprite_size.x + 8, sprite_size.y + 8 };
+	Vec2f origin = { (sprite_size.x / 2) + 8, (sprite_size.y / 2) + 8};
 
-	const int lines = 15;
-	const int bricks = lines * (kWinWidth / (sprite_size.x + 8));
+	const int lines = 10;
+	const int brick_count = lines * (kWinWidth / (sprite_size.x + 8));
 
-	for (int i = 0; i < bricks; ++i) {
+	m_bricks.reserve(brick_count);
+
+	for (int i = 0; i < brick_count; ++i) {
 		m_bricks.emplace_back(Sprite(m_pieces, origin, sprite_size, uv_positions[i % 8], uv_size));
 		origin.x += sprite_size.x + 8;
-		if (origin.x >= kWinWidth) {
-			origin.x = sprite_size.x + 8;
+		if (origin.x >= (kWinWidth - (sprite_size.x + 8))) {
+			origin.x = (sprite_size.x/2) + 8;
 			origin.y += sprite_size.y + 8;
 		}
 	}
@@ -75,8 +79,8 @@ void Game::resetBall()
 	const Vec2f default_uv_pos { 48, 136 };
 	const Vec2f default_uv_size { 8, 8 };
 	const Vec2f default_origin { kWinWidth / 2, kWinHeight / 2};
-	const Vec2f default_velocity = { 100, 100 };
-	const float default_radius = default_uv_size.x / 2.0f;
+	const Vec2f default_velocity = { 200, 200 };
+	const float default_radius = (default_uv_size.x + default_uv_size.y) / 2.0f;
 
 	m_ball.setUVPos(default_uv_pos);
 	m_ball.setUVSize(default_uv_size);
@@ -102,7 +106,6 @@ void Game::run()
 		m_display.clear(0.25f, 0.25f, 0.65f, 1.0f);
 
 		updateGameObjects(delta);
-		processCollisions();
 		renderGameObjects();
 
 		m_display.update();
@@ -128,8 +131,21 @@ void Game::resetGame()
 
 inline void Game::updateGameObjects(const float delta)
 {
-	m_player.update(delta);
-	m_ball.update(delta);
+	m_player.update(delta, kWinWidth);
+	m_ball.update(delta, kWinWidth, kWinHeight);
+	processCollisions();
+
+	if (m_destroyedBricks > 15) {
+		const auto is_destroyed = [](const Brick& brick) {
+			return brick.isDestroyed();
+		};
+
+		const auto begin = m_bricks.begin();
+		const auto end = m_bricks.end();
+
+		m_bricks.erase(std::remove_if(begin, end, is_destroyed), end);
+		m_destroyedBricks = 0;
+	}
 }
 
 
@@ -157,8 +173,8 @@ inline void Game::processCollisions()
 	if (m_bricks.back().getBottom() < m_ball.getTop())
 		return;
 
-	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
-		if (!m_ball.isIntersecting(*itr))
+	for (auto itr = m_bricks.end() - 1; itr != m_bricks.begin() - 1; --itr) {
+		if (itr->isDestroyed() || !m_ball.isIntersecting(*itr))
 			continue;
 
 		if (m_ball.getOrigin().x >= itr->getLeft() && m_ball.getOrigin().x <= itr->getRight()) {
@@ -186,7 +202,8 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		m_bricks.erase(itr);
+		itr->destroy();
+		++m_destroyedBricks;
 		break;
 	}
 }
@@ -199,8 +216,10 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_background);
 	m_renderer.submit(m_ball);
 
-	for (const auto& brick : m_bricks)
-		m_renderer.submit(brick);
+	for (const auto& brick : m_bricks) {
+		if (!brick.isDestroyed())
+			m_renderer.submit(brick);
+	}
 
 	m_renderer.submit(m_player);
 
