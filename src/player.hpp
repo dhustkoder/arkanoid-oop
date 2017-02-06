@@ -32,9 +32,9 @@ inline float Player::getVelocity() const
 
 inline void Player::update(const float dt)
 {
-	if (Keyboard::isKeyPressed(GLFW_KEY_D)) {
+	if (Keyboard::isKeyPressed(Keyboard::D)) {
 		setOrigin(getOrigin() + Vec2f(m_velocity * dt, 0));
-	} else if (Keyboard::isKeyPressed(GLFW_KEY_A)) {
+	} else if (Keyboard::isKeyPressed(Keyboard::A)) {
 		setOrigin(getOrigin() - Vec2f(m_velocity * dt, 0));
 	}
 

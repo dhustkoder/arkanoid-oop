@@ -72,7 +72,7 @@ void Game::resetBall()
 	const Vec2f default_uv_pos { 0, 80 };
 	const Vec2f default_uv_size { 24, 24 };
 	const Vec2f default_origin { 800 / 2, 600 / 2};
-	const Vec2f default_velocity = { 260, 260 };
+	const Vec2f default_velocity = { 100, 100 };
 	const float default_radius = default_uv_size.x / 2.0f;
 
 	m_ball.setUVPos(default_uv_pos);
@@ -149,6 +149,10 @@ inline void Game::processCollisions()
 
 		return;
 	}
+
+	// skip tests if ball is not as high as the lowest brick
+	if (m_bricks.back().getBottom() < m_ball.getTop())
+		return;
 
 	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
 		if (!m_ball.isIntersecting(*itr))

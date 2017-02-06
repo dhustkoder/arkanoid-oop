@@ -56,7 +56,8 @@ SpriteRenderer::SpriteRenderer(Shader shader)
 
 	for (int i = 0; i < attribs; ++i) {
 		glEnableVertexAttribArray(indexes[i]);
-		glVertexAttribPointer(indexes[i], components[i], GL_FLOAT, GL_FALSE, kVertexDataSize, (GLvoid*)offsets[i]);
+		glVertexAttribPointer(indexes[i], components[i], GL_FLOAT,
+		                      GL_TRUE, kVertexDataSize, (GLvoid*)offsets[i]);
 	}
 }
 

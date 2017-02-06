@@ -2,17 +2,15 @@
 #define ARKANOID_OOP_VERTEX_DATA_HPP_
 #include <cstddef>
 #include <cstdint>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include "math_types.hpp"
 
 namespace gp {
 
 
 struct VertexData {
-	glm::vec4 pos_and_uv;
-	glm::vec4 color;
-	GLfloat tex_index;
+	Vec4f pos_and_uv;
+	Vec4f color;
+	float tex_index;
 };
 
 
