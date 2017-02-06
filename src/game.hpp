@@ -11,6 +11,8 @@ namespace gp {
 
 
 class Game {
+	static constexpr const int kWinWidth = 800;
+	static constexpr const int kWinHeight = 600;
 public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
@@ -35,7 +37,9 @@ private:
 private:
 	Display m_display;
 	SpriteRenderer m_renderer;
-	Texture m_spritesTex;
+	Texture m_pieces;
+	Texture m_bkgImage;
+
 	Sprite m_background;
 	Ball m_ball;
 	Player m_player;

@@ -8,12 +8,13 @@ namespace gp {
 
 
 Game::Game()
-	: m_display("Arkanoid OOP", 800, 600),
-	m_renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs")),
-	m_spritesTex("../sprites.png"),
-	m_background(m_spritesTex, {400, 300}, {800, 600}, {566, 0}, {800, 600}),
-	m_ball(Sprite(m_spritesTex)),
-	m_player(Sprite(m_spritesTex))
+	: m_display("Arkanoid OOP", kWinWidth, kWinHeight),
+	m_renderer(kWinWidth, kWinHeight),
+	m_pieces("../data/sprites/pieces.png"),
+	m_bkgImage("../data/sprites/bkg0.png"),
+	m_background(m_bkgImage, {kWinWidth / 2, kWinHeight / 2}, {1600, 1200}, {0, 0}, {1600, 1200}),
+	m_ball(Sprite(m_pieces)),
+	m_player(Sprite(m_pieces))
 {
 	m_display.setVsync(false);
 	m_display.clear(0, 0, 0, 0);
@@ -30,19 +31,22 @@ Game::~Game()
 
 void Game::resetBricks()
 {
-	const Vec2f uv_size { 64, 32 };
+	const Vec2f uv_size { 32, 16 };
 	const Vec2f uv_positions[8] {
-		{ 0,    0 }, { 72,   0 }, { 144,  0 }, { 216,  0 },
-		{ 0,   40 }, { 72,  40 }, { 144, 40 }, { 216, 40 }
+		{ 8,    8 }, { 48,   8 }, { 84,  8 }, { 120,  8 },
+		{ 8,   28 }, { 48,  28 }, { 84, 28 }, { 120, 28 }
 	};
 
 	const Vec2f sprite_size = uv_size;
 	Vec2f origin = { sprite_size.x + 8, sprite_size.y + 8 };
 
-	for (int i = 0; i < 60; ++i) {
-		m_bricks.emplace_back(Sprite(m_spritesTex, origin, sprite_size, uv_positions[i % 8], uv_size));
+	const int lines = 15;
+	const int bricks = lines * (kWinWidth / (sprite_size.x + 8));
+
+	for (int i = 0; i < bricks; ++i) {
+		m_bricks.emplace_back(Sprite(m_pieces, origin, sprite_size, uv_positions[i % 8], uv_size));
 		origin.x += sprite_size.x + 8;
-		if (origin.x >= (800 - 8 - sprite_size.x)) {
+		if (origin.x >= kWinWidth) {
 			origin.x = sprite_size.x + 8;
 			origin.y += sprite_size.y + 8;
 		}
@@ -52,10 +56,10 @@ void Game::resetBricks()
 
 void Game::resetPlayer()
 {
-	const Vec2f default_uv_pos { 184, 111 };
-	const Vec2f default_uv_size { 96, 25 };
+	const Vec2f default_uv_pos { 8, 151 };
+	const Vec2f default_uv_size { 64, 20 };
 	const Vec2f default_player_size = default_uv_size;
-	const Vec2f default_player_origin { 800 / 2, 600 - (default_player_size.y / 2.0f)};
+	const Vec2f default_player_origin { kWinWidth / 2, kWinHeight - (default_player_size.y / 2.0f)};
 	const float default_velocity = 265.0f;
 
 	m_player.setUVPos(default_uv_pos);
@@ -68,9 +72,9 @@ void Game::resetPlayer()
 
 void Game::resetBall()
 {
-	const Vec2f default_uv_pos { 0, 80 };
-	const Vec2f default_uv_size { 24, 24 };
-	const Vec2f default_origin { 800 / 2, 600 / 2};
+	const Vec2f default_uv_pos { 48, 136 };
+	const Vec2f default_uv_size { 8, 8 };
+	const Vec2f default_origin { kWinWidth / 2, kWinHeight / 2};
 	const Vec2f default_velocity = { 100, 100 };
 	const float default_radius = default_uv_size.x / 2.0f;
 

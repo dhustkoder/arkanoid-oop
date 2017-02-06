@@ -11,6 +11,7 @@ namespace gp {
 
 
 class SpriteRenderer {
+	static constexpr const int kMaxTextures = 8;
 	static constexpr const int kMaxSprites = 1000;
 	static constexpr const int kVertexDataSize = sizeof(VertexData);
 	static constexpr const int kSpriteSize = kVertexDataSize * 4;
@@ -19,7 +20,7 @@ public:
 	SpriteRenderer(const SpriteRenderer&) = delete;
 	SpriteRenderer& operator=(const SpriteRenderer&) = delete;
 
-	explicit SpriteRenderer(Shader shader);
+	explicit SpriteRenderer(int width, int height);
 	~SpriteRenderer();
 	void begin();
 	void submit(const Sprite& sprite);
@@ -32,9 +33,10 @@ private:
 
 	std::vector<const Texture*> m_textures;
 	Shader m_shader;
+	VertexData* m_bufferData;
+
 	GLuint m_vao;
 	GLuint m_vbo;
-	VertexData* m_bufferData;
 	int m_spriteCount;
 };
 
@@ -87,7 +89,7 @@ inline void SpriteRenderer::submit(const Sprite& sprite)
 	};
 
 	if (std::find_if(m_textures.cbegin(), m_textures.cend(), is_same_index) == m_textures.cend()) {
-		if (m_textures.size() >= 32)
+		if (m_textures.size() >= kMaxTextures)
 			this->flush();
 		m_textures.push_back(&sprite.getTexture());
 	}

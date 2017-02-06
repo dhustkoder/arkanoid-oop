@@ -6,8 +6,8 @@
 namespace gp {
 
 
-SpriteRenderer::SpriteRenderer(Shader shader)
-	: m_shader(std::move(shader)),
+SpriteRenderer::SpriteRenderer(const int width, const int height)
+	: m_shader("../data/shaders/sprite_renderer.vs", "../data/shaders/sprite_renderer.fs"),
 	m_bufferData(nullptr),
 	m_spriteCount(0)
 {
@@ -22,15 +22,15 @@ SpriteRenderer::SpriteRenderer(Shader shader)
 		unbindVertexObjects();
 	});
 
-	constexpr GLint tex_indexes[32] { 
-		0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-		10, 11, 12, 13, 14, 15, 16, 17,
-		18, 19, 20, 21, 22, 23, 24, 25,
-		26, 27, 28, 29, 30, 31
+	constexpr GLint tex_indexes[8] { 
+		0, 1, 2, 3, 4, 5, 6, 7
 	};
 
-	m_shader.setUniform1iv("textures", &tex_indexes[0], 32);
-	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
+	m_shader.setUniform1iv("textures", &tex_indexes[0], 8);
+	m_shader.setUniformMat4("projection",
+	  glm::ortho(0.0f, static_cast<GLfloat>(width),
+	             static_cast<GLfloat>(height), 0.0f, -1.0f, 1.0f));
+
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
 
