@@ -8,7 +8,6 @@
 
 namespace gp {
 
-
 using Vec2f = glm::vec2;
 using Vec4f = glm::vec4;
 

@@ -5,6 +5,7 @@
 
 namespace gp {
 
+
 class Keyboard {
 public:
 	enum Key {

@@ -52,6 +52,7 @@ inline void gp::SpriteRenderer::end()
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	unbindVertexObjects();
 	m_shader.disable();
+	m_bufferData = nullptr;
 }
 
 
@@ -119,4 +120,5 @@ inline void SpriteRenderer::submit(const Sprite& sprite)
 
 } // namespace gp
 #endif
+
 

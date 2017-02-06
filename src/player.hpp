@@ -53,3 +53,4 @@ inline void Player::setVelocity(const float velocity)
 
 } // namespace gp
 #endif
+

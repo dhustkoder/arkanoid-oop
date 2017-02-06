@@ -8,6 +8,7 @@ namespace gp {
 
 SpriteRenderer::SpriteRenderer(Shader shader)
 	: m_shader(std::move(shader)),
+	m_bufferData(nullptr),
 	m_spriteCount(0)
 {
 	glGenVertexArrays(1, &m_vao);
@@ -71,20 +72,32 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::flush()
 {
-	m_shader.enable();
-	bindVertexObjects();
+	const bool is_writting_to_buffer = m_bufferData != nullptr;
 
-	const auto unbind_guard = finally([this] {
-		unbindVertexObjects();
-		m_shader.disable();
-	});
+	if (is_writting_to_buffer) {
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+	} else {
+		m_shader.enable();
+		this->bindVertexObjects();
+	}
+
 
 	for (const Texture* const texture : m_textures) {
 		glActiveTexture(GL_TEXTURE0 + texture->getIndexMod());
 		texture->enable();
 	}
 
+
 	glDrawArrays(GL_QUADS, 0, m_spriteCount * 4);
+
+
+	if (is_writting_to_buffer) {
+		m_bufferData = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	} else {
+		m_shader.disable();
+		this->unbindVertexObjects();
+	}
+
 	m_spriteCount = 0;
 	m_textures.clear();
 }

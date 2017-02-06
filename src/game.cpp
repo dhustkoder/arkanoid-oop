@@ -10,9 +10,8 @@ namespace gp {
 Game::Game()
 	: m_display("Arkanoid OOP", 800, 600),
 	m_renderer(Shader("../shaders/simple_tex.vs", "../shaders/simple_tex.fs")),
-	m_spritesTex("../spritesheet.png"),
-	m_backgroundTex("../background.png"),
-	m_background(m_backgroundTex, {400, 300}, {800, 600}, {0, 0}, {800, 600}),
+	m_spritesTex("../sprites.png"),
+	m_background(m_spritesTex, {400, 300}, {800, 600}, {566, 0}, {800, 600}),
 	m_ball(Sprite(m_spritesTex)),
 	m_player(Sprite(m_spritesTex))
 {
@@ -194,7 +193,6 @@ inline void Game::renderGameObjects()
 	m_renderer.begin();
 	
 	m_renderer.submit(m_background);
-	
 	m_renderer.submit(m_ball);
 
 	for (const auto& brick : m_bricks)
@@ -203,7 +201,6 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_player);
 
 	m_renderer.end();
-
 	m_renderer.flush();
 }
 
