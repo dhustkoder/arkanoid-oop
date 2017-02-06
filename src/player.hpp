@@ -7,8 +7,7 @@ namespace gp {
 
 class Player : public Sprite {
 public:
-	explicit Player(const Sprite& sprite);
-	Player(const Sprite& sprite, float velocity);
+	explicit Player(Sprite&& sprite);
 
 	float getVelocity() const;
 	void update(float dt);
@@ -18,14 +17,8 @@ private:
 };
 
 
-inline Player::Player(const Sprite& sprite)
-	: Sprite(sprite)
-{
-}
-
-inline Player::Player(const Sprite& sprite, float velocity)
-	: Sprite(sprite),
-	m_velocity(velocity)
+inline Player::Player(Sprite&& sprite)
+	: Sprite(std::move(sprite))
 {
 
 }

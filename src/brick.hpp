@@ -8,7 +8,7 @@ namespace gp {
 
 class Brick : public Sprite {
 public:
-	explicit Brick(const Sprite& sprite);
+	explicit Brick(Sprite&& sprite);
 
 	void destroy();
 	bool isDestroyed() const;
@@ -18,8 +18,8 @@ private:
 };
 
 
-inline Brick::Brick(const Sprite& sprite)
-	: Sprite(sprite),
+inline Brick::Brick(Sprite&& sprite)
+	: Sprite(std::move(sprite)),
 	m_destroyed(false)
 {
 }

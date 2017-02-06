@@ -11,7 +11,7 @@ namespace gp {
 
 
 class SpriteRenderer {
-	static constexpr const int kMaxSprites = 255;
+	static constexpr const int kMaxSprites = 1000;
 	static constexpr const int kVertexDataSize = sizeof(VertexData);
 	static constexpr const int kSpriteSize = kVertexDataSize * 4;
 	static constexpr const int kBufferSize = kSpriteSize * kMaxSprites;
@@ -81,36 +81,36 @@ inline void SpriteRenderer::submit(const Sprite& sprite)
 	const Vec4f color = sprite.getColor();
 
 	const int tex_index = sprite.getTexture().getIndex();
-	const auto found_same_index = [tex_index] (const Texture* const texture) {
+	const auto is_same_index = [tex_index] (const Texture* const texture) {
 		return texture->getIndex() == tex_index;
 	};
 
-	if (std::find_if(m_textures.cbegin(), m_textures.cend(), found_same_index) == m_textures.cend()) {
+	if (std::find_if(m_textures.cbegin(), m_textures.cend(), is_same_index) == m_textures.cend()) {
 		if (m_textures.size() >= 32)
 			this->flush();
 		m_textures.push_back(&sprite.getTexture());
 	}
 
-	const GLfloat tex_indexf = static_cast<GLfloat>(sprite.getTexture().getIndexMod());
+	const GLfloat tex_index_mod = static_cast<GLfloat>(sprite.getTexture().getIndexMod());
 
 	m_bufferData->pos_and_uv = Vec4f(left, top, uv_pos.x, uv_pos.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_indexf;
+	m_bufferData->tex_index = tex_index_mod;
 	++m_bufferData;
 
 	m_bufferData->pos_and_uv = Vec4f(right, top, uv_pos.x + uv_size.x, uv_pos.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_indexf;
+	m_bufferData->tex_index = tex_index_mod;
 	++m_bufferData;
 
 	m_bufferData->pos_and_uv = Vec4f(right, bottom, uv_pos.x + uv_size.x, uv_pos.y + uv_size.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_indexf;
+	m_bufferData->tex_index = tex_index_mod;
 	++m_bufferData;
 
 	m_bufferData->pos_and_uv = Vec4f(left, bottom, uv_pos.x, uv_pos.y + uv_size.y);
 	m_bufferData->color = color;
-	m_bufferData->tex_index = tex_indexf;
+	m_bufferData->tex_index = tex_index_mod;
 	++m_bufferData;
 
 	++m_spriteCount;

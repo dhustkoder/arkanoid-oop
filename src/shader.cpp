@@ -108,7 +108,7 @@ void Shader::setUniformMat4(const GLchar* const name, const glm::mat4& mat)
 }
 
 
-void Shader::setUniformIv(const GLchar* const name, const GLint* const values, const int count)
+void Shader::setUniform1iv(const GLchar* const name, const GLint* const values, const int count)
 {
 	const GLint loc = glGetUniformLocation(m_programId, name);
 	glUniform1iv(loc, count, values);

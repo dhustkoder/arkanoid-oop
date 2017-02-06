@@ -10,7 +10,7 @@ namespace gp {
 
 class Ball : public Sprite {
 public:
-	explicit Ball(const Sprite& sprite);
+	explicit Ball(Sprite&& sprite);
 
 	void update(const float dt);
 	bool isIntersecting(const Sprite& sprite);
@@ -28,9 +28,10 @@ private:
 };
 
 
-inline Ball::Ball(const Sprite& sprite)
-	: Sprite(sprite)
+inline Ball::Ball(Sprite&& sprite)
+	: Sprite(std::move(sprite))
 {
+
 }
 
 

@@ -28,7 +28,7 @@ SpriteRenderer::SpriteRenderer(Shader shader)
 		26, 27, 28, 29, 30, 31
 	};
 
-	m_shader.setUniformIv("textures", &tex_indexes[0], 32);
+	m_shader.setUniform1iv("textures", &tex_indexes[0], 32);
 	m_shader.setUniformMat4("projection", glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
@@ -66,9 +66,6 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
 }
-
-
-
 
 
 void SpriteRenderer::flush()

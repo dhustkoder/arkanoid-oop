@@ -35,7 +35,9 @@ private:
 private:
 	Display m_display;
 	SpriteRenderer m_renderer;
-	Texture m_spritesheet;
+	Texture m_spritesTex;
+	Texture m_backgroundTex;
+	Sprite m_background;
 	Ball m_ball;
 	Player m_player;
 	std::vector<Brick> m_bricks;
