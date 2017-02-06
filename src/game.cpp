@@ -123,7 +123,7 @@ void Game::resetGame()
 }
 
 
-void Game::updateGameObjects(const float delta)
+inline void Game::updateGameObjects(const float delta)
 {
 	m_player.update(delta);
 	m_ball.update(delta);
