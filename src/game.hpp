@@ -24,26 +24,33 @@ public:
 
 private:
 	void resetGame();
-	void updateGameObjects(float delta);
-	void processCollisions();
-	void renderGameObjects();
-
 	void resetBricks();
 	void resetPlayer();
 	void resetBall();
+	void resetBackground();
+
+	void updateGameObjects(float delta);
+	void processCollisions();
+	void renderGameObjects();
 
 
 
 private:
 	Display m_display;
 	SpriteRenderer m_renderer;
-	Texture m_pieces;
-	Texture m_bkgImage;
+	
+	Texture m_spritesheet;
+	
+	Texture m_backgrounds[4];
+
+	
 	Sprite m_background;
+	
+	
+	
 	Ball m_ball;
 	Player m_player;
 	std::vector<Brick> m_bricks;
-	int m_destroyedBricks;
 };
 
 

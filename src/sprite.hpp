@@ -9,19 +9,22 @@ namespace gp {
 
 class Sprite {
 public:
+	explicit Sprite(Texture&&) = delete;
+	void setTexture(Texture&&) = delete;
+
+
 	explicit Sprite(Sprite&&) noexcept = default;
 	explicit Sprite(const Sprite&) noexcept = default;
 
 	Sprite& operator=(Sprite&&) noexcept = default;
 	Sprite& operator=(const Sprite&) noexcept = default;
 
+	
+	explicit Sprite(const Texture& texture) noexcept;
 
 	Sprite(const Texture& texture, const Vec2f& origin, const Vec2f& size,
 	       const Vec2f& uv_pos, const Vec2f& uv_size,
 	       const Vec4f& color = Vec4f{1, 1, 1, 1}) noexcept;
-
-	explicit Sprite(const Texture& texture) noexcept;
-
 	
 	const Vec2f& getOrigin() const;
 	Vec2f getSize() const;
@@ -44,6 +47,7 @@ public:
 	void setUVSize(const Vec2f& new_uv_size);
 	void setUVPos(const Vec2f& new_uv_pos);
 	void setColor(const Vec4f& newcolor);
+	void setTexture(const Texture& new_texture);
 
 private:
 	Vec2f m_origin;
@@ -54,6 +58,17 @@ private:
 	const Texture* m_texture;
 };
 
+
+inline Sprite::Sprite(const Texture& texture) noexcept
+	: m_origin(0),
+	m_size(0),
+	m_uvPos(0),
+	m_uvSize(0),
+	m_color(1, 1, 1, 1),
+	m_texture(&texture)
+{
+
+}
 
 
 inline Sprite::Sprite(const Texture& texture,
@@ -71,14 +86,6 @@ inline Sprite::Sprite(const Texture& texture,
 	// normalize uv position and size
 	m_uvPos = { uv_pos.x / w, uv_pos.y / h };
 	m_uvSize = { uv_size.x / w, uv_size.y / h };
-}
-
-
-inline Sprite::Sprite(const Texture& texture) noexcept
-	: m_color(1, 1, 1, 1),
-	m_texture(&texture)
-{
-
 }
 
 
@@ -189,6 +196,11 @@ inline void Sprite::setUVPos(const Vec2f& new_uv_pos)
 inline void Sprite::setColor(const Vec4f& newcolor)
 {
 	m_color = newcolor;
+}
+
+inline void Sprite::setTexture(const Texture& new_texture)
+{
+	m_texture = &new_texture;
 }
 
 

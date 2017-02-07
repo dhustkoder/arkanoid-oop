@@ -10,11 +10,17 @@ namespace gp {
 Game::Game()
 	: m_display("Arkanoid OOP", kWinWidth, kWinHeight),
 	m_renderer(kWinWidth, kWinHeight),
-	m_pieces("../data/sprites/pieces.png"),
-	m_bkgImage("../data/sprites/bkg0.png"),
-	m_background(m_bkgImage, {kWinWidth / 2, kWinHeight / 2}, {1600, 1200}, {0, 0}, {1600, 1200}),
-	m_ball(Sprite(m_pieces)),
-	m_player(Sprite(m_pieces))
+	m_spritesheet("../data/sprites/pieces.png"),
+	
+	m_backgrounds{Texture("../data/sprites/bkg0.png"),
+	               Texture("../data/sprites/bkg1.png"),
+	               Texture("../data/sprites/bkg2.png"),
+	               Texture("../data/sprites/bkg3.png")},
+
+	m_background(m_backgrounds[0]),
+	m_ball(m_spritesheet),
+	m_player(m_spritesheet)
+
 {
 	m_display.setVsync(false);
 	m_display.clear(0, 0, 0, 0);
@@ -29,10 +35,17 @@ Game::~Game()
 }
 
 
+void Game::resetGame()
+{
+	resetPlayer();
+	resetBall();
+	resetBricks();
+	resetBackground();
+}
+
+
 void Game::resetBricks()
 {
-	m_destroyedBricks = 0;
-
 	const Vec2f uv_size { 32, 16 };
 	const Vec2f uv_positions[8] {
 		{ 8,    8 }, { 48,   8 }, { 84,  8 }, { 120,  8 },
@@ -40,18 +53,23 @@ void Game::resetBricks()
 	};
 
 	const Vec2f sprite_size = uv_size;
-	Vec2f origin = { (sprite_size.x / 2) + 8, (sprite_size.y / 2) + 8};
+	Vec2f origin = { (sprite_size.x + 8) / 2.0f, (sprite_size.y + 8) / 2.0f};
 
 	const int lines = 10;
-	const int brick_count = lines * (kWinWidth / (sprite_size.x + 8));
+	const int brick_count = lines * (kWinWidth / static_cast<int>(sprite_size.x + 8));
 
 	m_bricks.reserve(brick_count);
 
 	for (int i = 0; i < brick_count; ++i) {
-		m_bricks.emplace_back(Sprite(m_pieces, origin, sprite_size, uv_positions[i % 8], uv_size));
+		m_bricks.emplace_back(m_spritesheet);
+		m_bricks.back().setOrigin(origin);
+		m_bricks.back().setSize(sprite_size);
+		m_bricks.back().setUVPos(uv_positions[i % 8]);
+		m_bricks.back().setUVSize(uv_size);
+
 		origin.x += sprite_size.x + 8;
-		if (origin.x >= (kWinWidth - (sprite_size.x + 8))) {
-			origin.x = (sprite_size.x/2) + 8;
+		if (origin.x > (kWinWidth - ((sprite_size.x + 8) / 2.0f))) {
+			origin.x = (sprite_size.x + 8) / 2.0f;
 			origin.y += sprite_size.y + 8;
 		}
 	}
@@ -90,6 +108,17 @@ void Game::resetBall()
 }
 
 
+void Game::resetBackground()
+{
+	const auto& texture = m_backgrounds[3];
+	m_background.setTexture(texture);
+	m_background.setOrigin({kWinWidth / 2, kWinHeight / 2});
+	m_background.setSize({kWinWidth, kWinHeight});
+	m_background.setUVPos({0, 0});
+	m_background.setUVSize({texture.getWidth(), texture.getHeight()});
+}
+
+
 void Game::run()
 {
 	double frametime = 0;
@@ -121,31 +150,11 @@ void Game::run()
 }
 
 
-void Game::resetGame()
-{
-	resetPlayer();
-	resetBall();
-	resetBricks();
-}
-
-
 inline void Game::updateGameObjects(const float delta)
 {
 	m_player.update(delta, kWinWidth);
 	m_ball.update(delta, kWinWidth, kWinHeight);
 	processCollisions();
-
-	if (m_destroyedBricks > 15) {
-		const auto is_destroyed = [](const Brick& brick) {
-			return brick.isDestroyed();
-		};
-
-		const auto begin = m_bricks.begin();
-		const auto end = m_bricks.end();
-
-		m_bricks.erase(std::remove_if(begin, end, is_destroyed), end);
-		m_destroyedBricks = 0;
-	}
 }
 
 
@@ -173,11 +182,12 @@ inline void Game::processCollisions()
 	if (m_bricks.back().getBottom() < m_ball.getTop())
 		return;
 
-	for (auto itr = m_bricks.end() - 1; itr != m_bricks.begin() - 1; --itr) {
+	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
 		if (itr->isDestroyed() || !m_ball.isIntersecting(*itr))
 			continue;
 
-		if (m_ball.getOrigin().x >= itr->getLeft() && m_ball.getOrigin().x <= itr->getRight()) {
+		if (m_ball.getOrigin().x >= itr->getLeft() &&
+		    m_ball.getOrigin().x <= itr->getRight()) {
 
 			const GLfloat abs_y_vel = std::abs(m_ball.getVelocity().y);
 			GLfloat new_y_vel;
@@ -202,8 +212,7 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		itr->destroy();
-		++m_destroyedBricks;
+		m_bricks.erase(itr);
 		break;
 	}
 }
@@ -217,8 +226,7 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_ball);
 
 	for (const auto& brick : m_bricks) {
-		if (!brick.isDestroyed())
-			m_renderer.submit(brick);
+		m_renderer.submit(brick);
 	}
 
 	m_renderer.submit(m_player);
