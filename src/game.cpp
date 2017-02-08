@@ -40,6 +40,7 @@ Game::Game()
 	m_brickSprites.mapSprite("dark_purple_brick", {264, 28}, {32, 16});
 
 	m_ballSprites.mapSprite("blue_ball", {48, 136}, {8, 8});
+	m_ballSprites.mapSprite("red_ball", {66, 136}, {8, 8});
 	m_paddleSprites.mapSprite("blue_paddle", {48, 72}, {64, 16});
 
 
@@ -73,7 +74,9 @@ void Game::resetBricks()
 	m_bricks.reserve(brick_count);
 
 	for (int i = 0; i < brick_count; ++i) {
-		m_bricks.emplace_back(m_brickSprites.getSprite(i % m_brickSprites.getSize()));
+		const Sprite& sprite = m_brickSprites.getSprite(i % m_brickSprites.getSize());
+		m_bricks.emplace_back(sprite.getTexture());
+		m_bricks.back().setSprite(sprite);
 		m_bricks.back().setOrigin(origin);
 		m_bricks.back().setSize(sprite_size);
 
@@ -90,9 +93,9 @@ void Game::resetPlayer()
 {
 	const Vec2f default_player_size {64, 16};
 	const Vec2f default_player_origin { kWinWidth / 2, kWinHeight - (default_player_size.y / 2.0f)};
-	const float default_velocity = 265.0f;
+	const Vec2f default_velocity { 265.0f, 0 };
 
-	m_player = m_paddleSprites.getSprite("blue_paddle");
+	m_player.setSprite(m_paddleSprites.getSprite("blue_paddle"));
 	m_player.setSize(default_player_size);
 	m_player.setOrigin(default_player_origin);
 	m_player.setVelocity(default_velocity);
@@ -105,7 +108,7 @@ void Game::resetBall()
 	const Vec2f default_velocity = { 200, 200 };
 	const float default_radius = 8.0f;
 
-	m_ball = m_ballSprites.getSprite("blue_ball");
+	m_ball.setSprite(m_ballSprites.getSprite("red_ball"));
 	m_ball.setOrigin(default_origin);
 	m_ball.setRadius(default_radius);
 	m_ball.setVelocity(default_velocity);
@@ -186,7 +189,7 @@ inline void Game::processCollisions()
 		return;
 
 	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
-		if (m_ball.isIntersecting(*itr))
+		if (!m_ball.isIntersecting(*itr))
 			continue;
 
 		if (m_ball.getOrigin().x >= itr->getLeft() &&

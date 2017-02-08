@@ -16,73 +16,88 @@ namespace gp {
 class SpriteSheet {
 	using SpriteMap = std::vector<std::pair<std::string, Sprite>>;
 public:
-	SpriteSheet(const std::string& texture_file_path)
-		: m_texture(texture_file_path)
-	{
+	SpriteSheet(const std::string& texture_file_path);
 
-	}
+	Sprite getSprite(const std::string& name) const;
+	Sprite getSprite(const int index) const;
+	const Texture& getTexture() const;
+	int getSize() const;
 
-	~SpriteSheet()
-	{
-
-	}
-
-	void mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size)
-	{
-		const auto itr = find(name);
-		if (itr == m_sprites.end())
-			m_sprites.emplace_back(std::move(name), Sprite(m_texture, {0, 0}, {0, 0}, uv_pos, uv_size));
-		else
-			itr->second = Sprite(m_texture, {0, 0}, {0, 0}, uv_pos, uv_size);
-	}
-
-	Sprite getSprite(const std::string& name) const
-	{		
-		const auto itr = find(name);
-		if (itr == m_sprites.end())
-			throw Exception("request for unmapped sprite: " + name);
-
-		return Sprite(itr->second);
-	}
-
-	Sprite getSprite(const int index) const
-	{
-		return m_sprites.at(index).second;
-	}
-
-	const Texture& getTexture() const
-	{
-		return m_texture;
-	}
-
-	int getSize()
-	{
-		return static_cast<int>(m_sprites.size());
-	}
+	void mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size);
 
 private:
-
-	SpriteMap::iterator find(const std::string& name)
-	{
-		return std::find_if(m_sprites.begin(), m_sprites.end(),
-			[&] (const std::pair<std::string, Sprite>& pair) {
-				return pair.first == name;
-			});
-	}
-
-	SpriteMap::const_iterator find(const std::string& name) const
-	{
-		return std::find_if(m_sprites.cbegin(), m_sprites.cend(),
-			[&] (const std::pair<std::string, Sprite>& pair) {
-				return pair.first == name;
-			});
-	}
+	SpriteMap::const_iterator find(const std::string& name) const;
+	SpriteMap::iterator find(const std::string& name);
 
 
 	Texture m_texture;
 	SpriteMap m_sprites;
 };
 
+
+inline SpriteSheet::SpriteSheet(const std::string& texture_file_path)
+	: m_texture(texture_file_path)
+{
+
+}
+
+
+inline Sprite SpriteSheet::getSprite(const std::string& name) const
+{		
+	const auto itr = find(name);
+	if (itr == m_sprites.end())
+		throw Exception("request for unmapped sprite: " + name);
+
+	return Sprite(itr->second);
+}
+
+
+inline Sprite SpriteSheet::getSprite(const int index) const
+{
+	return m_sprites.at(index).second;
+}
+
+
+inline const Texture& SpriteSheet::getTexture() const
+{
+	return m_texture;
+}
+
+
+inline int SpriteSheet::getSize() const
+{
+	return static_cast<int>(m_sprites.size());
+}
+
+
+inline void SpriteSheet::mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size)
+{
+	const auto itr = find(name);
+	if (itr == m_sprites.end())
+		m_sprites.emplace_back(std::move(name), Sprite(m_texture, {0, 0}, uv_size, uv_pos, uv_size));
+	else
+		itr->second = Sprite(m_texture, {0, 0}, uv_size, uv_pos, uv_size);
+}
+
+
+
+
+inline SpriteSheet::SpriteMap::const_iterator SpriteSheet::find(const std::string& name) const
+{
+	return std::find_if(m_sprites.cbegin(), m_sprites.cend(),
+		[&] (const std::pair<std::string, Sprite>& pair) {
+			return pair.first == name;
+		});
+}
+
+
+inline SpriteSheet::SpriteMap::iterator SpriteSheet::find(const std::string& name)
+{
+	return std::find_if(m_sprites.begin(), m_sprites.end(),
+		[&] (const std::pair<std::string, Sprite>& pair) {
+			return pair.first == name;
+		});
+}
 
 
 

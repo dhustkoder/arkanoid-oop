@@ -71,13 +71,13 @@
     <ClInclude Include="..\src\ball.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\brick.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\game.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\sprite_sheet.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,13 +22,14 @@ public:
 
 	Sprite(const Texture& texture, const Vec2f& origin, const Vec2f& size,
 	       const Vec2f& uv_pos, const Vec2f& uv_size,
-	       const Vec4f& color = Vec4f{1, 1, 1, 1}) noexcept;
+	       const Vec2f& velocity = {0, 0}, const Vec4f& color = Vec4f{1, 1, 1, 1}) noexcept;
 	
 	const Vec2f& getOrigin() const;
 	Vec2f getSize() const;
 	const Vec2f& getHalfSize() const;
 	const Vec2f& getNormalizedUVPosition() const;
 	const Vec2f& getNormalizedUVSize() const;
+	const Vec2f& getVelocity() const;
 	const Vec4f& getColor() const;
 	const Texture& getTexture() const;
 
@@ -44,14 +45,23 @@ public:
 	void setSize(const Vec2f& newsize);
 	void setUVSize(const Vec2f& new_uv_size);
 	void setUVPos(const Vec2f& new_uv_pos);
+	void setVelocity(const Vec2f& new_velocity);
 	void setColor(const Vec4f& newcolor);
 	void setTexture(const Texture& new_texture);
+
+	// utils for derived classes
+	void setSprite(const Sprite& sprite);
+	void setSprite(Sprite&& sprite);
+	const Sprite& getSprite() const;
+
+	bool checkAABBCollision(const Sprite& other) const;
 
 private:
 	Vec2f m_origin;
 	Vec2f m_size;
 	Vec2f m_uvPos;
 	Vec2f m_uvSize;
+	Vec2f m_velocity;
 	Vec4f m_color;
 	const Texture* m_texture;
 };
@@ -62,6 +72,7 @@ inline Sprite::Sprite(const Texture& texture) noexcept
 	m_size(0),
 	m_uvPos(0),
 	m_uvSize(0),
+	m_velocity(0, 0),
 	m_color(1, 1, 1, 1),
 	m_texture(&texture)
 {
@@ -75,6 +86,7 @@ inline Sprite::Sprite(Sprite&& other) noexcept
 	m_uvPos(other.m_uvPos),
 	m_uvSize(other.m_uvSize),
 	m_color(other.m_color),
+	m_velocity(other.m_velocity),
 	m_texture(other.m_texture)
 {
 
@@ -86,6 +98,7 @@ inline Sprite::Sprite(const Sprite& other) noexcept
 	m_size(other.m_size),
 	m_uvPos(other.m_uvPos),
 	m_uvSize(other.m_uvSize),
+	m_velocity(other.m_velocity),
 	m_color(other.m_color),
 	m_texture(other.m_texture)
 {
@@ -96,7 +109,7 @@ inline Sprite::Sprite(const Sprite& other) noexcept
 inline Sprite::Sprite(const Texture& texture,
                       const Vec2f& origin, const Vec2f& size,
                       const Vec2f& uv_pos, const Vec2f& uv_size,
-		      const Vec4f& color) noexcept
+		      const Vec2f& velocity, const Vec4f& color) noexcept
 	: m_origin(origin),
 	m_size(size / 2.0f),
 	m_color(color),
@@ -138,6 +151,12 @@ inline const Vec2f& Sprite::getNormalizedUVPosition() const
 inline const Vec2f& Sprite::getNormalizedUVSize() const
 {
 	return m_uvSize;
+}
+
+
+inline const Vec2f& Sprite::getVelocity() const
+{
+	return m_velocity;
 }
 
 
@@ -215,6 +234,12 @@ inline void Sprite::setUVPos(const Vec2f& new_uv_pos)
 }
 
 
+inline void Sprite::setVelocity(const Vec2f& new_velocity)
+{
+	m_velocity = new_velocity;
+}
+
+
 inline void Sprite::setColor(const Vec4f& newcolor)
 {
 	m_color = newcolor;
@@ -223,6 +248,33 @@ inline void Sprite::setColor(const Vec4f& newcolor)
 inline void Sprite::setTexture(const Texture& new_texture)
 {
 	m_texture = &new_texture;
+}
+
+
+inline void Sprite::setSprite(const Sprite& sprite)
+{
+	this->operator=(sprite);
+}
+
+
+inline void Sprite::setSprite(Sprite&& sprite)
+{
+	this->operator=(std::move(sprite));
+}
+
+
+inline const Sprite& Sprite::getSprite() const
+{
+	return *this;
+}
+
+
+inline bool Sprite::checkAABBCollision(const Sprite& other) const
+{
+	return getRight() >= other.getLeft() &&
+		getLeft() <= other.getRight() &&
+		getTop()   <= other.getBottom() &&
+		getBottom() >= other.getTop();
 }
 
 
