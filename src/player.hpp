@@ -10,6 +10,7 @@ public:
 	explicit Player(Texture&&) = delete;
 	explicit Player(const Texture& texture);
 
+	using Sprite::operator=;
 	float getVelocity() const;
 	void update(float dt, int maxleft);
 	void setVelocity(float velocity);

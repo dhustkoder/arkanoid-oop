@@ -10,6 +10,7 @@ namespace gp {
 
 class Ball : public Sprite {
 public:
+	using Sprite::operator=;
 	explicit Ball(Texture&&) = delete;
 	explicit Ball(const Texture& texture);
 

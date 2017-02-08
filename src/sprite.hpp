@@ -12,15 +12,13 @@ public:
 	explicit Sprite(Texture&&) = delete;
 	void setTexture(Texture&&) = delete;
 
-
-	explicit Sprite(Sprite&&) noexcept = default;
-	explicit Sprite(const Sprite&) noexcept = default;
-
 	Sprite& operator=(Sprite&&) noexcept = default;
 	Sprite& operator=(const Sprite&) noexcept = default;
 
-	
 	explicit Sprite(const Texture& texture) noexcept;
+
+	Sprite(Sprite&& other) noexcept;
+	Sprite(const Sprite& other) noexcept;
 
 	Sprite(const Texture& texture, const Vec2f& origin, const Vec2f& size,
 	       const Vec2f& uv_pos, const Vec2f& uv_size,
@@ -66,6 +64,30 @@ inline Sprite::Sprite(const Texture& texture) noexcept
 	m_uvSize(0),
 	m_color(1, 1, 1, 1),
 	m_texture(&texture)
+{
+
+}
+
+
+inline Sprite::Sprite(Sprite&& other) noexcept
+	: m_origin(other.m_origin),
+	m_size(other.m_size),
+	m_uvPos(other.m_uvPos),
+	m_uvSize(other.m_uvSize),
+	m_color(other.m_color),
+	m_texture(other.m_texture)
+{
+
+}
+
+
+inline Sprite::Sprite(const Sprite& other) noexcept
+	: m_origin(other.m_origin),
+	m_size(other.m_size),
+	m_uvPos(other.m_uvPos),
+	m_uvSize(other.m_uvSize),
+	m_color(other.m_color),
+	m_texture(other.m_texture)
 {
 
 }

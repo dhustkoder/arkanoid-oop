@@ -10,21 +10,39 @@ namespace gp {
 Game::Game()
 	: m_display("Arkanoid OOP", kWinWidth, kWinHeight),
 	m_renderer(kWinWidth, kWinHeight),
-	m_spritesheet("../data/sprites/pieces.png"),
-	
-	m_backgrounds{Texture("../data/sprites/bkg0.png"),
-	               Texture("../data/sprites/bkg1.png"),
-	               Texture("../data/sprites/bkg2.png"),
-	               Texture("../data/sprites/bkg3.png")},
-
-	m_background(m_backgrounds[0]),
-	m_ball(m_spritesheet),
-	m_player(m_spritesheet)
-
+	m_brickSprites("../data/sprites/pieces.png"),
+	m_ballSprites("../data/sprites/pieces.png"),
+	m_paddleSprites("../data/sprites/pieces.png"),
+	m_backgroundImage("../data/sprites/bkg0.png"),
+	m_background(m_backgroundImage),
+	m_ball(m_ballSprites.getTexture()),
+	m_player(m_paddleSprites.getTexture())
 {
 	m_display.setVsync(false);
 	m_display.clear(0, 0, 0, 0);
 	m_display.update();
+
+	m_brickSprites.mapSprite("blue_brick", {8, 8}, {32, 16});
+	m_brickSprites.mapSprite("blue_green_brick", {48, 8}, {32, 16});
+	m_brickSprites.mapSprite("blue_red_brick", {84, 8}, {32, 16});
+	m_brickSprites.mapSprite("blue_purple_brick", {120, 8}, {32, 16});
+	m_brickSprites.mapSprite("blue_yellow_brick", {156, 8}, {32, 16});
+	m_brickSprites.mapSprite("blue_black_brick", {192, 8}, {32, 16});
+	m_brickSprites.mapSprite("blue_darkyellow_brick", {228, 8}, {32, 16});
+	m_brickSprites.mapSprite("yellow_purple_brick", {264, 8}, {32, 16});
+	m_brickSprites.mapSprite("green_brick", {8, 28}, {32, 16});
+	m_brickSprites.mapSprite("green_red_brick", {48, 28}, {32, 16});
+	m_brickSprites.mapSprite("green_purple_brick", {84, 28}, {32, 16});
+	m_brickSprites.mapSprite("green_yellow_brick", {120, 28}, {32, 16});
+	m_brickSprites.mapSprite("green_dark_brick", {156, 28}, {32, 16});
+	m_brickSprites.mapSprite("green_darkyellow_brick", {192, 28}, {32, 16});
+	m_brickSprites.mapSprite("dark_darkyellow_brick", {228, 28}, {32, 16});
+	m_brickSprites.mapSprite("dark_purple_brick", {264, 28}, {32, 16});
+
+	m_ballSprites.mapSprite("blue_ball", {48, 136}, {8, 8});
+	m_paddleSprites.mapSprite("blue_paddle", {48, 72}, {64, 16});
+
+
 	resetGame();
 }
 
@@ -46,14 +64,8 @@ void Game::resetGame()
 
 void Game::resetBricks()
 {
-	const Vec2f uv_size { 32, 16 };
-	const Vec2f uv_positions[8] {
-		{ 8,    8 }, { 48,   8 }, { 84,  8 }, { 120,  8 },
-		{ 8,   28 }, { 48,  28 }, { 84, 28 }, { 120, 28 }
-	};
-
-	const Vec2f sprite_size = uv_size;
-	Vec2f origin = { (sprite_size.x + 8) / 2.0f, (sprite_size.y + 8) / 2.0f};
+	const Vec2f sprite_size {32, 16};
+	Vec2f origin { (sprite_size.x + 8) / 2.0f, (sprite_size.y + 8) / 2.0f };
 
 	const int lines = 10;
 	const int brick_count = lines * (kWinWidth / static_cast<int>(sprite_size.x + 8));
@@ -61,11 +73,9 @@ void Game::resetBricks()
 	m_bricks.reserve(brick_count);
 
 	for (int i = 0; i < brick_count; ++i) {
-		m_bricks.emplace_back(m_spritesheet);
+		m_bricks.emplace_back(m_brickSprites.getSprite(i % m_brickSprites.getSize()));
 		m_bricks.back().setOrigin(origin);
 		m_bricks.back().setSize(sprite_size);
-		m_bricks.back().setUVPos(uv_positions[i % 8]);
-		m_bricks.back().setUVSize(uv_size);
 
 		origin.x += sprite_size.x + 8;
 		if (origin.x > (kWinWidth - ((sprite_size.x + 8) / 2.0f))) {
@@ -78,14 +88,11 @@ void Game::resetBricks()
 
 void Game::resetPlayer()
 {
-	const Vec2f default_uv_pos { 8, 151 };
-	const Vec2f default_uv_size { 64, 20 };
-	const Vec2f default_player_size = default_uv_size;
+	const Vec2f default_player_size {64, 16};
 	const Vec2f default_player_origin { kWinWidth / 2, kWinHeight - (default_player_size.y / 2.0f)};
 	const float default_velocity = 265.0f;
 
-	m_player.setUVPos(default_uv_pos);
-	m_player.setUVSize(default_uv_size);
+	m_player = m_paddleSprites.getSprite("blue_paddle");
 	m_player.setSize(default_player_size);
 	m_player.setOrigin(default_player_origin);
 	m_player.setVelocity(default_velocity);
@@ -94,14 +101,11 @@ void Game::resetPlayer()
 
 void Game::resetBall()
 {
-	const Vec2f default_uv_pos { 48, 136 };
-	const Vec2f default_uv_size { 8, 8 };
 	const Vec2f default_origin { kWinWidth / 2, kWinHeight / 2};
 	const Vec2f default_velocity = { 200, 200 };
-	const float default_radius = (default_uv_size.x + default_uv_size.y) / 2.0f;
+	const float default_radius = 8.0f;
 
-	m_ball.setUVPos(default_uv_pos);
-	m_ball.setUVSize(default_uv_size);
+	m_ball = m_ballSprites.getSprite("blue_ball");
 	m_ball.setOrigin(default_origin);
 	m_ball.setRadius(default_radius);
 	m_ball.setVelocity(default_velocity);
@@ -110,8 +114,7 @@ void Game::resetBall()
 
 void Game::resetBackground()
 {
-	const auto& texture = m_backgrounds[3];
-	m_background.setTexture(texture);
+	const Texture& texture = m_background.getTexture();
 	m_background.setOrigin({kWinWidth / 2, kWinHeight / 2});
 	m_background.setSize({kWinWidth, kWinHeight});
 	m_background.setUVPos({0, 0});
@@ -166,9 +169,9 @@ inline void Game::processCollisions()
 		GLfloat x_vel;
 
 		// check if collided against the paddle edges
-		if (m_ball.getOrigin().x < (m_player.getLeft() + 24))
+		if (m_ball.getOrigin().x < (m_player.getLeft() + 16))
 			x_vel = -std::abs(m_ball.getVelocity().x);
-		else if (m_ball.getOrigin().x > (m_player.getRight() - 24))
+		else if (m_ball.getOrigin().x > (m_player.getRight() - 16))
 			x_vel = std::abs(m_ball.getVelocity().x);
 		else
 			x_vel = m_ball.getVelocity().x;
@@ -183,7 +186,7 @@ inline void Game::processCollisions()
 		return;
 
 	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
-		if (itr->isDestroyed() || !m_ball.isIntersecting(*itr))
+		if (m_ball.isIntersecting(*itr))
 			continue;
 
 		if (m_ball.getOrigin().x >= itr->getLeft() &&
