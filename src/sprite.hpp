@@ -85,8 +85,8 @@ inline Sprite::Sprite(Sprite&& other) noexcept
 	m_size(other.m_size),
 	m_uvPos(other.m_uvPos),
 	m_uvSize(other.m_uvSize),
-	m_color(other.m_color),
 	m_velocity(other.m_velocity),
+	m_color(other.m_color),
 	m_texture(other.m_texture)
 {
 
@@ -112,6 +112,7 @@ inline Sprite::Sprite(const Texture& texture,
 		      const Vec2f& velocity, const Vec4f& color) noexcept
 	: m_origin(origin),
 	m_size(size / 2.0f),
+	m_velocity(velocity),
 	m_color(color),
 	m_texture(&texture)
 {
