@@ -231,9 +231,8 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_background);
 	m_renderer.submit(m_ball);
 
-	for (const auto& brick : m_bricks) {
+	for (const auto& brick : m_bricks)
 		m_renderer.submit(brick);
-	}
 
 	m_renderer.submit(m_player);
 

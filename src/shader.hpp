@@ -68,3 +68,4 @@ inline void Shader::disable() const
 
 } // namespace gp
 #endif
+

@@ -1,6 +1,5 @@
 #ifndef ARKANOID_OOP_GAME_HPP_
 #define ARKANOID_OOP_GAME_HPP_
-#include <memory>
 #include <vector>
 #include "display.hpp"
 #include "sprite_sheet.hpp"
