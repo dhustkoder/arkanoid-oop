@@ -6,9 +6,8 @@
 namespace gp {
 
 
-
-Game::Game()
-	: m_display("Arkanoid OOP", kWinWidth, kWinHeight),
+Game::Game() :
+	m_display("Arkanoid OOP", kWinWidth, kWinHeight),
 	m_renderer(kWinWidth, kWinHeight),
 
 	m_backgroundTextures{Texture("../data/sprites/bkg0.png"),
@@ -17,37 +16,16 @@ Game::Game()
 	                     Texture("../data/sprites/bkg3.png")},
 
 	m_piecesTexture("../data/sprites/pieces.png"),
-	m_brickSprites(m_piecesTexture),
-	m_ballSprites(m_piecesTexture),
-	m_paddleSprites(m_piecesTexture),
+
 	m_background(m_backgroundTextures[0]),
-	m_ball(m_ballSprites.getTexture()),
-	m_player(m_paddleSprites.getTexture())
+	m_player(m_piecesTexture, kWinWidth, kWinHeight),
+	m_ball(m_piecesTexture, kWinWidth, kWinHeight),
+	m_bricks(m_piecesTexture, kWinWidth, kWinHeight)
+
 {
 	m_display.setVsync(false);
 	m_display.clear(0, 0, 0, 0);
 	m_display.update();
-
-	m_brickSprites.mapSprite("blue_brick", {8, 8}, {32, 16});
-	m_brickSprites.mapSprite("blue_green_brick", {48, 8}, {32, 16});
-	m_brickSprites.mapSprite("blue_red_brick", {84, 8}, {32, 16});
-	m_brickSprites.mapSprite("blue_purple_brick", {120, 8}, {32, 16});
-	m_brickSprites.mapSprite("blue_yellow_brick", {156, 8}, {32, 16});
-	m_brickSprites.mapSprite("blue_black_brick", {192, 8}, {32, 16});
-	m_brickSprites.mapSprite("blue_darkyellow_brick", {228, 8}, {32, 16});
-	m_brickSprites.mapSprite("yellow_purple_brick", {264, 8}, {32, 16});
-	m_brickSprites.mapSprite("green_brick", {8, 28}, {32, 16});
-	m_brickSprites.mapSprite("green_red_brick", {48, 28}, {32, 16});
-	m_brickSprites.mapSprite("green_purple_brick", {84, 28}, {32, 16});
-	m_brickSprites.mapSprite("green_yellow_brick", {120, 28}, {32, 16});
-	m_brickSprites.mapSprite("green_dark_brick", {156, 28}, {32, 16});
-	m_brickSprites.mapSprite("green_darkyellow_brick", {192, 28}, {32, 16});
-	m_brickSprites.mapSprite("dark_darkyellow_brick", {228, 28}, {32, 16});
-	m_brickSprites.mapSprite("dark_purple_brick", {264, 28}, {32, 16});
-
-	m_ballSprites.mapSprite("blue_ball", {48, 136}, {8, 8});
-	m_ballSprites.mapSprite("red_ball", {66, 136}, {8, 8});
-	m_paddleSprites.mapSprite("blue_paddle", {48, 72}, {64, 16});
 
 
 	resetGame();
@@ -62,62 +40,10 @@ Game::~Game()
 
 void Game::resetGame()
 {
-	resetPlayer();
-	resetBall();
-	resetBricks();
-	resetBackground(1);
-}
-
-
-void Game::resetBricks()
-{
-	const Vec2f sprite_size {32, 16};
-	Vec2f origin { (sprite_size.x + 8) / 2.0f, (sprite_size.y + 8) / 2.0f };
-
-	const int lines = 10;
-	const int brick_count = lines * (kWinWidth / static_cast<int>(sprite_size.x + 8));
-
-	m_bricks.reserve(brick_count);
-
-	for (int i = 0; i < brick_count; ++i) {
-		const Sprite& sprite = m_brickSprites.getSprite(i % m_brickSprites.getSize());
-		m_bricks.emplace_back(sprite.getTexture());
-		m_bricks.back().setSprite(sprite);
-		m_bricks.back().setOrigin(origin);
-		m_bricks.back().setSize(sprite_size);
-
-		origin.x += sprite_size.x + 8;
-		if (origin.x > (kWinWidth - ((sprite_size.x + 8) / 2.0f))) {
-			origin.x = (sprite_size.x + 8) / 2.0f;
-			origin.y += sprite_size.y + 8;
-		}
-	}
-}
-
-
-void Game::resetPlayer()
-{
-	const Vec2f default_player_size {64, 16};
-	const Vec2f default_player_origin { kWinWidth / 2, kWinHeight - (default_player_size.y / 2.0f)};
-	const Vec2f default_velocity { 265.0f, 0 };
-
-	m_player.setSprite(m_paddleSprites.getSprite("blue_paddle"));
-	m_player.setSize(default_player_size);
-	m_player.setOrigin(default_player_origin);
-	m_player.setVelocity(default_velocity);
-}
-
-
-void Game::resetBall()
-{
-	const Vec2f default_origin { kWinWidth / 2, kWinHeight / 2};
-	const Vec2f default_velocity = { 200, 200 };
-	const float default_radius = 8.0f;
-
-	m_ball.setSprite(m_ballSprites.getSprite("red_ball"));
-	m_ball.setOrigin(default_origin);
-	m_ball.setRadius(default_radius);
-	m_ball.setVelocity(default_velocity);
+	m_player.reset(0);
+	m_ball.reset(0);
+	m_bricks.reset(10);
+	resetBackground(0);
 }
 
 
@@ -162,8 +88,9 @@ void Game::run()
 
 inline void Game::updateGameObjects(const float delta)
 {
-	m_player.update(delta, kWinWidth);
-	m_ball.update(delta, kWinWidth, kWinHeight);
+	m_player.update(delta);
+	m_ball.update(delta);
+	m_bricks.update(delta);
 	processCollisions();
 }
 
@@ -189,10 +116,10 @@ inline void Game::processCollisions()
 	}
 
 	// skip tests if ball is not as high as the lowest brick
-	if (m_bricks.back().getBottom() < m_ball.getTop())
+	if (m_bricks.getBricks().back().getBottom() < m_ball.getTop())
 		return;
 
-	for (auto itr = m_bricks.begin(); itr != m_bricks.end(); ++itr) {
+	for (auto itr = m_bricks.getBricks().begin(); itr != m_bricks.getBricks().end(); ++itr) {
 		if (!m_ball.isIntersecting(*itr))
 			continue;
 
@@ -222,7 +149,7 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		m_bricks.erase(itr);
+		m_bricks.getBricks().erase(itr);
 		break;
 	}
 }
@@ -235,7 +162,7 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_background);
 	m_renderer.submit(m_ball);
 
-	for (const auto& brick : m_bricks)
+	for (const auto& brick : m_bricks.getBricks())
 		m_renderer.submit(brick);
 
 	m_renderer.submit(m_player);

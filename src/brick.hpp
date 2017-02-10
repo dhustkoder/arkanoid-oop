@@ -10,12 +10,34 @@ class Brick : public Sprite {
 public:
 	Brick(Texture&&) = delete;
 	
-	explicit Brick(const Texture& t)
-		: Sprite(t)
-	{
-	}
+	Brick(const Texture& texture);
+	void destroy();
+	bool isDestroyed() const;
+
+private:
+	bool m_destroyed;
 };
 
 
-} // namespace gp
+inline Brick::Brick(const Texture& texture)
+	: Sprite(texture), m_destroyed(false)
+{
+
+}
+
+
+inline void Brick::destroy()
+{
+	m_destroyed = true;
+}
+
+
+inline bool Brick::isDestroyed() const
+{
+	return m_destroyed;
+}
+
+
+}
 #endif
+

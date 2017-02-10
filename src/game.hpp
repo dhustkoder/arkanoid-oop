@@ -6,7 +6,7 @@
 #include "sprite_renderer.hpp"
 #include "ball.hpp"
 #include "player.hpp"
-#include "brick.hpp"
+#include "bricks.hpp"
 
 namespace gp {
 
@@ -25,9 +25,6 @@ public:
 
 private:
 	void resetGame();
-	void resetBricks();
-	void resetPlayer();
-	void resetBall();
 	void resetBackground(int index);
 
 	void updateGameObjects(float delta);
@@ -42,14 +39,10 @@ private:
 	Texture m_backgroundTextures[4];
 	Texture m_piecesTexture;
 
-	SpriteSheet m_brickSprites;
-	SpriteSheet m_ballSprites;
-	SpriteSheet m_paddleSprites;
-	
 	Sprite m_background;
-	Ball m_ball;
 	Player m_player;
-	std::vector<Sprite> m_bricks;
+	Ball m_ball;
+	Bricks m_bricks;
 };
 
 
