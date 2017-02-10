@@ -28,7 +28,7 @@ private:
 	void resetBricks();
 	void resetPlayer();
 	void resetBall();
-	void resetBackground();
+	void resetBackground(int index);
 
 	void updateGameObjects(float delta);
 	void processCollisions();
@@ -39,7 +39,7 @@ private:
 private:
 	Display m_display;
 	SpriteRenderer m_renderer;
-	Texture m_backgroundTexture;
+	Texture m_backgroundTextures[4];
 	Texture m_piecesTexture;
 
 	SpriteSheet m_brickSprites;

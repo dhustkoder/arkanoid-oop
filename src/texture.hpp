@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <GL/glew.h>
+#include "math_types.hpp"
 
 namespace gp {
 
@@ -27,6 +28,7 @@ public:
 	int getIndex() const;
 	int getWidth() const;
 	int getHeight() const;
+	Vec2f getSize() const;
 
 private:
 	GLuint m_id;
@@ -96,6 +98,12 @@ inline int Texture::getWidth() const
 inline int Texture::getHeight() const
 {
 	return m_height;
+}
+
+
+inline Vec2f Texture::getSize() const
+{
+	return { getWidth(), getHeight() };
 }
 
 

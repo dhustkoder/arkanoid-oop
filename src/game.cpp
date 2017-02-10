@@ -10,12 +10,17 @@ namespace gp {
 Game::Game()
 	: m_display("Arkanoid OOP", kWinWidth, kWinHeight),
 	m_renderer(kWinWidth, kWinHeight),
-	m_backgroundTexture("../data/sprites/bkg0.png"),
+
+	m_backgroundTextures{Texture("../data/sprites/bkg0.png"),
+	                     Texture("../data/sprites/bkg1.png"),
+	                     Texture("../data/sprites/bkg2.png"),
+	                     Texture("../data/sprites/bkg3.png")},
+
 	m_piecesTexture("../data/sprites/pieces.png"),
 	m_brickSprites(m_piecesTexture),
 	m_ballSprites(m_piecesTexture),
 	m_paddleSprites(m_piecesTexture),
-	m_background(m_backgroundTexture),
+	m_background(m_backgroundTextures[0]),
 	m_ball(m_ballSprites.getTexture()),
 	m_player(m_paddleSprites.getTexture())
 {
@@ -60,7 +65,7 @@ void Game::resetGame()
 	resetPlayer();
 	resetBall();
 	resetBricks();
-	resetBackground();
+	resetBackground(1);
 }
 
 
@@ -116,13 +121,11 @@ void Game::resetBall()
 }
 
 
-void Game::resetBackground()
+void Game::resetBackground(const int index)
 {
-	const Texture& texture = m_background.getTexture();
-	m_background.setOrigin({kWinWidth / 2, kWinHeight / 2});
-	m_background.setSize({kWinWidth, kWinHeight});
-	m_background.setUVPos({0, 0});
-	m_background.setUVSize({texture.getWidth(), texture.getHeight()});
+	const Texture& texture = m_backgroundTextures[index];
+	m_background = Sprite(texture, {kWinWidth / 2.0f, kWinHeight / 2.0f},
+	                      {kWinWidth, kWinHeight}, {0, 0}, texture.getSize());
 }
 
 
