@@ -13,7 +13,7 @@ struct VertexData {
 	float tex_index;
 };
 
-
+constexpr const int kMaxTexIndexValue = 7;
 constexpr const GLuint kVertexPosAndUVIndex = 0;
 constexpr const GLuint kVertexColorIndex = 1;
 constexpr const GLuint kVertexTexIndexIndex = 2;

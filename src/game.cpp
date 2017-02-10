@@ -10,11 +10,12 @@ namespace gp {
 Game::Game()
 	: m_display("Arkanoid OOP", kWinWidth, kWinHeight),
 	m_renderer(kWinWidth, kWinHeight),
-	m_brickSprites("../data/sprites/pieces.png"),
-	m_ballSprites("../data/sprites/pieces.png"),
-	m_paddleSprites("../data/sprites/pieces.png"),
-	m_backgroundImage("../data/sprites/bkg0.png"),
-	m_background(m_backgroundImage),
+	m_backgroundTexture("../data/sprites/bkg0.png"),
+	m_piecesTexture("../data/sprites/pieces.png"),
+	m_brickSprites(m_piecesTexture),
+	m_ballSprites(m_piecesTexture),
+	m_paddleSprites(m_piecesTexture),
+	m_background(m_backgroundTexture),
 	m_ball(m_ballSprites.getTexture()),
 	m_player(m_paddleSprites.getTexture())
 {

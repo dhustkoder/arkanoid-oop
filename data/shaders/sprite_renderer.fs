@@ -28,5 +28,6 @@ void main()
 		pixel = texture2D(textures[6], fs_tex_coords);
 	else if (tex_index == 7)
 		pixel = texture2D(textures[7], fs_tex_coords);
+
 }
 

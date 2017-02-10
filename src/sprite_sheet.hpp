@@ -16,7 +16,7 @@ namespace gp {
 class SpriteSheet {
 	using SpriteMap = std::vector<std::pair<std::string, Sprite>>;
 public:
-	SpriteSheet(const std::string& texture_file_path);
+	SpriteSheet(const Texture& texture);
 
 	Sprite getSprite(const std::string& name) const;
 	Sprite getSprite(const int index) const;
@@ -30,13 +30,13 @@ private:
 	SpriteMap::iterator find(const std::string& name);
 
 
-	Texture m_texture;
+	const Texture& m_texture;
 	SpriteMap m_sprites;
 };
 
 
-inline SpriteSheet::SpriteSheet(const std::string& texture_file_path)
-	: m_texture(texture_file_path)
+inline SpriteSheet::SpriteSheet(const Texture& texture)
+	: m_texture(texture)
 {
 
 }

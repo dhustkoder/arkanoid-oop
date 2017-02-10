@@ -1,6 +1,7 @@
 #include <SOIL/SOIL.h>
-#include "texture.hpp"
+#include "vertex_data.hpp"
 #include "exception.hpp"
+#include "texture.hpp"
 
 
 namespace gp {
@@ -10,7 +11,7 @@ int Texture::s_index = 0;
 Texture::Texture(const std::string& texture_file_path)
 	: m_index(s_index++)
 {
-	if (s_index >= 32)
+	if (s_index >= kMaxTexIndexValue)
 		s_index = 0;
 
 	glGenTextures(1, &m_id);

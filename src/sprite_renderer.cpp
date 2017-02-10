@@ -92,7 +92,7 @@ void SpriteRenderer::flush()
 
 
 	if (is_writting_to_buffer) {
-		m_bufferData = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		m_bufferData = static_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 	} else {
 		m_shader.disable();
 		this->unbindVertexObjects();

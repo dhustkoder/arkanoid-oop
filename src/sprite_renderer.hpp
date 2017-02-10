@@ -45,7 +45,7 @@ inline void gp::SpriteRenderer::begin()
 {
 	m_shader.enable();
 	bindVertexObjects();
-	m_bufferData = reinterpret_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+	m_bufferData = static_cast<VertexData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 }
 
 

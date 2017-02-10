@@ -39,11 +39,13 @@ private:
 private:
 	Display m_display;
 	SpriteRenderer m_renderer;
+	Texture m_backgroundTexture;
+	Texture m_piecesTexture;
+
 	SpriteSheet m_brickSprites;
 	SpriteSheet m_ballSprites;
 	SpriteSheet m_paddleSprites;
 	
-	Texture m_backgroundImage;
 	Sprite m_background;
 	Ball m_ball;
 	Player m_player;
