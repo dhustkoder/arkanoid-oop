@@ -9,11 +9,11 @@ Game::Game() :
 	m_renderer(kViewWidth, kViewHeight),
 	m_pointsStr("", {100, kViewHeight - 10}, 2, 2),
 	m_fpsStr("", {100, kViewHeight - 30}, 2, 2),
-	m_points(0),
 	m_background(ResourceManager::getTexture("bkg0")),
 	m_player(kViewWidth, kViewHeight),
 	m_ball(kViewWidth, kViewHeight),
-	m_bricks(kViewWidth, kViewHeight)
+	m_bricks(kViewWidth, kViewHeight),
+	m_points(0)
 
 {
 	Display::setVsync(false);
