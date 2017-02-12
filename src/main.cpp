@@ -1,7 +1,7 @@
 #include <iostream>
 #include "exception.hpp"
 #include "display.hpp"
-#include"resource_manager.hpp"
+#include "resource_manager.hpp"
 #include "finally.hpp"
 #include "game.hpp"
 

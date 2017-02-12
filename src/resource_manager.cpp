@@ -30,6 +30,7 @@ inline void ResourceManager::loadTextures()
 	s_textureMap.emplace_back(std::make_pair(std::string("bkg2"), Texture("../data/sprites/bkg2.png")));
 	s_textureMap.emplace_back(std::make_pair(std::string("bkg3"), Texture("../data/sprites/bkg3.png")));
 	s_textureMap.emplace_back(std::make_pair(std::string("pieces"), Texture("../data/sprites/pieces.png")));
+	s_textureMap.emplace_back(std::make_pair(std::string("fontset"), Texture("../data/sprites/fontset.png")));
 }
 
 
@@ -38,35 +39,24 @@ inline void ResourceManager::loadSpriteSheets()
 	s_spriteSheetMap.clear();
 	s_spriteSheetMap.reserve(10);
 
-	SpriteSheet alpha_numeric(getTexture("pieces"));
-	alpha_numeric.mapSprite("A", {304, 8}, {5, 8}); 
-	alpha_numeric.mapSprite("B", {310, 8}, {5, 8});
-	alpha_numeric.mapSprite("C", {316, 8}, {5, 8});
-	alpha_numeric.mapSprite("D", {322, 8}, {5, 8});
-	alpha_numeric.mapSprite("E", {328, 8}, {5, 8});
-	alpha_numeric.mapSprite("F", {334, 8}, {5, 8});
-	alpha_numeric.mapSprite("G", {340, 8}, {5, 8});
-	alpha_numeric.mapSprite("H", {304,17}, {5, 8});
-	alpha_numeric.mapSprite("I", {310,17}, {2, 8});
-	alpha_numeric.mapSprite("J", {316,17}, {5, 8});
-	alpha_numeric.mapSprite("K", {322,17}, {5, 8});
-	alpha_numeric.mapSprite("L", {328,17}, {5, 8});
-	alpha_numeric.mapSprite("M", {334,17}, {5, 8});
-	alpha_numeric.mapSprite("N", {340,17}, {5, 8});
-	alpha_numeric.mapSprite("O", {304,26}, {5, 8});
-	alpha_numeric.mapSprite("P", {310,26}, {5, 8});
-	alpha_numeric.mapSprite("Q", {316,26}, {5, 8});
-	alpha_numeric.mapSprite("R", {322,26}, {5, 8});
-	alpha_numeric.mapSprite("S", {328,26}, {5, 8});
-	alpha_numeric.mapSprite("T", {334,26}, {5, 8});
-	alpha_numeric.mapSprite("U", {340,26}, {5, 8});
-	alpha_numeric.mapSprite("V", {304,35}, {5, 8});
-	alpha_numeric.mapSprite("W", {310,35}, {5, 8});
-	alpha_numeric.mapSprite("X", {316,35}, {5, 8});
-	alpha_numeric.mapSprite("Y", {322,35}, {5, 8});
-	alpha_numeric.mapSprite("Z", {328,35}, {5, 8});
-	alpha_numeric.mapSprite(" ", {334,35}, {5, 8});
-	alpha_numeric.mapSprite("!", {329,57}, {2, 8});
+	SpriteSheet fontset(getTexture("fontset"));
+
+	constexpr const char* const characteres[] {
+		"!", "%", "\'", "(", ")", "*", "+", ",", "-", ".", "/",
+		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		":", " ", "<", "=", ">", "?", "@",
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+		"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+		"U", "V", "W", "X", "Y", "Z"
+	};
+
+	constexpr const int characteres_size = sizeof(characteres) / sizeof(characteres[0]);
+
+	for (int i = 0; i < characteres_size; ++i)
+		fontset.mapSprite(characteres[i], {i * 8, 0}, { 8, 8 });
+
+
+
 
 	SpriteSheet balls(getTexture("pieces"));
 	balls.mapSprite("blue", {48, 136}, {8, 8});
@@ -99,7 +89,7 @@ inline void ResourceManager::loadSpriteSheets()
 	bricks.mapSprite("dark_darkyellow_brick", {228, 28}, {32, 16});
 	bricks.mapSprite("dark_purple_brick", {264, 28}, {32, 16});
 
-	s_spriteSheetMap.emplace_back(std::make_pair(std::string("alpha_numeric"), std::move(alpha_numeric)));
+	s_spriteSheetMap.emplace_back(std::make_pair(std::string("fontset"), std::move(fontset)));
 	s_spriteSheetMap.emplace_back(std::make_pair(std::string("balls"), std::move(balls)));
 	s_spriteSheetMap.emplace_back(std::make_pair(std::string("paddles"), std::move(paddles)));
 	s_spriteSheetMap.emplace_back(std::make_pair(std::string("bricks"), std::move(bricks)));

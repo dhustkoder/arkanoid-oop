@@ -7,6 +7,8 @@
 #include "ball.hpp"
 #include "player.hpp"
 #include "bricks.hpp"
+#include "graphic_string.hpp"
+
 
 namespace gp {
 
@@ -34,6 +36,8 @@ private:
 
 private:
 	SpriteRenderer m_renderer;
+	GraphicString m_pointsString;
+	int m_points;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;

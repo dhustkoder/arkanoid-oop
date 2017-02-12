@@ -1,7 +1,5 @@
 #include <iostream>
 #include <tuple>
-#include "resource_manager.hpp"
-#include "graphic_string.hpp"
 #include "game.hpp"
 
 namespace gp {
@@ -9,6 +7,8 @@ namespace gp {
 
 Game::Game() :
 	m_renderer(kViewWidth, kViewHeight),
+	m_pointsString("", {kViewWidth / 2, kViewHeight / 2}, 2, 2),
+	m_points(0),
 	m_background(ResourceManager::getTexture("bkg0")),
 	m_player(kViewWidth, kViewHeight),
 	m_ball(kViewWidth, kViewHeight),
@@ -62,6 +62,11 @@ void Game::run()
 		Display::clear(0.25f, 0.25f, 0.65f, 1.0f);
 
 		updateGameObjects(delta);
+		m_pointsString = GraphicString("POINTS:" + std::to_string(m_points),
+		                               {kViewWidth / 2, kViewHeight / 2},
+		                               std::abs(4.0f * sinf(frametime * 0.2f)),
+					       std::abs(4.0f * sinf(frametime * 0.2f)));
+
 		renderGameObjects();
 
 		Display::update();
@@ -139,6 +144,7 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
+		++m_points;
 		m_bricks.getBricks().erase(itr);
 		break;
 	}
@@ -153,9 +159,8 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_bricks.getBricks());
 	m_renderer.submit(m_ball);
 	m_renderer.submit(m_player);
-
-	const GraphicString str("!Hello World!", {kViewWidth / 2, kViewHeight / 2});
-	m_renderer.submit(str.getSprites());
+	
+	m_renderer.submit(m_pointsString.getSprites());
 
 
 	m_renderer.end();

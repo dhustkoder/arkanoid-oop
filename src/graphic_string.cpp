@@ -8,29 +8,39 @@ namespace gp {
 GraphicString::GraphicString(std::string str, Vec2f origin, const float scale,
                              const float spacing, const Vec4f& color)
 
-	: m_spriteSheet(ResourceManager::getSpriteSheet("alpha_numeric"))
-
+	: m_str(std::move(str)),
+	m_scale(scale),
+	m_spacing(spacing),
+	m_origin(origin),
+	m_color(color),
+	m_spriteSheet(&ResourceManager::getSpriteSheet("fontset"))
 {
-	if (str.empty())
+	if (m_str.empty())
 		return;
 
-	m_spriteString.reserve(str.size());
+	m_spriteString.reserve(m_str.size());
 
-	for (std::string::size_type i = 0; i < str.size(); ++i) {
-		str[i] = std::toupper(str[i]);
-		m_spriteString.emplace_back(m_spriteSheet.getSprite(str.substr(i, 1)));
-		m_spriteString.back().setOrigin(origin);
-		m_spriteString.back().setSize(m_spriteString.back().getSize() * scale);
-		m_spriteString.back().setColor(color);
+	GLfloat previus_right = 0.0f;
 
-		if (m_spriteString.size() > 1) {
-			const GLfloat previus_right = (m_spriteString.end() - 2)->getRight();
-			const GLfloat current_left = (m_spriteString.end() - 1)->getLeft();
+	for (std::string::size_type i = 0; i < m_str.size(); ++i) {
+		m_str[i] = std::toupper(m_str[i]);
+
+		Sprite sprite = m_spriteSheet->getSprite(m_str.substr(i, 1));
+		sprite.setOrigin(origin);
+		sprite.setSize(sprite.getSize() * m_scale);
+		sprite.setColor(m_color);
+
+		if (!m_spriteString.empty()) {
+			const GLfloat current_left = sprite.getLeft();
 			if (previus_right >= current_left) {
-				origin.x += (previus_right - current_left) + spacing;
-				m_spriteString.back().setOrigin(origin);
+				origin.x += (previus_right - current_left) + m_spacing;
+				sprite.setOrigin(origin);
 			}
 		}
+
+		previus_right = sprite.getRight();
+		if (m_str[i] != ' ')
+			m_spriteString.emplace_back(std::move(sprite));
 	}
 
 	
