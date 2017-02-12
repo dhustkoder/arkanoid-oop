@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_MATH_TYPES_HPP_
-#define ARKANOID_OOP_MATH_TYPES_HPP_
+#ifndef ARKANOOP_MATH_TYPES_HPP_
+#define ARKANOOP_MATH_TYPES_HPP_
 #include <iostream>
 #include <GL/glew.h>
 #include <glm/glm.hpp>

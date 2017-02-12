@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_GRAPHIC_STRING_HPP_
-#define ARKANOID_OOP_GRAPHIC_STRING_HPP_
+#ifndef ARKANOOP_GRAPHIC_STRING_HPP_
+#define ARKANOOP_GRAPHIC_STRING_HPP_
 #include <cctype>
 #include <vector>
 #include "sprite_sheet.hpp"

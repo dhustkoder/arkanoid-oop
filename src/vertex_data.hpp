@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_VERTEX_DATA_HPP_
-#define ARKANOID_OOP_VERTEX_DATA_HPP_
+#ifndef ARKANOOP_VERTEX_DATA_HPP_
+#define ARKANOOP_VERTEX_DATA_HPP_
 #include <cstddef>
 #include <cstdint>
 #include "math_types.hpp"

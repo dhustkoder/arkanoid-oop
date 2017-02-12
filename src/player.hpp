@@ -1,7 +1,7 @@
-#ifndef ARKANOID_OOP_PLAYER_HPP_
-#define ARKANOID_OOP_PLAYER_HPP_
+#ifndef ARKANOOP_PLAYER_HPP_
+#define ARKANOOP_PLAYER_HPP_
 #include "keyboard.hpp"
-#include "sprite_sheet.hpp"
+#include "resource_manager.hpp"
 
 namespace gp {
 

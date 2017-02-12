@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_SPRITE_SHEET_HPP_
-#define ARKANOID_OOP_SPRITE_SHEET_HPP_
+#ifndef ARKANOOP_SPRITE_SHEET_HPP_
+#define ARKANOOP_SPRITE_SHEET_HPP_
 #include <cctype>
 #include <string>
 #include <utility>

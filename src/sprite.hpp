@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_SPRITE_HPP_
-#define ARKANOID_OOP_SPRITE_HPP_
+#ifndef ARKANOOP_SPRITE_HPP_
+#define ARKANOOP_SPRITE_HPP_
 #include "math_types.hpp"
 #include "texture.hpp"
 

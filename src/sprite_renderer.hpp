@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_SPRITE_RENDERER_HPP_
-#define ARKANOID_OOP_SPRITE_RENDERER_HPP_
+#ifndef ARKANOOP_SPRITE_RENDERER_HPP_
+#define ARKANOOP_SPRITE_RENDERER_HPP_
 #include <algorithm>
 #include <vector>
 #include "sprite.hpp"

@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_DISPLAY_HPP_
-#define ARKANOID_OOP_DISPLAY_HPP_
+#ifndef ARKANOOP_DISPLAY_HPP_
+#define ARKANOOP_DISPLAY_HPP_
 #include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

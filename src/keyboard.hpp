@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_KEYBOARD_HPP_
-#define ARKANOID_OOP_KEYBOARD_HPP_
+#ifndef ARKANOOP_KEYBOARD_HPP_
+#define ARKANOOP_KEYBOARD_HPP_
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

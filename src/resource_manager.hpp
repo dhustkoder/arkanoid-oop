@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_RESOURCE_MANAGER_HPP_
-#define ARKANOID_OOP_RESOURCE_MANAGER_HPP_
+#ifndef ARKANOOP_RESOURCE_MANAGER_HPP_
+#define ARKANOOP_RESOURCE_MANAGER_HPP_
 #include <cctype>
 #include <vector>
 #include <string>

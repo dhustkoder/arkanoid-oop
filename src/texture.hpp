@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_TEXTURE_HPP_
-#define ARKANOID_OOP_TEXTURE_HPP_
+#ifndef ARKANOOP_TEXTURE_HPP_
+#define ARKANOOP_TEXTURE_HPP_
 #include <string>
 #include <utility>
 #include <GL/glew.h>

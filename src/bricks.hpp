@@ -1,7 +1,7 @@
-#ifndef ARKANOID_OOP_BRICKS_HPP_
-#define ARKANOID_OOP_BRICKS_HPP_
+#ifndef ARKANOOP_BRICKS_HPP_
+#define ARKANOOP_BRICKS_HPP_
 #include "brick.hpp"
-#include "sprite_sheet.hpp"
+#include "resource_manager.hpp"
 
 
 namespace gp {
@@ -11,11 +11,11 @@ class Bricks {
 public:
 	Bricks(int max_width, int max_heigth);
 	const std::vector<Brick>& getBricks() const;
+	int getDestroyedBricksCount() const;
 	std::vector<Brick>& getBricks();
 
 	void update(float dt);
 	void reset(int num_lines);
-
 
 private:
 	void removeDestroyedBricks();
@@ -50,6 +50,12 @@ inline std::vector<Brick>& Bricks::getBricks()
 }
 
 
+inline int Bricks::getDestroyedBricksCount() const
+{
+	return m_destroyedBricks;
+}
+
+
 inline void Bricks::update(float /*dt*/)
 {
 }
@@ -75,7 +81,7 @@ inline void Bricks::reset(const int num_lines)
 		if (origin.x > (m_maxWidth - ((sprite_size.x + 8) / 2.0f))) {
 			origin.x = (sprite_size.x + 8) / 2.0f;
 			origin.y += sprite_size.y + 8;
-			if (origin.y > (m_maxWidth - ((sprite_size.y + 8) / 2.0f)))
+			if (origin.y > (m_maxHeight - ((sprite_size.y + 8) / 2.0f)))
 				origin.y = (sprite_size.y + 8) / 2.0f;
 		}
 	}

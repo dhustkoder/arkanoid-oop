@@ -1,5 +1,5 @@
-#ifndef ARKANOID_OOP_BALL_HPP_
-#define ARKANOID_OOP_BALL_HPP_
+#ifndef ARKANOOP_BALL_HPP_
+#define ARKANOOP_BALL_HPP_
 #include "keyboard.hpp"
 #include "resource_manager.hpp"
 
