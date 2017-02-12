@@ -41,11 +41,13 @@ private:
 inline Texture::Texture(Texture&& other) noexcept
 	: m_id(other.m_id),
 	m_width(other.m_width),
-	m_height(other.m_height)
+	m_height(other.m_height),
+	m_index(other.m_index)
 {
 	other.m_id = 0;
 	other.m_width = 0;
 	other.m_height = 0;
+	other.m_index = 0;
 }
 
 
@@ -61,6 +63,7 @@ inline Texture& Texture::operator=(Texture&& other) noexcept
 	std::swap(m_id, other.m_id);
 	std::swap(m_width, other.m_width);
 	std::swap(m_height, other.m_height);
+	std::swap(m_index, other.m_index);
 	return *this;
 }
 

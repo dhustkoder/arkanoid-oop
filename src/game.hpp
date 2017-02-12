@@ -12,8 +12,8 @@ namespace gp {
 
 
 class Game {
-	static constexpr const int kWinWidth = 800;
-	static constexpr const int kWinHeight = 600;
+	static constexpr const int kViewWidth = Display::kDefaultWidth;
+	static constexpr const int kViewHeight = Display::kDefaultHeight;
 public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
@@ -32,13 +32,8 @@ private:
 	void renderGameObjects();
 
 
-
 private:
-	Display m_display;
 	SpriteRenderer m_renderer;
-	Texture m_piecesTexture;
-
-	SpriteSheet m_letters;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;

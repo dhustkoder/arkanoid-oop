@@ -1,5 +1,6 @@
 #ifndef ARKANOID_OOP_DISPLAY_HPP_
 #define ARKANOID_OOP_DISPLAY_HPP_
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "exception.hpp"
@@ -9,22 +10,47 @@ namespace gp {
 
 class Display {
 public:
-	Display(const char* name, int width, int height);
-	~Display();
-	bool shouldClose() const;
-	void setVsync(bool value);
-	void update();
-	void clear(float r, float g, float b, float a);
+	static constexpr const int kDefaultWidth = 800;
+	static constexpr const int kDefaultHeight = 600;
+	static constexpr const char* const kDefaultTitle = "Arkanoop";
+
+	static void initialize();
+	static void terminate();
+	static void setTitle(const std::string& name);
+	static void setSize(int width, int height);
+	static bool shouldClose();
+	static void setVsync(bool value);
+	static void update();
+	static void clear(float r, float g, float b, float a);
 
 private:
 	static void resizeCallback(GLFWwindow* window, int width, int height);
-	GLFWwindow* m_window;
+
+private:
+	static GLFWwindow* s_window;
+	static int s_width;
+	static int s_height;
+	static Display s_instance;
 };
 
 
-inline bool Display::shouldClose() const
+inline void Display::setTitle(const std::string& name)
 {
-	return glfwWindowShouldClose(m_window) == 1;
+	glfwSetWindowTitle(s_window, name.c_str());
+}
+
+
+inline void Display::setSize(const int width, const int height)
+{
+	s_width = width;
+	s_height = height;
+	glfwSetWindowSize(s_window, width, height);
+}
+
+
+inline bool Display::shouldClose()
+{
+	return glfwWindowShouldClose(s_window) == 1;
 }
 
 
@@ -40,7 +66,7 @@ inline void Display::update()
 	if (err != GL_NO_ERROR)
 		throw Exception((char*)glewGetErrorString(err));
 
-	glfwSwapBuffers(m_window);
+	glfwSwapBuffers(s_window);
 	glfwPollEvents();
 }
 

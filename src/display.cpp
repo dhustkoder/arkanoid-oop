@@ -6,20 +6,25 @@
 
 namespace gp {
 
+GLFWwindow* Display::s_window;
+int Display::s_width = Display::kDefaultWidth;
+int Display::s_height = Display::kDefaultHeight;
+Display Display::s_instance;
 
-Display::Display(const char* const name, const int width, const int height)
+
+void Display::initialize()
 {
 	if (!glfwInit())
 		throw Exception("failed to initialize GLFW");
 
-	m_window = glfwCreateWindow(width, height, name, nullptr, nullptr);
+	s_window = glfwCreateWindow(s_width, s_height, kDefaultTitle, nullptr, nullptr);
 
-	if (m_window == nullptr)
+	if (s_window == nullptr)
 		throw Exception("failed to initialize display");
 
-	glfwMakeContextCurrent(m_window);
-	glfwSetKeyCallback(m_window, Keyboard::keyCallback);
-	glfwSetWindowSizeCallback(m_window, Display::resizeCallback);
+	glfwMakeContextCurrent(s_window);
+	glfwSetKeyCallback(s_window, Keyboard::keyCallback);
+	glfwSetWindowSizeCallback(s_window, Display::resizeCallback);
 
 	const int glew_err = glewInit();
 	if (glew_err != GLEW_OK)
@@ -44,9 +49,9 @@ Display::Display(const char* const name, const int width, const int height)
 }
 
 
-Display::~Display()
+void Display::terminate()
 {
-	glfwDestroyWindow(m_window);
+	glfwDestroyWindow(s_window);
 	glfwTerminate();
 }
 

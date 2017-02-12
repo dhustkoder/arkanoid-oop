@@ -8,53 +8,16 @@ namespace gp {
 
 
 Game::Game() :
-	m_display("Arkanoid OOP", kWinWidth, kWinHeight),
-	m_renderer(kWinWidth, kWinHeight),
-	m_piecesTexture("../data/sprites/pieces.png"),
-	m_letters(m_piecesTexture),
-	m_background(m_backgroundTextures[0]),
-	m_player(m_piecesTexture, kWinWidth, kWinHeight),
-	m_ball(m_piecesTexture, kWinWidth, kWinHeight),
-	m_bricks(m_piecesTexture, kWinWidth, kWinHeight)
+	m_renderer(kViewWidth, kViewHeight),
+	m_background(ResourceManager::getTexture("bkg0")),
+	m_player(kViewWidth, kViewHeight),
+	m_ball(kViewWidth, kViewHeight),
+	m_bricks(kViewWidth, kViewHeight)
 
 {
-	m_display.setVsync(false);
-	m_display.clear(0, 0, 0, 0);
-	m_display.update();
-
-	ResourceManager::loadTexture("bkg0", "../data/sprites/bkg0.png");
-	ResourceManager::loadTexture("bkg1", "../data/sprites/bkg1.png");
-	ResourceManager::loadTexture("bkg2", "../data/sprites/bkg2.png");
-	ResourceManager::loadTexture("bkg3", "../data/sprites/bkg3.png");
-
-	m_letters.mapSprite("A", {304, 8}, {5, 8}); 
-	m_letters.mapSprite("B", {310, 8}, {5, 8});
-	m_letters.mapSprite("C", {316, 8}, {5, 8});
-	m_letters.mapSprite("D", {322, 8}, {5, 8});
-	m_letters.mapSprite("E", {328, 8}, {5, 8});
-	m_letters.mapSprite("F", {334, 8}, {5, 8});
-	m_letters.mapSprite("G", {340, 8}, {5, 8});
-	m_letters.mapSprite("H", {304,17}, {5, 8});
-	m_letters.mapSprite("I", {310,17}, {5, 8});
-	m_letters.mapSprite("J", {316,17}, {5, 8});
-	m_letters.mapSprite("K", {322,17}, {5, 8});
-	m_letters.mapSprite("L", {328,17}, {5, 8});
-	m_letters.mapSprite("M", {334,17}, {5, 8});
-	m_letters.mapSprite("N", {340,17}, {5, 8});
-	m_letters.mapSprite("O", {304,26}, {5, 8});
-	m_letters.mapSprite("P", {310,26}, {5, 8});
-	m_letters.mapSprite("Q", {316,26}, {5, 8});
-	m_letters.mapSprite("R", {322,26}, {5, 8});
-	m_letters.mapSprite("S", {328,26}, {5, 8});
-	m_letters.mapSprite("T", {334,26}, {5, 8});
-	m_letters.mapSprite("U", {340,26}, {5, 8});
-	m_letters.mapSprite("V", {304,35}, {5, 8});
-	m_letters.mapSprite("W", {310,35}, {5, 8});
-	m_letters.mapSprite("X", {316,35}, {5, 8});
-	m_letters.mapSprite("Y", {322,35}, {5, 8});
-	m_letters.mapSprite("Z", {328,35}, {5, 8});
-	m_letters.mapSprite("!", {329,57}, {2, 8});
-
+	Display::setVsync(false);
+	Display::clear(0, 0, 0, 0);
+	Display::update();
 	resetGame();
 }
 
@@ -76,9 +39,10 @@ void Game::resetGame()
 
 void Game::resetBackground(const int index)
 {
-	const Texture& texture = m_backgroundTextures[index];
-	m_background = Sprite(texture, {kWinWidth / 2.0f, kWinHeight / 2.0f},
-	                      {kWinWidth, kWinHeight}, {0, 0}, texture.getSize());
+	const Texture& texture = ResourceManager::getTexture("bkg" + std::to_string(index));
+	m_background = Sprite(texture, {kViewWidth / 2.0f, kViewHeight / 2.0f},
+	                      {kViewWidth, kViewHeight}, {0, 0}, texture.getSize());
+
 }
 
 
@@ -90,18 +54,17 @@ void Game::run()
 	float delta;
 	int fps = 0;
 
-	while (!m_display.shouldClose()) {
+	while (!Display::shouldClose()) {
 		frametime = glfwGetTime();
 		delta = static_cast<float>(frametime - lastframetime);
 		lastframetime = frametime;
 
-		m_display.clear(0.25f, 0.25f, 0.65f, 1.0f);
+		Display::clear(0.25f, 0.25f, 0.65f, 1.0f);
 
 		updateGameObjects(delta);
 		renderGameObjects();
 
-		m_display.update();
-
+		Display::update();
 
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
@@ -191,10 +154,8 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_ball);
 	m_renderer.submit(m_player);
 
-	static const GraphicString newgame("new game", {400, 300}, m_letters, 2.0f, 2.0f, {1, 0, 0, 1});
-	static const GraphicString loadgame("load game", {400, 320}, m_letters, 2.0f, 2.0f, {1, 0, 0, 1});
-	m_renderer.submit(newgame.getSprites());
-	m_renderer.submit(loadgame.getSprites());
+	const GraphicString str("!Hello World!", {kViewWidth / 2, kViewHeight / 2});
+	m_renderer.submit(str.getSprites());
 
 
 	m_renderer.end();

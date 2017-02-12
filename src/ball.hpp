@@ -1,7 +1,7 @@
 #ifndef ARKANOID_OOP_BALL_HPP_
 #define ARKANOID_OOP_BALL_HPP_
 #include "keyboard.hpp"
-#include "sprite_sheet.hpp"
+#include "resource_manager.hpp"
 
 
 namespace gp {
@@ -9,8 +9,7 @@ namespace gp {
 
 class Ball : public Sprite {
 public:
-	Ball(Texture&&) = delete;
-	Ball(const Texture& texture, int win_width, int win_height);
+	Ball(int max_width, int max_height);
 
 	float getRadius() const;
 	bool isIntersecting(const Sprite& sprite) const;
@@ -19,30 +18,25 @@ public:
 	void update(float dt);
 	void reset(int sprite_index);
 
+
 private:
 	SpriteSheet m_sprites;
-	int m_winWidth;
-	int m_winHeight;
+	int m_maxWidth;
+	int m_maxHeight;
 	int m_currentSpriteIndex;
 	float m_radius;
 };
 
 
-inline Ball::Ball(const Texture& texture, const int win_width, const int win_height) :
-	Sprite(texture),
-	m_sprites(texture),
-	m_winWidth(win_width),
-	m_winHeight(win_height),
+inline Ball::Ball(const int max_width, const int max_height) :
+	Sprite(ResourceManager::getSpriteSheet("balls").getTexture()),
+	m_sprites(ResourceManager::getSpriteSheet("balls")),
+	m_maxWidth(max_width),
+	m_maxHeight(max_height),
 	m_currentSpriteIndex(0),
 	m_radius(0)
 {
-	m_sprites.mapSprite("blue", {48, 136}, {8, 8});
-	m_sprites.mapSprite("green", {57, 136}, {8, 8});
-	m_sprites.mapSprite("red", {66, 136}, {8, 8});
-	m_sprites.mapSprite("purple", {75, 136}, {8, 8});
-	m_sprites.mapSprite("yellow", {84, 136}, {8, 8});
-	m_sprites.mapSprite("black", {93, 136}, {8, 8});
-	m_sprites.mapSprite("dark_yellow", {102, 136}, {8, 8});
+
 }
 
 
@@ -63,16 +57,16 @@ inline void Ball::setRadius(const float radius)
 
 inline void Ball::update(const float dt)
 {
-	if (getRight() > m_winWidth) {
-		setOrigin({m_winWidth - getHalfSize().x, getOrigin().y});
+	if (getRight() > m_maxWidth) {
+		setOrigin({m_maxWidth - getHalfSize().x, getOrigin().y});
 		setVelocity({-std::abs(getVelocity().x), getVelocity().y});
 	} else if (getLeft() < 0) {
 		setOrigin({getHalfSize().x, getOrigin().y});
 		setVelocity({std::abs(getVelocity().x), getVelocity().y});
 	}
 
-	if (getBottom() > m_winHeight) {
-		setOrigin({getOrigin().x, m_winHeight - getHalfSize().y});
+	if (getBottom() > m_maxHeight) {
+		setOrigin({getOrigin().x, m_maxHeight - getHalfSize().y});
 		setVelocity({getVelocity().x, -std::abs(getVelocity().y)});
 		reset(++m_currentSpriteIndex);
 		
@@ -112,7 +106,7 @@ inline bool Ball::isIntersecting(const Sprite& brick) const
 
 inline void Ball::reset(const int sprite_index)
 {
-	const Vec2f default_origin { m_winWidth / 2, m_winHeight / 2};
+	const Vec2f default_origin { m_maxWidth / 2, m_maxHeight / 2};
 	const Vec2f default_velocity { 200, 200 };
 	const float default_radius = 8.0f;
 
