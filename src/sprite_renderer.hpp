@@ -24,6 +24,8 @@ public:
 	~SpriteRenderer();
 	void begin();
 	void submit(const Sprite& sprite);
+	template<class RenderableType>
+	void submit(const std::vector<RenderableType>& sprites);
 	void end();
 	void flush();
 
@@ -117,6 +119,14 @@ inline void SpriteRenderer::submit(const Sprite& sprite)
 	++m_bufferData;
 
 	++m_spriteCount;
+}
+
+
+template<class RenderableType>
+inline void SpriteRenderer::submit(const std::vector<RenderableType>& sprites)
+{
+	for (const RenderableType& renderable : sprites)
+		this->submit(renderable);
 }
 
 

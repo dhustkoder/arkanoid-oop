@@ -75,6 +75,10 @@ inline void Ball::update(const float dt)
 		setOrigin({getOrigin().x, m_winHeight - getHalfSize().y});
 		setVelocity({getVelocity().x, -std::abs(getVelocity().y)});
 		reset(++m_currentSpriteIndex);
+		
+		if (m_currentSpriteIndex >= m_sprites.getSize())
+			m_currentSpriteIndex = 0;
+
 	} else if (getTop() < 0) {
 		setOrigin({getOrigin().x, getHalfSize().y});
 		setVelocity({getVelocity().x, std::abs(getVelocity().y)});
@@ -121,3 +125,4 @@ inline void Ball::reset(const int sprite_index)
 
 } // namespace gp
 #endif
+

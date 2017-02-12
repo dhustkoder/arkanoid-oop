@@ -36,9 +36,9 @@ private:
 private:
 	Display m_display;
 	SpriteRenderer m_renderer;
-	Texture m_backgroundTextures[4];
 	Texture m_piecesTexture;
 
+	SpriteSheet m_letters;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;

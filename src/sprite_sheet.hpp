@@ -1,10 +1,12 @@
 #ifndef ARKANOID_OOP_SPRITE_SHEET_HPP_
 #define ARKANOID_OOP_SPRITE_SHEET_HPP_
+#include <cctype>
 #include <string>
 #include <utility>
 #include <vector>
 #include <algorithm>
 
+#include "exception.hpp"
 #include "math_types.hpp"
 #include "texture.hpp"
 #include "sprite.hpp"
@@ -18,8 +20,8 @@ class SpriteSheet {
 public:
 	SpriteSheet(const Texture& texture);
 
-	Sprite getSprite(const std::string& name) const;
-	Sprite getSprite(const int index) const;
+	const Sprite& getSprite(const std::string& name) const;
+	const Sprite& getSprite(const int index) const;
 	const Texture& getTexture() const;
 	int getSize() const;
 
@@ -42,17 +44,17 @@ inline SpriteSheet::SpriteSheet(const Texture& texture)
 }
 
 
-inline Sprite SpriteSheet::getSprite(const std::string& name) const
+inline const Sprite& SpriteSheet::getSprite(const std::string& name) const
 {		
 	const auto itr = find(name);
 	if (itr == m_sprites.end())
 		throw Exception("request for unmapped sprite: " + name);
 
-	return Sprite(itr->second);
+	return itr->second;
 }
 
 
-inline Sprite SpriteSheet::getSprite(const int index) const
+inline const Sprite& SpriteSheet::getSprite(const int index) const
 {
 	return m_sprites.at(index).second;
 }
@@ -72,6 +74,9 @@ inline int SpriteSheet::getSize() const
 
 inline void SpriteSheet::mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size)
 {
+	for (auto& c : name)
+		c = std::toupper(c);
+
 	const auto itr = find(name);
 	if (itr == m_sprites.end())
 		m_sprites.emplace_back(std::move(name), Sprite(m_texture, {0, 0}, uv_size, uv_pos, uv_size));
