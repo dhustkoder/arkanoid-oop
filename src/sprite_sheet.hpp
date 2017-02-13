@@ -74,9 +74,6 @@ inline int SpriteSheet::getSize() const
 
 inline void SpriteSheet::mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size)
 {
-	for (auto& c : name)
-		c = std::toupper(c);
-
 	const auto itr = find(name);
 	if (itr == m_sprites.end())
 		m_sprites.emplace_back(std::move(name), Sprite(m_texture, {0, 0}, uv_size, uv_pos, uv_size));

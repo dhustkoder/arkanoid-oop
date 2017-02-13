@@ -7,8 +7,7 @@ namespace gp {
 
 Game::Game() :
 	m_renderer(kViewWidth, kViewHeight),
-	m_pointsStr("", {100, kViewHeight - 10}, 2, 2),
-	m_fpsStr("", {100, kViewHeight - 30}, 2, 2),
+	m_infoStr("", {0, kViewHeight - 50}, 2, 2),
 	m_background(ResourceManager::getTexture("bkg0")),
 	m_player(kViewWidth, kViewHeight),
 	m_ball(kViewWidth, kViewHeight),
@@ -69,7 +68,8 @@ void Game::run()
 
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
-			m_fpsStr.setString("FPS:" + std::to_string(fps));
+			m_infoStr.setString("BRICKS DESTROYED:" + std::to_string(m_points) +
+			                    "\nFPS:" + std::to_string(fps));
 			fps = 0;
 			lastsecond = frametime;
 		}
@@ -141,7 +141,13 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		m_pointsStr.setString("POINTS:" + std::to_string(++m_points));
+		++m_points;
+		const auto& oldstr = m_infoStr.getString();
+		const auto fps_num_beg = oldstr.find("\n") + 5;
+		const auto fps_num_end = oldstr.size() - fps_num_beg;
+
+		m_infoStr.setString("BRICKS DESTROYED:" + std::to_string(m_points) +
+		                    "\nFPS:" + oldstr.substr(fps_num_beg, fps_num_end));
 		m_bricks.getBricks().erase(itr);
 		break;
 	}
@@ -157,8 +163,7 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_ball);
 	m_renderer.submit(m_player);
 	
-	m_renderer.submit(m_pointsStr.getSprites());
-	m_renderer.submit(m_fpsStr.getSprites());
+	m_renderer.submit(m_infoStr.getSprites());
 
 	m_renderer.end();
 	m_renderer.flush();

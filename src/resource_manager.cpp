@@ -55,9 +55,6 @@ inline void ResourceManager::loadSpriteSheets()
 	for (int i = 0; i < characteres_size; ++i)
 		fontset.mapSprite(characteres[i], {i * 8, 0}, { 8, 8 });
 
-
-
-
 	SpriteSheet balls(getTexture("pieces"));
 	balls.mapSprite("blue", {48, 136}, {8, 8});
 	balls.mapSprite("green", {57, 136}, {8, 8});

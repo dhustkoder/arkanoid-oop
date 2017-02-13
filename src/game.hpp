@@ -36,8 +36,7 @@ private:
 
 private:
 	SpriteRenderer m_renderer;
-	GraphicString m_pointsStr;
-	GraphicString m_fpsStr;
+	GraphicString m_infoStr;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;
