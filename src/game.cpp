@@ -7,7 +7,8 @@ namespace gp {
 
 Game::Game() :
 	m_renderer(kViewWidth, kViewHeight),
-	m_pointsString("", {kViewWidth / 2, kViewHeight / 2}, 2, 2),
+	m_pointsStr("", {100, kViewHeight - 10}, 2, 2),
+	m_fpsStr("", {100, kViewHeight - 30}, 2, 2),
 	m_points(0),
 	m_background(ResourceManager::getTexture("bkg0")),
 	m_player(kViewWidth, kViewHeight),
@@ -62,21 +63,17 @@ void Game::run()
 		Display::clear(0.25f, 0.25f, 0.65f, 1.0f);
 
 		updateGameObjects(delta);
-		m_pointsString = GraphicString("POINTS:" + std::to_string(m_points),
-		                               {kViewWidth / 2, kViewHeight / 2},
-		                               std::abs(4.0f * sinf(frametime * 0.2f)),
-					       std::abs(4.0f * sinf(frametime * 0.2f)));
-
 		renderGameObjects();
 
-		Display::update();
+		Display::update();		
 
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
-			std::cout << "FPS: " << fps << '\n';
+			m_fpsStr.setString("FPS: " + std::to_string(fps));
 			fps = 0;
 			lastsecond = frametime;
 		}
+
 	}
 }
 
@@ -144,7 +141,7 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		++m_points;
+		m_pointsStr.setString("POINTS: " + std::to_string(++m_points));
 		m_bricks.getBricks().erase(itr);
 		break;
 	}
@@ -160,8 +157,8 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_ball);
 	m_renderer.submit(m_player);
 	
-	m_renderer.submit(m_pointsString.getSprites());
-
+	m_renderer.submit(m_pointsStr.getSprites());
+	m_renderer.submit(m_fpsStr.getSprites());
 
 	m_renderer.end();
 	m_renderer.flush();

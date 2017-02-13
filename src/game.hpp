@@ -36,12 +36,13 @@ private:
 
 private:
 	SpriteRenderer m_renderer;
-	GraphicString m_pointsString;
-	int m_points;
+	GraphicString m_pointsStr;
+	GraphicString m_fpsStr;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;
 	Bricks m_bricks;
+	int m_points;
 };
 
 
