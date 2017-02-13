@@ -69,7 +69,7 @@ void Game::run()
 
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
-			m_fpsStr.setString("FPS: " + std::to_string(fps));
+			m_fpsStr.setString("FPS:" + std::to_string(fps));
 			fps = 0;
 			lastsecond = frametime;
 		}
@@ -141,7 +141,7 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		m_pointsStr.setString("POINTS: " + std::to_string(++m_points));
+		m_pointsStr.setString("POINTS:" + std::to_string(++m_points));
 		m_bricks.getBricks().erase(itr);
 		break;
 	}
