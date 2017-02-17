@@ -72,7 +72,7 @@ inline void Bricks::reset(const int num_lines)
 
 	for (int i = 0; i < brick_count; ++i) {
 		const Sprite& sprite = m_sprites.getSprite(i % m_sprites.getSize());
-		m_bricks.emplace_back(sprite.getTexture());
+		m_bricks.emplace_back(Brick(i % 3));
 		m_bricks.back().setSprite(sprite);
 		m_bricks.back().setOrigin(origin);
 		m_bricks.back().setSize(sprite_size);

@@ -13,7 +13,6 @@ Game::Game() :
 	m_ball(kViewWidth, kViewHeight),
 	m_bricks(kViewWidth, kViewHeight),
 	m_points(0)
-
 {
 	Display::setVsync(false);
 	Display::clear(0, 0, 0, 0);
@@ -141,14 +140,18 @@ inline void Game::processCollisions()
 			m_ball.setVelocity({new_x_vel, m_ball.getVelocity().y});
 		}
 
-		++m_points;
-		const auto& oldstr = m_infoStr.getString();
-		const auto fps_num_beg = oldstr.find("\n") + 5;
-		const auto fps_num_end = oldstr.size() - fps_num_beg;
+		itr->hit();
+		if (itr->isDestroyed()) {
+			++m_points;
+			const auto& oldstr = m_infoStr.getString();
+			const auto fps_num_beg = oldstr.find("\n") + 5;
+			const auto fps_num_end = oldstr.size() - fps_num_beg;
 
-		m_infoStr.setString("BRICKS DESTROYED:" + std::to_string(m_points) +
-		                    "\nFPS:" + oldstr.substr(fps_num_beg, fps_num_end));
-		m_bricks.getBricks().erase(itr);
+			m_infoStr.setString("BRICKS DESTROYED:" + std::to_string(m_points) +
+			                    "\nFPS:" + oldstr.substr(fps_num_beg, fps_num_end));
+			m_bricks.getBricks().erase(itr);
+		}
+		
 		break;
 	}
 }

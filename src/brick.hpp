@@ -1,40 +1,37 @@
 #ifndef ARKANOOP_BRICK_HPP_
 #define ARKANOOP_BRICK_HPP_
-#include "sprite.hpp"
-
+#include "resource_manager.hpp"
 
 namespace gp {
 
 
 class Brick : public Sprite {
 public:
-	Brick(Texture&&) = delete;
-	
-	Brick(const Texture& texture);
-	void destroy();
+	Brick (int resistence = 1);
+	void hit(int force = 1);
 	bool isDestroyed() const;
 
 private:
-	bool m_destroyed;
+	int m_resistence;
 };
 
 
-inline Brick::Brick(const Texture& texture)
-	: Sprite(texture), m_destroyed(false)
+inline Brick::Brick(int resistence)
+	: Sprite(ResourceManager::getSpriteSheet("bricks").getTexture()),
+	m_resistence(resistence)
 {
-
 }
 
 
-inline void Brick::destroy()
+inline void Brick::hit(int force)
 {
-	m_destroyed = true;
+	m_resistence -= force;
 }
 
 
 inline bool Brick::isDestroyed() const
 {
-	return m_destroyed;
+	return m_resistence <= 0;
 }
 
 
