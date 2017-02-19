@@ -20,7 +20,7 @@ public:
 	SpriteRenderer(const SpriteRenderer&) = delete;
 	SpriteRenderer& operator=(const SpriteRenderer&) = delete;
 
-	explicit SpriteRenderer(int width, int height);
+	explicit SpriteRenderer();
 	~SpriteRenderer();
 	void begin();
 	void submit(const Sprite& sprite);

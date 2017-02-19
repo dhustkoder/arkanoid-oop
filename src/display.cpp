@@ -7,9 +7,12 @@
 namespace gp {
 
 GLFWwindow* Display::s_window;
-int Display::s_width = Display::kDefaultWidth;
-int Display::s_height = Display::kDefaultHeight;
-Display Display::s_instance;
+
+int Display::s_screenWidth = Display::kDefaultScreenWidth;
+int Display::s_screenHeight = Display::kDefaultScreenHeight;
+
+int Display::s_viewWidth = Display::kDefaultViewWidth;
+int Display::s_viewHeight = Display::kDefaultViewHeight;
 
 
 void Display::initialize()
@@ -17,7 +20,7 @@ void Display::initialize()
 	if (!glfwInit())
 		throw Exception("failed to initialize GLFW");
 
-	s_window = glfwCreateWindow(s_width, s_height, kDefaultTitle, nullptr, nullptr);
+	s_window = glfwCreateWindow(s_screenWidth, s_screenHeight, kDefaultTitle, nullptr, nullptr);
 
 	if (s_window == nullptr)
 		throw Exception("failed to initialize display");
@@ -58,6 +61,8 @@ void Display::terminate()
 
 void Display::resizeCallback(GLFWwindow* const /*window*/, const int width, const int height)
 {
+	s_screenWidth = width;
+	s_screenHeight = height;
 	glViewport(0, 0, width, height);
 }
 

@@ -14,8 +14,6 @@ namespace gp {
 
 
 class Game {
-	static constexpr const int kViewWidth = Display::kDefaultWidth;
-	static constexpr const int kViewHeight = Display::kDefaultHeight;
 public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
@@ -32,7 +30,6 @@ private:
 	void updateGameObjects(float delta);
 	void processCollisions();
 	void renderGameObjects();
-
 
 private:
 	SpriteRenderer m_renderer;

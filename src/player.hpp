@@ -8,23 +8,19 @@ namespace gp {
 
 class Player : public Sprite {
 public:
-	explicit Player(int max_width, int max_height);
+	explicit Player();
 	void update(float dt);
 	void reset(int sprite_index);
 
 
 private:
 	SpriteSheet m_sprites;
-	int m_maxWidth;
-	int m_maxHeight;
 };
 
 
-inline Player::Player(const int max_width, const int max_height) :
+inline Player::Player() :
 	Sprite(ResourceManager::getSpriteSheet("paddles").getTexture()),
-	m_sprites(ResourceManager::getSpriteSheet("paddles")),
-	m_maxWidth(max_width),
-	m_maxHeight(max_height)
+	m_sprites(ResourceManager::getSpriteSheet("paddles"))
 {
 	
 }
@@ -37,8 +33,8 @@ inline void Player::update(const float dt)
 	else if (Keyboard::isKeyPressed(Keyboard::A))
 		setOrigin(getOrigin() - getVelocity() * dt);
 
-	if (getRight() > m_maxWidth)
-		setOrigin({getOrigin().x - (getRight() - m_maxWidth), getOrigin().y});
+	if (getRight() > Display::getViewSize().x)
+		setOrigin({getOrigin().x - (getRight() - Display::getViewSize().x), getOrigin().y});
 	else if (getLeft() < 0.0f)
 		setOrigin({getOrigin().x - getLeft(), getOrigin().y});
 }
@@ -48,7 +44,7 @@ inline void Player::reset(const int sprite_index)
 {
 	const auto& sprite = m_sprites.getSprite(sprite_index % m_sprites.getSize());
 	setSprite(sprite);
-	setOrigin({m_maxWidth / 2, m_maxHeight - getHalfSize().y});
+	setOrigin({Display::getViewSize().x / 2, Display::getViewSize().y - getHalfSize().y});
 	setVelocity({190, 0});
 }
 

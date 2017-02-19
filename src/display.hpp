@@ -4,20 +4,29 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "exception.hpp"
+#include "math_types.hpp"
 
 namespace gp {
 
 
 class Display {
 public:
-	static constexpr const int kDefaultWidth = 800;
-	static constexpr const int kDefaultHeight = 600;
-	static constexpr const char* const kDefaultTitle = "Arkanoop";
+	static constexpr const int kDefaultScreenWidth = 800;
+	static constexpr const int kDefaultScreenHeight = 600;
+	static constexpr const int kDefaultViewWidth = 800;
+	static constexpr const int kDefaultViewHeight = 600;
+	static constexpr auto kDefaultTitle = u8"Arkanoop";
+
+	Display() = delete;
 
 	static void initialize();
 	static void terminate();
 	static void setTitle(const std::string& name);
-	static void setSize(int width, int height);
+	
+	static void setScreenSize(int width, int height);
+	static Vec2f getScreenSize();
+	static Vec2f getViewSize();
+
 	static bool shouldClose();
 	static void setVsync(bool value);
 	static void update();
@@ -28,9 +37,12 @@ private:
 
 private:
 	static GLFWwindow* s_window;
-	static int s_width;
-	static int s_height;
-	static Display s_instance;
+	
+	static int s_screenWidth;
+	static int s_screenHeight;
+	
+	static int s_viewWidth;
+	static int s_viewHeight;
 };
 
 
@@ -40,11 +52,23 @@ inline void Display::setTitle(const std::string& name)
 }
 
 
-inline void Display::setSize(const int width, const int height)
+inline void Display::setScreenSize(const int width, const int height)
 {
-	s_width = width;
-	s_height = height;
+	s_screenWidth = width;
+	s_screenHeight = height;
 	glfwSetWindowSize(s_window, width, height);
+}
+
+
+inline Vec2f Display::getScreenSize()
+{
+	return { s_screenWidth, s_screenHeight };
+}
+
+
+inline Vec2f Display::getViewSize()
+{
+	return { s_viewWidth, s_viewHeight };
 }
 
 

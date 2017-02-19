@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "display.hpp"
 #include "finally.hpp"
 #include "sprite_renderer.hpp"
 
@@ -6,7 +7,7 @@
 namespace gp {
 
 
-SpriteRenderer::SpriteRenderer(const int width, const int height)
+SpriteRenderer::SpriteRenderer()
 	: m_shader("../data/shaders/sprite_renderer.vs", "../data/shaders/sprite_renderer.fs"),
 	m_bufferData(nullptr),
 	m_spriteCount(0)
@@ -27,10 +28,9 @@ SpriteRenderer::SpriteRenderer(const int width, const int height)
 	};
 
 	m_shader.setUniform1iv("textures", &tex_indexes[0], 8);
-	m_shader.setUniformMat4("projection",
-	  glm::ortho(0.0f, static_cast<GLfloat>(width),
-	             static_cast<GLfloat>(height), 0.0f, -1.0f, 1.0f));
-
+	m_shader.setUniformMat4("projection", glm::ortho(0.0f, Display::getViewSize().x,
+	                                                 Display::getViewSize().y,
+	                                                 0.0f, -1.0f, 1.0f));
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
 

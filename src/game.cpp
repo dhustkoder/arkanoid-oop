@@ -6,12 +6,8 @@ namespace gp {
 
 
 Game::Game() :
-	m_renderer(kViewWidth, kViewHeight),
-	m_infoStr("", {0, kViewHeight - 50}, 2, 2),
+	m_infoStr("", {0, Display::getViewSize().y - 50}, 2, 2),
 	m_background(ResourceManager::getTexture("bkg0")),
-	m_player(kViewWidth, kViewHeight),
-	m_ball(kViewWidth, kViewHeight),
-	m_bricks(kViewWidth, kViewHeight),
 	m_points(0)
 {
 	Display::setVsync(false);
@@ -39,8 +35,8 @@ void Game::resetGame()
 void Game::resetBackground(const int index)
 {
 	const Texture& texture = ResourceManager::getTexture("bkg" + std::to_string(index));
-	m_background = Sprite(texture, {kViewWidth / 2.0f, kViewHeight / 2.0f},
-	                      {kViewWidth, kViewHeight}, {0, 0}, texture.getSize());
+	m_background = Sprite(texture, Display::getViewSize() / 2.0f, Display::getViewSize(),
+	                      {0, 0}, texture.getSize());
 
 }
 

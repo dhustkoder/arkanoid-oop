@@ -9,7 +9,7 @@ namespace gp {
 
 class Bricks {
 public:
-	Bricks(int max_width, int max_heigth);
+	Bricks();
 	const std::vector<Brick>& getBricks() const;
 	int getDestroyedBricksCount() const;
 	std::vector<Brick>& getBricks();
@@ -23,18 +23,14 @@ private:
 	SpriteSheet m_sprites;
 	std::vector<Brick> m_bricks;
 	int m_destroyedBricks;
-	int m_maxWidth;
-	int m_maxHeight;
 };
 
 
-inline Bricks::Bricks(int max_width, int max_height)
+inline Bricks::Bricks()
 	: m_sprites(ResourceManager::getSpriteSheet("bricks")),
-	m_destroyedBricks(0),
-	m_maxWidth(max_width),
-	m_maxHeight(max_height)
-
+	m_destroyedBricks(0)
 {
+
 }
 
 
@@ -66,7 +62,7 @@ inline void Bricks::reset(const int num_lines)
 	const Vec2f sprite_size = m_sprites.getSprite(0).getSize();
 	Vec2f origin { (sprite_size.x + 8) / 2.0f, (sprite_size.y + 8) / 2.0f };
 
-	const int brick_count = num_lines * (m_maxWidth / static_cast<int>(sprite_size.x + 8));
+	const int brick_count = num_lines * (Display::getViewSize().x / static_cast<int>(sprite_size.x + 8));
 
 	m_bricks.reserve(brick_count);
 
@@ -78,10 +74,10 @@ inline void Bricks::reset(const int num_lines)
 		m_bricks.back().setSize(sprite_size);
 
 		origin.x += sprite_size.x + 8;
-		if (origin.x > (m_maxWidth - ((sprite_size.x + 8) / 2.0f))) {
+		if (origin.x > (Display::getViewSize().x - ((sprite_size.x + 8) / 2.0f))) {
 			origin.x = (sprite_size.x + 8) / 2.0f;
 			origin.y += sprite_size.y + 8;
-			if (origin.y > (m_maxHeight - ((sprite_size.y + 8) / 2.0f)))
+			if (origin.y > (Display::getViewSize().y - ((sprite_size.y + 8) / 2.0f)))
 				origin.y = (sprite_size.y + 8) / 2.0f;
 		}
 	}

@@ -9,7 +9,7 @@ namespace gp {
 
 class Ball : public Sprite {
 public:
-	Ball(int max_width, int max_height);
+	Ball();
 
 	float getRadius() const;
 	bool isIntersecting(const Sprite& sprite) const;
@@ -21,18 +21,14 @@ public:
 
 private:
 	SpriteSheet m_sprites;
-	int m_maxWidth;
-	int m_maxHeight;
 	int m_currentSpriteIndex;
 	float m_radius;
 };
 
 
-inline Ball::Ball(const int max_width, const int max_height) :
+inline Ball::Ball() :
 	Sprite(ResourceManager::getSpriteSheet("balls").getTexture()),
 	m_sprites(ResourceManager::getSpriteSheet("balls")),
-	m_maxWidth(max_width),
-	m_maxHeight(max_height),
 	m_currentSpriteIndex(0),
 	m_radius(0)
 {
@@ -57,16 +53,16 @@ inline void Ball::setRadius(const float radius)
 
 inline void Ball::update(const float dt)
 {
-	if (getRight() > m_maxWidth) {
-		setOrigin({m_maxWidth - getHalfSize().x, getOrigin().y});
+	if (getRight() > Display::getViewSize().x) {
+		setOrigin({Display::getViewSize().x - getHalfSize().x, getOrigin().y});
 		setVelocity({-std::abs(getVelocity().x), getVelocity().y});
 	} else if (getLeft() < 0) {
 		setOrigin({getHalfSize().x, getOrigin().y});
 		setVelocity({std::abs(getVelocity().x), getVelocity().y});
 	}
 
-	if (getBottom() > m_maxHeight) {
-		setOrigin({getOrigin().x, m_maxHeight - getHalfSize().y});
+	if (getBottom() > Display::getViewSize().y) {
+		setOrigin({getOrigin().x, Display::getViewSize().y - getHalfSize().y});
 		setVelocity({getVelocity().x, -std::abs(getVelocity().y)});
 		reset(++m_currentSpriteIndex);
 		
@@ -106,7 +102,7 @@ inline bool Ball::isIntersecting(const Sprite& brick) const
 
 inline void Ball::reset(const int sprite_index)
 {
-	const Vec2f default_origin { m_maxWidth / 2, m_maxHeight / 2};
+	const Vec2f default_origin { Display::getViewSize().x / 2, Display::getViewSize().y / 2};
 	const Vec2f default_velocity { 200, 200 };
 	const float default_radius = 8.0f;
 

@@ -27,8 +27,6 @@ public:
 	float getSpacing() const;
 	const Vec4f& getColor() const;
 
-
-
 	void setString(std::string str);
 	void setPos(const Vec2f& origin);
 	void setScale(float scale);
@@ -159,4 +157,3 @@ inline const std::vector<Sprite>& GraphicString::getSprites() const
 
 } // namespace gp
 #endif
-
