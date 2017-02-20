@@ -53,6 +53,36 @@ private:
 };
 
 
+inline bool operator==(const GraphicString& gstr, const std::string& str)
+{
+	return gstr.getString() == str;
+}
+
+inline bool operator!=(const GraphicString& gstr, const std::string& str)
+{
+	return !(gstr == str);
+}
+
+inline bool operator==(const std::string& str, const GraphicString& gstr)
+{
+	return str == gstr.getString();
+}
+
+inline bool operator!=(const std::string& str, const GraphicString& gstr)
+{
+	return !(str == gstr);
+}
+
+inline bool operator==(const GraphicString& left, const GraphicString& right)
+{
+	return left.getString() == right.getString();
+}
+
+inline bool operator!=(const GraphicString& left, const GraphicString& right)
+{
+	return !(left == right);
+}
+
 inline GraphicString::GraphicString()
 	: GraphicString("")
 {

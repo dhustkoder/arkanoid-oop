@@ -1,5 +1,6 @@
 #ifndef ARKANOOP_PLAYER_HPP_
 #define ARKANOOP_PLAYER_HPP_
+#include "display.hpp"
 #include "keyboard.hpp"
 #include "resource_manager.hpp"
 

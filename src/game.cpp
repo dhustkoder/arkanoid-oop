@@ -1,6 +1,8 @@
 #include <iostream>
-#include <tuple>
+
 #include "game.hpp"
+#include "display.hpp"
+#include "resource_manager.hpp"
 
 namespace gp {
 

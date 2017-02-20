@@ -1,7 +1,16 @@
 
-Level0 {
+
+"Testing This Joke" {
 	Bricks {
-		[1, 1] [2, 4]
+		1
 	}
 }
+
+
+"Testing Further" {
+	Bricks {
+		5
+	}
+}
+
 

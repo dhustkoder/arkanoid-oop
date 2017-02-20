@@ -1,14 +1,12 @@
 #ifndef ARKANOOP_GAME_HPP_
 #define ARKANOOP_GAME_HPP_
-#include <vector>
-#include "display.hpp"
-#include "sprite_sheet.hpp"
 #include "sprite_renderer.hpp"
-#include "ball.hpp"
-#include "player.hpp"
-#include "bricks.hpp"
 #include "graphic_string.hpp"
-
+#include "level.hpp"
+#include "sprite.hpp"
+#include "player.hpp"
+#include "ball.hpp"
+#include "bricks.hpp"
 
 namespace gp {
 
@@ -34,10 +32,10 @@ private:
 private:
 	SpriteRenderer m_renderer;
 	GraphicString m_infoStr;
+	Level m_level;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;
-	Bricks m_bricks;
 	int m_points;
 };
 

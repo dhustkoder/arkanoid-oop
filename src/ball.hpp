@@ -18,9 +18,7 @@ public:
 	void update(float dt);
 	void reset(int sprite_index);
 
-
 private:
-	SpriteSheet m_sprites;
 	int m_currentSpriteIndex;
 	float m_radius;
 };
@@ -28,7 +26,6 @@ private:
 
 inline Ball::Ball() :
 	Sprite(ResourceManager::getSpriteSheet("balls").getTexture()),
-	m_sprites(ResourceManager::getSpriteSheet("balls")),
 	m_currentSpriteIndex(0),
 	m_radius(0)
 {
@@ -65,8 +62,9 @@ inline void Ball::update(const float dt)
 		setOrigin({getOrigin().x, Display::getViewSize().y - getHalfSize().y});
 		setVelocity({getVelocity().x, -std::abs(getVelocity().y)});
 		reset(++m_currentSpriteIndex);
-		
-		if (m_currentSpriteIndex >= m_sprites.getSize())
+	
+		const SpriteSheet& sprites = ResourceManager::getSpriteSheet("balls");	
+		if (m_currentSpriteIndex >= sprites.getSize())
 			m_currentSpriteIndex = 0;
 
 	} else if (getTop() < 0) {
@@ -106,7 +104,8 @@ inline void Ball::reset(const int sprite_index)
 	const Vec2f default_velocity { 200, 200 };
 	const float default_radius = 8.0f;
 
-	setSprite(m_sprites.getSprite(sprite_index % m_sprites.getSize()));
+	const SpriteSheet& sprites = ResourceManager::getSpriteSheet("balls");
+	setSprite(sprites.getSprite(sprite_index % sprites.getSize()));
 	setOrigin(default_origin);
 	setVelocity(default_velocity);
 	setRadius(default_radius);
