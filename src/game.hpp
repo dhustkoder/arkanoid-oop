@@ -25,7 +25,7 @@ private:
 	void resetGame();
 	void resetBackground(int index);
 
-	void updateGameObjects(float frametime, float delta);
+	void updateGameObjects(float dt);
 	void processCollisions();
 	void renderGameObjects();
 

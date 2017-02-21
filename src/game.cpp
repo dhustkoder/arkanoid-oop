@@ -59,10 +59,10 @@ void Game::run()
 
 		Display::clear(0.25f, 0.25f, 0.65f, 1.0f);
 
-		updateGameObjects(frametime, delta);
+		updateGameObjects(delta);
 		renderGameObjects();
 
-		Display::update();		
+		Display::update();
 
 		++fps;
 		if ((frametime - lastsecond) >= 1.0f) {
@@ -76,23 +76,11 @@ void Game::run()
 }
 
 
-inline void Game::updateGameObjects(const float frametime, const float delta)
+inline void Game::updateGameObjects(const float dt)
 {
-	if (!m_presentingLevel) {
-		m_player.update(delta);
-		m_ball.update(delta);
-		processCollisions();
-	} else {
-		static float presentation_start = frametime;
-		float diff = frametime - presentation_start;
-
-		if (diff >= 3.0f)
-			m_presentingLevel = false;
-		
-		auto gstr = m_level.getName();
-		gstr.setColor({1.0f, 1.0f, 1.0f, 1.0f * diff});
-		m_level.setName(std::move(gstr));
-	}
+	m_player.update(dt);
+	m_ball.update(dt);
+	processCollisions();
 }
 
 
