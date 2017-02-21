@@ -1,16 +1,10 @@
 
-
-"Testing This Joke" {
-	Bricks {
-		1
-	}
+"TESTING THIS JOKE" {
+	Bricks: 1
 }
 
-
-"Testing Further" {
-	Bricks {
-		5
-	}
+"TESTING FURTHER" {
+	Bricks: 5
 }
 
 

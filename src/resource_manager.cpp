@@ -113,8 +113,32 @@ void ResourceManager::loadLevels()
 	}();
 
 
-	for (auto c : file)
-		std::cout << c;
+	std::string name;
+	std::string map;
+
+	for (std::string::size_type i = 0; i < file.size(); ++i) {
+		if (file[i] == '\"') {
+			const auto level_name_beg = i + 1;
+			
+			for ( i = i + 1; i < file.size(); ++i) {
+				if (file[i] == '\"')
+					break;
+			}
+
+			if (i >= file.size())
+				break;
+
+			const auto level_name_end = i;
+			name = file.substr(level_name_beg, level_name_end - level_name_beg);
+			
+			const auto level_bricks_beg = file.find_first_of("Bricks:", level_name_beg) + 7;
+			const auto level_bricks_end = file.find_first_of('\n', level_bricks_beg);
+			map = file.substr(level_bricks_beg, level_bricks_end - level_bricks_beg);
+
+			std::cout << "NAME: " << name << '\n' << "MAP: " << map << '\n';
+			s_levelMap.emplace_back(Level(name, map));
+		}
+	}
 }
 
 } // namespace gp
