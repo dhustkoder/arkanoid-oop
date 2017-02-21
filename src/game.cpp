@@ -9,6 +9,7 @@ namespace gp {
 
 Game::Game() :
 	m_infoStr("", {0, Display::getViewSize().y - 50}, 2, 2),
+	m_level(ResourceManager::getLevel(0)),
 	m_background(ResourceManager::getTexture("bkg0")),
 	m_points(0)
 {
@@ -29,7 +30,6 @@ void Game::resetGame()
 {
 	m_player.reset(0);
 	m_ball.reset(0);
-	m_bricks.reset(10);
 	resetBackground(0);
 }
 
@@ -79,7 +79,6 @@ inline void Game::updateGameObjects(const float delta)
 {
 	m_player.update(delta);
 	m_ball.update(delta);
-	m_bricks.update(delta);
 	processCollisions();
 }
 
@@ -104,11 +103,12 @@ inline void Game::processCollisions()
 		return;
 	}
 
+
 	// skip tests if ball is not as high as the lowest brick
-	if (m_bricks.getBricks().back().getBottom() < m_ball.getTop())
+	if (m_level.getBricks().back().getBottom() < m_ball.getTop())
 		return;
 
-	for (auto itr = m_bricks.getBricks().begin(); itr != m_bricks.getBricks().end(); ++itr) {
+	for (auto itr = m_level.getBricks().begin(); itr != m_level.getBricks().end(); ++itr) {
 		if (!m_ball.isIntersecting(*itr))
 			continue;
 
@@ -147,7 +147,7 @@ inline void Game::processCollisions()
 
 			m_infoStr.setString("BRICKS DESTROYED:" + std::to_string(m_points) +
 			                    "\nFPS:" + oldstr.substr(fps_num_beg, fps_num_end));
-			m_bricks.getBricks().erase(itr);
+			m_level.getBricks().erase(itr);
 		}
 		
 		break;
@@ -160,7 +160,7 @@ inline void Game::renderGameObjects()
 	m_renderer.begin();
 	
 	m_renderer.submit(m_background);
-	m_renderer.submit(m_bricks.getBricks());
+	m_renderer.submit(m_level.getBricks());
 	m_renderer.submit(m_ball);
 	m_renderer.submit(m_player);
 	

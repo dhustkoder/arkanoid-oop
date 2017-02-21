@@ -35,7 +35,7 @@ private:
 	static LevelMap::iterator findLevel(const std::string& name);
 	static void loadTextures();
 	static void loadSpriteSheets();
-
+	static void loadLevels();
 
 private:
 	static TextureMap s_textureMap;

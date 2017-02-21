@@ -1,15 +1,18 @@
+#include <iostream>
+#include <fstream>
 #include "resource_manager.hpp"
 
 namespace gp {
 
 ResourceManager::TextureMap ResourceManager::s_textureMap;
 ResourceManager::SpriteSheetMap ResourceManager::s_spriteSheetMap;
-
+ResourceManager::LevelMap ResourceManager::s_levelMap;
 
 void ResourceManager::initialize()
 {
 	loadTextures();
 	loadSpriteSheets();
+	loadLevels();
 }
 
 
@@ -92,6 +95,27 @@ inline void ResourceManager::loadSpriteSheets()
 	s_spriteSheetMap.emplace_back(std::make_pair(std::string("bricks"), std::move(bricks)));
 }
 
+void ResourceManager::loadLevels()
+{
+	const std::string file = [] {
+		std::ifstream levels_file ("../data/levels/levels.dat", std::ios::ate);
+		
+		std::string str;
+		str.resize(levels_file.tellg());
+		
+		levels_file.seekg(levels_file.beg);
+
+		std::copy(std::istreambuf_iterator<char>(levels_file),
+		          std::istreambuf_iterator<char>(),
+		          str.begin());
+
+		return str;
+	}();
+
+
+	for (auto c : file)
+		std::cout << c;
+}
 
 } // namespace gp
 
