@@ -26,7 +26,7 @@ private:
 	void setBackground(int index);
 	void setLevel(int index);
 
-	void updateGameObjects(float dt);
+	void updateGameObjects();
 	void processCollisions();
 	void renderGameObjects();
 
@@ -38,6 +38,11 @@ private:
 	Player m_player;
 	Ball m_ball;
 	Bricks m_bricks;
+	
+	double m_time;
+	double m_levelPresentationStartTime;
+	float m_delta;
+
 	int m_levelIndex;
 	int m_points;
 	bool m_presentingLevel;

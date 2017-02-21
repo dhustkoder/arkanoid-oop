@@ -32,7 +32,6 @@ void Game::resetGame()
 	m_player.reset(0);
 	m_ball.reset(0);
 
-	setBackground(m_levelIndex);
 	setLevel(m_levelIndex++);
 }
 
@@ -49,47 +48,61 @@ void Game::setLevel(const int index)
 {
 	m_levelName = ResourceManager::getLevel(index).getName();
 	m_bricks = ResourceManager::getLevel(index).getBricks();
+	setBackground(index);
 	m_presentingLevel = true;
+	m_levelPresentationStartTime = glfwGetTime();
 }
 
 
 void Game::run()
 {
-	double frametime = 0;
-	double lastframetime = 0;
+	double lasttime = 0;
 	double lastsecond = 0;
-	float delta;
 	int fps = 0;
 
 	while (!Display::shouldClose()) {
-		frametime = glfwGetTime();
-		delta = static_cast<float>(frametime - lastframetime);
-		lastframetime = frametime;
+		m_time = glfwGetTime();
+		m_delta = static_cast<float>(m_time - lasttime);
+		lasttime = m_time;
 
 		Display::clear(0.25f, 0.25f, 0.65f, 1.0f);
-
-		updateGameObjects(delta);
+		
+		updateGameObjects();
 		renderGameObjects();
 
 		Display::update();
 
 		++fps;
-		if ((frametime - lastsecond) >= 1.0f) {
+		if ((m_time - lastsecond) >= 1.0f) {
 			m_infoStr.setString("BRICKS DESTROYED:" + std::to_string(m_points) +
 			                    "\nFPS:" + std::to_string(fps));
 			fps = 0;
-			lastsecond = frametime;
+			lastsecond = m_time;
 		}
 
 	}
 }
 
 
-inline void Game::updateGameObjects(const float dt)
+inline void Game::updateGameObjects()
 {
-	m_player.update(dt);
-	m_ball.update(dt);
-	processCollisions();
+	if (m_presentingLevel) {
+		if ((m_time - m_levelPresentationStartTime) < 5.0f) {
+			Vec4f color {1, 1, 1, 1 * sinf(m_time - m_levelPresentationStartTime)};
+			m_levelName.setColor(color);
+		} else {
+			m_presentingLevel = false;
+		}
+
+	} else {
+		m_player.update(m_delta);
+		m_ball.update(m_delta);
+		processCollisions();
+
+		if (m_bricks.getBricks().size() == 0)
+			setLevel(m_levelIndex++);
+	}
+
 }
 
 
@@ -172,9 +185,11 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_background);
 	m_renderer.submit(m_bricks.getBricks());
 	m_renderer.submit(m_ball);
-	m_renderer.submit(m_player);
-	
+	m_renderer.submit(m_player);	
 	m_renderer.submit(m_infoStr);
+
+	if (m_presentingLevel)
+		m_renderer.submit(m_levelName);
 
 	m_renderer.end();
 	m_renderer.flush();
