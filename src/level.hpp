@@ -15,13 +15,10 @@ public:
 	Level(Level&&) noexcept;
 	Level(const Level&);
 
-	Level() = default;
 	Level(const std::string& name, const std::string& brick_map);
 
 	const GraphicString& getName() const;
-	void setName(GraphicString gstr);
-
-	std::vector<Brick>& getBricks();
+	const Bricks& getBricks() const;
 
 private:
 	GraphicString m_name;
@@ -64,14 +61,9 @@ inline const GraphicString& Level::getName() const
 	return m_name;
 }
 
-inline std::vector<Brick>& Level::getBricks()
+inline const Bricks& Level::getBricks() const
 {
-	return m_bricks.getBricks();
-}
-
-inline void Level::setName(GraphicString gstr)
-{
-	m_name = std::move(gstr);
+	return m_bricks;
 }
 
 } // namespace gp

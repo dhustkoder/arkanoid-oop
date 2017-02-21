@@ -23,7 +23,8 @@ public:
 
 private:
 	void resetGame();
-	void resetBackground(int index);
+	void setBackground(int index);
+	void setLevel(int index);
 
 	void updateGameObjects(float dt);
 	void processCollisions();
@@ -32,10 +33,12 @@ private:
 private:
 	SpriteRenderer m_renderer;
 	GraphicString m_infoStr;
-	Level m_level;
+	GraphicString m_levelName;
 	Sprite m_background;
 	Player m_player;
 	Ball m_ball;
+	Bricks m_bricks;
+	int m_levelIndex;
 	int m_points;
 	bool m_presentingLevel;
 };
