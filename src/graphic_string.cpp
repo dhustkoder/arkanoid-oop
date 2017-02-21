@@ -46,7 +46,7 @@ void GraphicString::evaluateSpriteString()
 	for (std::string::size_type i = 0; i < m_str.size(); ++i) {
 
 		if (m_str[i] == '\n') {
-			pos.y += m_spriteString.at(m_spriteString.size() - 1).getSize().y + m_spacing;
+			pos.y += m_spriteString.back().getSize().y + m_spacing;
 			pos.x = m_pos.x;
 			previus_right = -1;
 			continue;

@@ -6,6 +6,7 @@
 
 namespace gp {
 
+constexpr int SpriteRenderer::kTextureIndexes[SpriteRenderer::kMaxTextures];
 
 SpriteRenderer::SpriteRenderer()
 	: m_shader("../data/shaders/sprite_renderer.vs", "../data/shaders/sprite_renderer.fs"),
@@ -23,14 +24,10 @@ SpriteRenderer::SpriteRenderer()
 		unbindVertexObjects();
 	});
 
-	constexpr GLint tex_indexes[8] { 
-		0, 1, 2, 3, 4, 5, 6, 7
-	};
-
-	m_shader.setUniform1iv("textures", &tex_indexes[0], 8);
-	m_shader.setUniformMat4("projection", glm::ortho(0.0f, Display::getViewSize().x,
-	                                                 Display::getViewSize().y,
-	                                                 0.0f, -1.0f, 1.0f));
+	m_shader.setUniform1iv("textures", &kTextureIndexes[0], kMaxTextures);
+	m_shader.setUniformMat4("projection",
+	  glm::ortho(0.0f, Display::getViewSize().x, Display::getViewSize().y,
+	             0.0f, -1.0f, 1.0f));
 
 	glBufferData(GL_ARRAY_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
 

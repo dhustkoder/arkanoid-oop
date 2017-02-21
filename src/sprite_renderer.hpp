@@ -12,6 +12,10 @@ namespace gp {
 
 class SpriteRenderer {
 	static constexpr const int kMaxTextures = 8;
+	static constexpr const int kTextureIndexes[kMaxTextures] {
+		0, 1, 2, 3, 4, 5, 6, 7
+	};
+
 	static constexpr const int kMaxSprites = 1000;
 	static constexpr const int kVertexDataSize = sizeof(VertexData);
 	static constexpr const int kSpriteSize = kVertexDataSize * 4;
