@@ -25,7 +25,7 @@ private:
 	void resetGame();
 	void resetBackground(int index);
 
-	void updateGameObjects(float delta);
+	void updateGameObjects(float frametime, float delta);
 	void processCollisions();
 	void renderGameObjects();
 
@@ -37,6 +37,7 @@ private:
 	Player m_player;
 	Ball m_ball;
 	int m_points;
+	bool m_presentingLevel;
 };
 
 

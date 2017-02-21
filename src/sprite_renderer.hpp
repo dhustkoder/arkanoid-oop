@@ -5,6 +5,7 @@
 #include "sprite.hpp"
 #include "shader.hpp"
 #include "vertex_data.hpp"
+#include "graphic_string.hpp"
 
 
 namespace gp {
@@ -30,6 +31,7 @@ public:
 	void submit(const Sprite& sprite);
 	template<class RenderableType>
 	void submit(const std::vector<RenderableType>& sprites);
+	void submit(const GraphicString& gstr);
 	void end();
 	void flush();
 
@@ -133,6 +135,10 @@ inline void SpriteRenderer::submit(const std::vector<RenderableType>& sprites)
 		this->submit(renderable);
 }
 
+inline void SpriteRenderer::submit(const GraphicString& gstr)
+{
+	this->submit(gstr.getSprites());
+}
 
 } // namespace gp
 #endif

@@ -9,7 +9,6 @@ namespace gp {
 
 Game::Game() :
 	m_infoStr("", {0, Display::getViewSize().y - 50}, 2, 2),
-	m_level(ResourceManager::getLevel(0)),
 	m_background(ResourceManager::getTexture("bkg0")),
 	m_points(0)
 {
@@ -30,6 +29,8 @@ void Game::resetGame()
 {
 	m_player.reset(0);
 	m_ball.reset(0);
+	m_level = ResourceManager::getLevel(0);
+	m_presentingLevel = true;
 	resetBackground(0);
 }
 
@@ -58,7 +59,7 @@ void Game::run()
 
 		Display::clear(0.25f, 0.25f, 0.65f, 1.0f);
 
-		updateGameObjects(delta);
+		updateGameObjects(frametime, delta);
 		renderGameObjects();
 
 		Display::update();		
@@ -75,11 +76,23 @@ void Game::run()
 }
 
 
-inline void Game::updateGameObjects(const float delta)
+inline void Game::updateGameObjects(const float frametime, const float delta)
 {
-	m_player.update(delta);
-	m_ball.update(delta);
-	processCollisions();
+	if (!m_presentingLevel) {
+		m_player.update(delta);
+		m_ball.update(delta);
+		processCollisions();
+	} else {
+		static float presentation_start = frametime;
+		float diff = frametime - presentation_start;
+
+		if (diff >= 3.0f)
+			m_presentingLevel = false;
+		
+		auto gstr = m_level.getName();
+		gstr.setColor({1.0f, 1.0f, 1.0f, 1.0f * diff});
+		m_level.setName(std::move(gstr));
+	}
 }
 
 
@@ -164,7 +177,10 @@ inline void Game::renderGameObjects()
 	m_renderer.submit(m_ball);
 	m_renderer.submit(m_player);
 	
-	m_renderer.submit(m_infoStr.getSprites());
+	m_renderer.submit(m_infoStr);
+
+	if (m_presentingLevel)
+		m_renderer.submit(m_level.getName());
 
 	m_renderer.end();
 	m_renderer.flush();

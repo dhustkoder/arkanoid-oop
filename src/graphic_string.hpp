@@ -9,9 +9,10 @@ namespace gp {
 
 class GraphicString {
 public:
+	GraphicString& operator=(const GraphicString& other) = default;
 	GraphicString& operator=(GraphicString&& other) noexcept = default;
-	GraphicString(GraphicString&& other) noexcept = default;
 	GraphicString(const GraphicString& other) = default;
+	GraphicString(GraphicString&& other) noexcept = default;
 
 	GraphicString(std::string str, Vec2f pos = {0, 0},
 	              float scale = 1.0f, float spacing = 2.0f,
