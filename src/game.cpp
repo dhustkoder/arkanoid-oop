@@ -28,10 +28,6 @@ void Game::resetGame()
 {
 	m_points = 0;
 	m_levelIndex = 0;
-
-	m_player.reset(0);
-	m_ball.reset(0);
-
 	setLevel(m_levelIndex++);
 }
 
@@ -44,10 +40,16 @@ void Game::setBackground(const int index)
 
 }
 
+
 void Game::setLevel(const int index)
 {
 	m_levelName = ResourceManager::getLevel(index).getName();
 	m_bricks = ResourceManager::getLevel(index).getBricks();
+
+	m_player.reset(0);
+	m_ball.reset(0);
+	m_ball.stuckIntoPlayer(m_player);
+
 	setBackground(index);
 	m_presentingLevel = true;
 	m_levelPresentationStartTime = glfwGetTime();
@@ -87,22 +89,33 @@ void Game::run()
 inline void Game::updateGameObjects()
 {
 	if (m_presentingLevel) {
+
 		if ((m_time - m_levelPresentationStartTime) < 5.0f) {
-			Vec4f color {1, 1, 1, 1 * sinf(m_time - m_levelPresentationStartTime)};
+
+			const Vec4f color {
+				1,
+				1,
+				1,
+				1 * sinf(m_time - m_levelPresentationStartTime)
+			};
+
 			m_levelName.setColor(color);
+
 		} else {
 			m_presentingLevel = false;
 		}
 
 	} else {
+
 		m_player.update(m_delta);
 		m_ball.update(m_delta);
-		processCollisions();
+
+		if (!m_ball.isStuckIntoPlayer())
+			processCollisions();
 
 		if (m_bricks.getBricks().size() == 0)
 			setLevel(m_levelIndex++);
 	}
-
 }
 
 
@@ -197,3 +210,4 @@ inline void Game::renderGameObjects()
 
 
 } // namespace gp
+

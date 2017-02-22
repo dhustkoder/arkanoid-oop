@@ -1,33 +1,40 @@
 #ifndef ARKANOOP_BALL_HPP_
 #define ARKANOOP_BALL_HPP_
 #include "keyboard.hpp"
-#include "resource_manager.hpp"
-
+#include "player.hpp"
 
 namespace gp {
 
 
 class Ball : public Sprite {
+	static constexpr const float kDefaultVelocity = 150.0f;
 public:
 	Ball();
 
 	float getRadius() const;
 	bool isIntersecting(const Sprite& sprite) const;
+	bool isStuckIntoPlayer() const;
 
 	void setRadius(float radius);
 	void update(float dt);
 	void reset(int sprite_index);
+	void stuckIntoPlayer(const Player& player);
 
 private:
+	const Player* m_player;
 	int m_currentSpriteIndex;
 	float m_radius;
+	bool m_isStuck;
+
 };
 
 
 inline Ball::Ball() :
 	Sprite(ResourceManager::getSpriteSheet("balls").getTexture()),
+	m_player(nullptr),
 	m_currentSpriteIndex(0),
-	m_radius(0)
+	m_radius(0),
+	m_isStuck(false)
 {
 
 }
@@ -38,6 +45,11 @@ inline float Ball::getRadius() const
 	return m_radius;
 }
 
+
+inline bool Ball::isStuckIntoPlayer() const
+{
+	return m_isStuck;
+}
 
 
 inline void Ball::setRadius(const float radius)
@@ -50,6 +62,26 @@ inline void Ball::setRadius(const float radius)
 
 inline void Ball::update(const float dt)
 {
+	if (m_isStuck) {
+
+		setOrigin({m_player->getOrigin().x,
+		           m_player->getOrigin().y -
+			   m_player->getHalfSize().y -
+			   getHalfSize().y});
+
+
+		if (Keyboard::isKeyPressed(Keyboard::Space)) {
+			setVelocity({m_player->getVelocity().x,
+			             -kDefaultVelocity});
+			m_isStuck = false;
+			m_player = nullptr;
+		}
+
+
+		return;
+	}
+
+
 	if (getRight() > Display::getViewSize().x) {
 		setOrigin({Display::getViewSize().x - getHalfSize().x, getOrigin().y});
 		setVelocity({-std::abs(getVelocity().x), getVelocity().y});
@@ -111,6 +143,18 @@ inline void Ball::reset(const int sprite_index)
 	setRadius(default_radius);
 }
 
+
+inline void Ball::stuckIntoPlayer(const Player& player)
+{
+	m_player = &player;
+
+	setOrigin({m_player->getOrigin().x,
+	           m_player->getOrigin().y -
+	           m_player->getHalfSize().y -
+	           getHalfSize().y});
+
+	m_isStuck = true;
+}
 
 } // namespace gp
 #endif

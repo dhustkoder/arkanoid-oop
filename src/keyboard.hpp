@@ -12,7 +12,8 @@ public:
 		W = GLFW_KEY_W,
 		S = GLFW_KEY_S,
 		D = GLFW_KEY_D,
-		A = GLFW_KEY_A
+		A = GLFW_KEY_A,
+		Space = GLFW_KEY_SPACE
 	};
 
 	static bool isKeyPressed(Key key);
