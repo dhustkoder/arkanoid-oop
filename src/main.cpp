@@ -31,7 +31,7 @@ int main()
 		std::cerr << "FATAL UNKNOWN EXCEPTION...\n"; 
 	}
 
-	std::cout << "PRESS ENTER TO EXIT\n";
+	std::cout << "PRESS ANY KEY TO EXIT...\n";
 	std::cin.ignore(1);
 	return EXIT_FAILURE;
 }
