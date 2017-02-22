@@ -163,7 +163,12 @@ inline void Game::processCollisions()
 
 		} else {
 			
-			const GLfloat abs_x_vel = std::abs(m_ball.getVelocity().x);
+			const GLfloat abs_x_vel =
+			  static_cast<int>(m_ball.getVelocity().x) == 0
+			  ? Ball::kDefaultVelocity
+			  : std::abs(m_ball.getVelocity().x);
+			
+
 			GLfloat new_x_vel;
 
 			if (m_ball.getOrigin().x < itr->getOrigin().x)

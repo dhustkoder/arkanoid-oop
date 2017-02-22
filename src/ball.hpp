@@ -3,12 +3,14 @@
 #include "keyboard.hpp"
 #include "player.hpp"
 
+
 namespace gp {
 
 
 class Ball : public Sprite {
-	static constexpr const float kDefaultVelocity = 150.0f;
 public:
+	static constexpr const float kDefaultVelocity = 150.0f;
+
 	Ball();
 
 	float getRadius() const;
@@ -19,13 +21,11 @@ public:
 	void update(float dt);
 	void reset(int sprite_index);
 	void stuckIntoPlayer(const Player& player);
-
 private:
 	const Player* m_player;
 	int m_currentSpriteIndex;
 	float m_radius;
 	bool m_isStuck;
-
 };
 
 
@@ -67,16 +67,24 @@ inline void Ball::update(const float dt)
 		setOrigin({m_player->getOrigin().x,
 		           m_player->getOrigin().y -
 			   m_player->getHalfSize().y -
-			   getHalfSize().y});
-
+		           getHalfSize().y});
 
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
-			setVelocity({m_player->getVelocity().x,
-			             -kDefaultVelocity});
+			
+			float xmul;
+
+			if (Keyboard::isKeyPressed(Keyboard::A))
+				xmul = -1;
+			else if (Keyboard::isKeyPressed(Keyboard::D))
+				xmul = 1;
+			else
+				xmul = 0;
+
+			setVelocity({kDefaultVelocity * xmul, -kDefaultVelocity});
+
 			m_isStuck = false;
 			m_player = nullptr;
 		}
-
 
 		return;
 	}
@@ -132,14 +140,9 @@ inline bool Ball::isIntersecting(const Sprite& brick) const
 
 inline void Ball::reset(const int sprite_index)
 {
-	const Vec2f default_origin { Display::getViewSize().x / 2, Display::getViewSize().y / 2};
-	const Vec2f default_velocity { 200, 200 };
 	const float default_radius = 8.0f;
-
 	const SpriteSheet& sprites = ResourceManager::getSpriteSheet("balls");
 	setSprite(sprites.getSprite(sprite_index % sprites.getSize()));
-	setOrigin(default_origin);
-	setVelocity(default_velocity);
 	setRadius(default_radius);
 }
 
@@ -155,6 +158,7 @@ inline void Ball::stuckIntoPlayer(const Player& player)
 
 	m_isStuck = true;
 }
+
 
 } // namespace gp
 #endif
