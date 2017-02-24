@@ -63,10 +63,10 @@
     <ClInclude Include="..\src\bricks.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\brick.hpp">
+    <ClInclude Include="..\src\ball.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ball.hpp">
+    <ClInclude Include="..\src\level.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -96,6 +96,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\graphic_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\bricks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

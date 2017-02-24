@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ball.hpp" />
-    <ClInclude Include="..\src\brick.hpp" />
     <ClInclude Include="..\src\bricks.hpp" />
     <ClInclude Include="..\src\display.hpp" />
     <ClInclude Include="..\src\exception.hpp" />
@@ -28,6 +27,7 @@
     <ClInclude Include="..\src\game.hpp" />
     <ClInclude Include="..\src\graphic_string.hpp" />
     <ClInclude Include="..\src\keyboard.hpp" />
+    <ClInclude Include="..\src\level.hpp" />
     <ClInclude Include="..\src\math_types.hpp" />
     <ClInclude Include="..\src\player.hpp" />
     <ClInclude Include="..\src\resource_manager.hpp" />
@@ -39,6 +39,7 @@
     <ClInclude Include="..\src\vertex_data.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\bricks.cpp" />
     <ClCompile Include="..\src\display.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\graphic_string.cpp" />
