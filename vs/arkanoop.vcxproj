@@ -44,6 +44,7 @@
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\graphic_string.cpp" />
     <ClCompile Include="..\src\keyboard.cpp" />
+    <ClCompile Include="..\src\level.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\resource_manager.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
