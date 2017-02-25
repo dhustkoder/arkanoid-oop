@@ -93,10 +93,8 @@ inline void Game::updateGameObjects()
 		if ((m_time - m_levelPresentationStartTime) < 5.0f) {
 
 			const Vec4f color {
-				1,
-				1,
-				1,
-				1 * sinf(m_time - m_levelPresentationStartTime)
+				1, 1, 1,
+				1 * sinf(static_cast<float>(m_time - m_levelPresentationStartTime))
 			};
 
 			m_levelName.setColor(color);

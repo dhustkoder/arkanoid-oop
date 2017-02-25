@@ -99,10 +99,15 @@ void ResourceManager::loadLevels()
 {
 	const std::string file = [] {
 		std::ifstream levels_file ("../data/levels/levels.dat", std::ios::ate);
-		
 		std::string str;
-		str.resize(levels_file.tellg());
-		
+
+		const auto size = levels_file.tellg();
+
+		if (size > 0)
+			str.resize(static_cast<std::string::size_type>(size));
+		else
+			throw Exception("levels.dat: bad file");
+
 		levels_file.seekg(levels_file.beg);
 
 		std::copy(std::istreambuf_iterator<char>(levels_file),

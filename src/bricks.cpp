@@ -20,7 +20,8 @@ void Bricks::reset(const int num_lines)
 	const Vec2f sprite_size = sprites.getSprite(0).getSize();
 	Vec2f origin { (sprite_size.x + 8) / 2.0f, (sprite_size.y + 8) / 2.0f };
 
-	const int brick_count = num_lines * (Display::getViewSize().x / static_cast<int>(sprite_size.x + 8));
+	const int brick_count = num_lines * (static_cast<int>(Display::getViewSize().x) /
+	                                     static_cast<int>(sprite_size.x + 8));
 
 	m_bricks.reserve(brick_count);
 
