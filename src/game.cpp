@@ -122,18 +122,15 @@ inline void Game::processCollisions()
 	if (m_ball.isIntersecting(m_player)) {
 
 		const GLfloat y_vel = -std::abs(m_ball.getVelocity().y);
-		GLfloat x_vel;
+		GLfloat x_vel = m_ball.getVelocity().x ? m_ball.getVelocity().x : Ball::kDefaultVelocity;
 
 		// check if collided against the paddle edges
 		if (m_ball.getOrigin().x < (m_player.getLeft() + 16))
-			x_vel = -std::abs(m_ball.getVelocity().x);
+			x_vel = -std::abs(x_vel);
 		else if (m_ball.getOrigin().x > (m_player.getRight() - 16))
-			x_vel = std::abs(m_ball.getVelocity().x);
-		else
-			x_vel = m_ball.getVelocity().x;
+			x_vel = std::abs(x_vel);
 
 		m_ball.setVelocity({x_vel, y_vel});
-
 		return;
 	}
 

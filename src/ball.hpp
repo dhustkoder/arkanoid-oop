@@ -91,7 +91,7 @@ inline void Ball::update(const float dt)
 
 
 	if (getRight() > Display::getViewSize().x) {
-		setOrigin({Display::getViewSize().x - getHalfSize().x, getOrigin().y});
+		setOrigin({getOrigin().x - getHalfSize().x, getOrigin().y});
 		setVelocity({-std::abs(getVelocity().x), getVelocity().y});
 	} else if (getLeft() < 0) {
 		setOrigin({getHalfSize().x, getOrigin().y});
@@ -99,20 +99,15 @@ inline void Ball::update(const float dt)
 	}
 
 	if (getBottom() > Display::getViewSize().y) {
-		setOrigin({getOrigin().x, Display::getViewSize().y - getHalfSize().y});
+		setOrigin({getOrigin().x, getOrigin().y - getHalfSize().y});
 		setVelocity({getVelocity().x, -std::abs(getVelocity().y)});
-		reset(++m_currentSpriteIndex);
-	
-		const SpriteSheet& sprites = ResourceManager::getSpriteSheet("balls");	
-		if (m_currentSpriteIndex >= sprites.getSize())
-			m_currentSpriteIndex = 0;
 
 	} else if (getTop() < 0) {
 		setOrigin({getOrigin().x, getHalfSize().y});
 		setVelocity({getVelocity().x, std::abs(getVelocity().y)});
 	}
 
-	setOrigin(getOrigin() +  getVelocity() * dt);
+	setOrigin(getOrigin() + getVelocity() * dt);
 }
 
 
