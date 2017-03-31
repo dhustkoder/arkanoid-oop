@@ -1,5 +1,6 @@
 #ifndef ARKANOOP_BALL_HPP_
 #define ARKANOOP_BALL_HPP_
+#include <cassert>
 #include "keyboard.hpp"
 #include "player.hpp"
 
@@ -24,7 +25,6 @@ public:
 	void freeFromPlayer();
 private:
 	const Player* m_player;
-	int m_currentSpriteIndex;
 	float m_radius;
 };
 
@@ -32,7 +32,6 @@ private:
 inline Ball::Ball() :
 	Sprite(ResourceManager::getSpriteSheet("balls").getTexture()),
 	m_player(nullptr),
-	m_currentSpriteIndex(0),
 	m_radius(0)
 {
 

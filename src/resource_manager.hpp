@@ -30,9 +30,9 @@ public:
 	static const Level& getLevel(int index);
 
 private:
-	static TextureMap::iterator findTexture(const std::string& name);
-	static SpriteSheetMap::iterator findSpriteSheet(const std::string& name);
-	static LevelMap::iterator findLevel(const std::string& name);
+	template<class T>
+	static typename T::iterator findResource(const std::string& name, T* map);
+
 	static void loadTextures();
 	static void loadSpriteSheets();
 	static void loadLevels();
@@ -44,10 +44,31 @@ private:
 };
 
 
+template<class T>
+typename T::iterator ResourceManager::findResource(const std::string& name, T* const map)
+{
+	const auto itr = std::find_if(map->begin(), map->end(),
+				[&name] (const typename T::value_type& elem) {
+					return elem.first == name;
+				});
+	return itr;
+}
+
+
+template<>
+inline ResourceManager::LevelMap::iterator ResourceManager::findResource(const std::string& name, LevelMap* const map)
+{
+	const auto itr = std::find_if(map->begin(), map->end(),
+				[&name] (const typename LevelMap::value_type& elem) {
+					return elem.getName() == name;
+				});
+	return itr;
+}
+
 
 inline const Texture& ResourceManager::getTexture(std::string name)
 {
-	const auto itr = findTexture(name);
+	const auto itr = findResource(name, &s_textureMap);
 	if (itr == s_textureMap.end())
 	       throw Exception("Couldn't find texture with name \'" + name + "\'");
 
@@ -57,7 +78,7 @@ inline const Texture& ResourceManager::getTexture(std::string name)
 
 inline const SpriteSheet& ResourceManager::getSpriteSheet(std::string name)
 {
-	const auto itr = findSpriteSheet(name);
+	const auto itr = findResource(name, &s_spriteSheetMap);
 	if (itr == s_spriteSheetMap.end())
 	       throw Exception("Couldn't find sprite sheet with name \'" + name + "\'");
 
@@ -67,7 +88,7 @@ inline const SpriteSheet& ResourceManager::getSpriteSheet(std::string name)
 
 inline const Level& ResourceManager::getLevel(std::string name)
 {
-	const auto itr = findLevel(name);
+	const auto itr = findResource(name, &s_levelMap);
 	if (itr == s_levelMap.end())
 	       throw Exception("Couldn't find Level with name \'" + name + "\'");
 
@@ -81,34 +102,7 @@ inline const Level& ResourceManager::getLevel(int index)
 }
 
 
-inline ResourceManager::TextureMap::iterator ResourceManager::findTexture(const std::string& name)
-{
-	const auto itr = std::find_if(s_textureMap.begin(), s_textureMap.end(),
-	                           [&name] (const TextureMap::value_type& pair) {
-				   	return pair.first == name; 
-				   });
-	return itr;
-}
 
-
-inline ResourceManager::SpriteSheetMap::iterator ResourceManager::findSpriteSheet(const std::string& name)
-{
-	const auto itr = std::find_if(s_spriteSheetMap.begin(), s_spriteSheetMap.end(),
-	                           [&name] (const SpriteSheetMap::value_type& pair) {
-				   	return pair.first == name; 
-				   });
-	return itr;
-}
-
-
-inline ResourceManager::LevelMap::iterator ResourceManager::findLevel(const std::string& name)
-{
-	const auto itr = std::find_if(s_levelMap.begin(), s_levelMap.end(),
-	                           [&name] (const LevelMap::value_type& level){
-				   	return level.getName() == name;
-				   });
-	return itr;
-}
 
 
 } // namespace gp

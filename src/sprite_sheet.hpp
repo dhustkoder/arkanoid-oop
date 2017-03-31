@@ -24,7 +24,7 @@ public:
 	const Sprite& getSprite(const int index) const;
 	const Texture& getTexture() const;
 	int getSize() const;
-
+	void sort();
 	void mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size);
 
 private:
@@ -71,6 +71,15 @@ inline int SpriteSheet::getSize() const
 	return static_cast<int>(m_sprites.size());
 }
 
+
+inline void SpriteSheet::sort()
+{
+	std::sort(m_sprites.begin(), m_sprites.end(),
+	         [](const typename SpriteMap::value_type& a,
+		    const typename SpriteMap::value_type& b) {
+		 	return a.first < b.first;
+		 });
+}
 
 inline void SpriteSheet::mapSprite(std::string name, const Vec2f& uv_pos, const Vec2f& uv_size)
 {

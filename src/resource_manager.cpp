@@ -58,6 +58,8 @@ inline void ResourceManager::loadSpriteSheets()
 	for (int i = 0; i < characteres_size; ++i)
 		fontset.mapSprite(characteres[i], {i * 8, 0}, { 8, 8 });
 
+	fontset.sort();
+
 	SpriteSheet balls(getTexture("pieces"));
 	balls.mapSprite("blue", {48, 136}, {8, 8});
 	balls.mapSprite("green", {57, 136}, {8, 8});
@@ -66,9 +68,11 @@ inline void ResourceManager::loadSpriteSheets()
 	balls.mapSprite("yellow", {84, 136}, {8, 8});
 	balls.mapSprite("black", {93, 136}, {8, 8});
 	balls.mapSprite("dark_yellow", {102, 136}, {8, 8});
+	balls.sort();
 
 	SpriteSheet paddles(getTexture("pieces"));
 	paddles.mapSprite("blue", {48, 72}, {64, 16});
+	paddles.sort();
 
 
 	SpriteSheet bricks(getTexture("pieces"));
@@ -88,6 +92,7 @@ inline void ResourceManager::loadSpriteSheets()
 	bricks.mapSprite("green_darkyellow_brick", {192, 28}, {32, 16});
 	bricks.mapSprite("dark_darkyellow_brick", {228, 28}, {32, 16});
 	bricks.mapSprite("dark_purple_brick", {264, 28}, {32, 16});
+	bricks.sort();
 
 	s_spriteSheetMap.emplace_back(std::make_pair(std::string("fontset"), std::move(fontset)));
 	s_spriteSheetMap.emplace_back(std::make_pair(std::string("balls"), std::move(balls)));
