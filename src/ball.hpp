@@ -21,11 +21,11 @@ public:
 	void update(float dt);
 	void reset(int sprite_index);
 	void stuckIntoPlayer(const Player& player);
+	void freeFromPlayer();
 private:
 	const Player* m_player;
 	int m_currentSpriteIndex;
 	float m_radius;
-	bool m_isStuck;
 };
 
 
@@ -33,8 +33,7 @@ inline Ball::Ball() :
 	Sprite(ResourceManager::getSpriteSheet("balls").getTexture()),
 	m_player(nullptr),
 	m_currentSpriteIndex(0),
-	m_radius(0),
-	m_isStuck(false)
+	m_radius(0)
 {
 
 }
@@ -48,7 +47,7 @@ inline float Ball::getRadius() const
 
 inline bool Ball::isStuckIntoPlayer() const
 {
-	return m_isStuck;
+	return m_player != nullptr;
 }
 
 
@@ -62,29 +61,15 @@ inline void Ball::setRadius(const float radius)
 
 inline void Ball::update(const float dt)
 {
-	if (m_isStuck) {
+	if (isStuckIntoPlayer()) {
 
 		setOrigin({m_player->getOrigin().x,
 		           m_player->getOrigin().y -
 			   m_player->getHalfSize().y -
 		           getHalfSize().y});
 
-		if (Keyboard::isKeyPressed(Keyboard::Space)) {
-			
-			float xmul;
-
-			if (Keyboard::isKeyPressed(Keyboard::A))
-				xmul = -1;
-			else if (Keyboard::isKeyPressed(Keyboard::D))
-				xmul = 1;
-			else
-				xmul = 0;
-
-			setVelocity({kDefaultVelocity * xmul, -kDefaultVelocity});
-
-			m_isStuck = false;
-			m_player = nullptr;
-		}
+		if (Keyboard::isKeyPressed(Keyboard::Space))
+			freeFromPlayer();
 
 		return;
 	}
@@ -150,8 +135,24 @@ inline void Ball::stuckIntoPlayer(const Player& player)
 	           m_player->getOrigin().y -
 	           m_player->getHalfSize().y -
 	           getHalfSize().y});
+}
 
-	m_isStuck = true;
+
+inline void Ball::freeFromPlayer()
+{
+	assert(m_player != nullptr);
+
+	float xmul;
+
+	if (Keyboard::isKeyPressed(Keyboard::A))
+		xmul = -1;
+	else if (Keyboard::isKeyPressed(Keyboard::D))
+		xmul = 1;
+	else
+		xmul = 0;
+
+	setVelocity({kDefaultVelocity * xmul, -kDefaultVelocity});
+	m_player = nullptr;
 }
 
 
